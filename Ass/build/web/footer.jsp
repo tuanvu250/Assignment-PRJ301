@@ -38,12 +38,13 @@
 
             footer {
                 height: 400px;
+                width: 100%;
                 background-color: #C63F3E;
+                position: relative;
+                bottom: 0;
             }
 
             .footer {
-                position: absolute;
-                width: 80%;
                 display: flex;
                 align-items: start;
                 justify-content: space-evenly;
