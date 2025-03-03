@@ -117,8 +117,10 @@
             .footer a:hover {
                 color: #fbe385;
             }
-
-
+            
+            .foot-right input {
+                width: 250px;
+            }
         </style>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">

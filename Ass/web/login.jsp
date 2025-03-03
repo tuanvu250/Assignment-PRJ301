@@ -43,7 +43,7 @@
                 gap: 20px
             }
             .login-sign {
-                font-size: 20px;
+                font-size: 16px;
                 padding: 12px 20px;
                 width: 500px;
                 border-radius: 50px;
@@ -137,7 +137,7 @@
 
             <div class="login-end">
                 Don’t have an account?
-                <a href="" >Register</a>
+                <a href="register.jsp" >Register</a>
             </div>
 
         </div>

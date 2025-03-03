@@ -114,6 +114,10 @@
                 color: #FFFFFF;
             }
             
+            .nav-search-form input {
+                width: 350px;
+            }
+            
             .nav-search-form button {
                 background-color: #C63F3E;
             }
