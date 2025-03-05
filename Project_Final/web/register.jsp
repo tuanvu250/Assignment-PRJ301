@@ -52,23 +52,23 @@
                 border-radius: 50px;
                 border: 1px solid #000;
             }
-            
+
             .signup-line {
                 display: flex;
                 align-items: center;
                 gap: 20px;
             }
-            
+
             .signup-line h3 {
                 font-weight: initial;
             }
-            
+
             .signup-linee {
                 width: 220px;
                 height: 1px;
                 background-color: #1d1d1b;
             }
-            
+
             .signup-btn {
                 padding: 12px 20px;
                 width: 500px;
@@ -77,22 +77,22 @@
                 border-radius: 50px;
                 color: #FFF;
             }
-            
+
             .signup-form {
                 display: flex;
                 flex-direction: column;
                 gap: 20px;
             }
-            
+
             .signup-btn:hover {
                 background-color: #C63F3E;
             }
-            
+
             .signup-end a {
                 color: #1d1d1b;
                 font-weight: bold;
             }
-            
+
             .signup-end a:hover {
                 color: #C63F3E;
             }
@@ -104,13 +104,14 @@
         <%@include file = "header.jsp" %>
         <div class="signup">
             <h2>REGISTER</h2>
-            <form class="signup-form">
-                <input class="signup-input" type="text" placeholder="Enter username"/>
-                <input class="signup-input"type="password" placeholder="Enter password"/>
-                <input class="signup-input"type="password" placeholder="Confirm password"/>
-                <input class="signup-input" type="text" placeholder="Enter fullname"/>
-                <input class="signup-input" type="text" placeholder="Enter email"/>
-                <input class="signup-input" type="tel" placeholder="Enter phone number"/>
+            <form class="signup-form" action="MainController" method="post">
+                <input type="hidden" name="action" value="register">
+                <input class="signup-input" type="text" placeholder="Enter username" name="registerUSName"/>
+                <input class="signup-input"type="password" placeholder="Enter password" name="registerPassword"/>
+                <input class="signup-input"type="password" placeholder="Confirm password" name="registerCFPassword"/>
+                <input class="signup-input" type="text" placeholder="Enter fullname" name="registerFullName"/>
+                <input class="signup-input" type="text" placeholder="Enter email" name="registerEmail"/>
+                <input class="signup-input" type="tel" placeholder="Enter phone number" name="registerPhone"/>
                 <button class="signup-btn">
                     SIGN UP
                 </button>

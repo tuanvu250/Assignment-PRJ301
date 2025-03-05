@@ -31,9 +31,8 @@ public class UserDAO implements IDAO<UserDTO, String> {
         return usID + String.format("%03d", count);
     }
 
-    @Override
-    public boolean create(UserDTO Object) {
-        String sql = "INSERT INTO [dbo].[Users] ([userId], [usname], [password], [fullname], [email], [phone], [role] VALUES (?, ?, ?, ?, ?, ?, ?))";
+    public boolean createAdmin(UserDTO Object) {
+        String sql = "INSERT INTO [dbo].[Users] ([userId], [usname], [password], [fullname], [email], [phone], [role]) VALUES (?, ?, ?, ?, ?, ?, ?))";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -44,6 +43,27 @@ public class UserDAO implements IDAO<UserDTO, String> {
             ps.setString(5, Object.getEmail());
             ps.setInt(6, Object.getPhone_number());
             ps.setString(7, Object.getRole());
+            int n = ps.executeUpdate();
+            return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+     public boolean createUser(UserDTO Object) {
+        String sql = "INSERT INTO [dbo].[Users] ([userId], [usname], [password], [fullname], [email], [phone], [role]) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, autoCreateID());
+            ps.setString(2, Object.getUserName());
+            ps.setString(3, Object.getPassword());
+            ps.setString(4, Object.getFullName());
+            ps.setString(5, Object.getEmail());
+            ps.setInt(6, Object.getPhone_number());
+            ps.setString(7, "user");
             int n = ps.executeUpdate();
             return n > 0;
         } catch (ClassNotFoundException ex) {
@@ -96,6 +116,11 @@ public class UserDAO implements IDAO<UserDTO, String> {
 
     @Override
     public boolean delete(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean create(UserDTO Object) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -5,6 +5,8 @@
  */
 package controller;
 
+import dao.UserDAO;
+import dto.UserDTO;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,7 +26,7 @@ public class MainController extends HttpServlet {
 
     public static final String LOGIN_PAGE = "login.jsp";
     public static final String HOME_PAGE = "home.jsp";
-
+    public static UserDAO usDao = new UserDAO();
     protected String processClick(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME_PAGE;
@@ -61,6 +63,21 @@ public class MainController extends HttpServlet {
         return url;
     }
 
+    protected String processRegister(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String url = HOME_PAGE;
+        HttpSession session = request.getSession();
+        String usName = request.getParameter("registerUSName");
+        String password = request.getParameter("registerPassword");
+        String cfPassword = request.getParameter("registerCFPassword");
+        String fullName = request.getParameter("registerFullName");
+        String email = request.getParameter("registerEmail");
+        int phone = Integer.parseInt(request.getParameter("registerPhone"));
+        UserDTO newUser = new UserDTO(usName, password, fullName, email, phone, "user");
+        usDao.createUser(newUser);
+        return url;
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -73,6 +90,8 @@ public class MainController extends HttpServlet {
                 url = processLogin(request, response);
             } else if (action.equals("logout")) {
                 url = processLogout(request, response);
+            } else if (action.equals("register")) {
+                url = processRegister(request, response);
             }
         } catch (Exception e) {
             log("ERROR: " + e.toString());

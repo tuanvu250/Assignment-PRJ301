@@ -31,7 +31,6 @@ public class UserDTO {
         this.phone_number = phone_number;
         this.role = role;
     }
-
     public String getUserID() {
         return userID;
     }
