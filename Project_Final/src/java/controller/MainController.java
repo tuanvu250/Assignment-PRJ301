@@ -26,7 +26,9 @@ public class MainController extends HttpServlet {
 
     public static final String LOGIN_PAGE = "login.jsp";
     public static final String HOME_PAGE = "home.jsp";
+    public static final String REGISTER_PAGE = "register.jsp";
     public static UserDAO usDao = new UserDAO();
+
     protected String processClick(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME_PAGE;
@@ -66,15 +68,45 @@ public class MainController extends HttpServlet {
     protected String processRegister(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME_PAGE;
-        HttpSession session = request.getSession();
-        String usName = request.getParameter("registerUSName");
-        String password = request.getParameter("registerPassword");
-        String cfPassword = request.getParameter("registerCFPassword");
-        String fullName = request.getParameter("registerFullName");
-        String email = request.getParameter("registerEmail");
-        int phone = Integer.parseInt(request.getParameter("registerPhone"));
-        UserDTO newUser = new UserDTO(usName, password, fullName, email, phone, "user");
-        usDao.createUser(newUser);
+        boolean checkError = false;
+        try {
+            String usName = request.getParameter("registerUSName");
+            String password = request.getParameter("registerPassword");
+            String cfPassword = request.getParameter("registerCFPassword");
+            String fullName = request.getParameter("registerFullName");
+            String email = request.getParameter("registerEmail");
+            String phone = request.getParameter("registerPhone");
+            int phone_number = 0;
+            if (usName == null || usName.trim().isEmpty()) {
+                checkError = true;
+                request.setAttribute("errorUSName", "This field is required!");
+            }
+            if (!cfPassword.equals(password)) {
+                checkError = true;
+                request.setAttribute("errorCFPassword", "Confirm Password  must be same Password!");
+            }
+            if (fullName == null || fullName.trim().isEmpty()) {
+                checkError = true;
+                request.setAttribute("errorFullName", "This field is required!");
+            }
+            //regex Email:
+            try {
+                phone_number = Integer.parseInt(phone);
+            } catch (Exception e) {
+                checkError = true;
+                request.setAttribute("errorPhone", "Error Format Phone!");
+            }
+
+            UserDTO newUser = new UserDTO(usName, password, fullName, email, phone_number, "user");
+            if (!checkError) {
+                usDao.createUser(newUser);
+            }else{
+                url = REGISTER_PAGE;
+            }
+        } catch (Exception e) {
+            log("Error: " + e.toString());
+        }
+
         return url;
     }
 

@@ -1,4 +1,5 @@
-
+use [assignment_PRJ];
+DROP TABLE IF EXISTS Users;
 	CREATE TABLE Users (
     userId VARCHAR(50) PRIMARY KEY,
     usname VARCHAR(50) NOT NULL UNIQUE,
