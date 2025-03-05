@@ -4,6 +4,7 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dto.UserDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -37,26 +38,26 @@
                 padding: 36px 79px;
                 font-weight: inherit;
             }
-            
+
             h1 {
                 text-align: center;
                 margin-bottom: 32px;
             }
-            
+
             .container {
                 display: flex;
                 justify-content: center;
                 gap: 56px;
                 margin-bottom: 80px;
             }
-            
+
             .container h3 {
                 color: #1d1d1b;
                 text-align: center;
                 margin-top: 12px;
                 font-size: 24px;
             }
-            
+
             .container h3:hover{
                 color: #C63F3E
             }
@@ -66,24 +67,29 @@
     </head>
     <body>
         <%@include file = "header.jsp" %>
+        <%
+            if (session.getAttribute("user") != null) {
+                UserDTO user = (UserDTO) session.getAttribute("user");
 
+        %><h2>Welcome <%=user.getFullName()%></h2>
+        <%}%>
         <div class="banner">
             <img src="img/Rectangle_4.png">
             <h2>DISCOVER</h2>
         </div>
-        
+
         <h1>CATEGORY</h1>
-        
+
         <div class="container">
-            <a class="contain-left" href="">
+            <a class="contain-left" href="MainController?action=click">
                 <img src="img/Rectangle_5.png">
                 <h3>SALE OFF</h3>
             </a>
-            <a class="contain-mid">
+            <a class="contain-mid" href="MainController?action=click">
                 <img src="img/Rectangle_5.png">
                 <h3>MALE</h3>
             </a>
-            <a class="contain-right">
+            <a class="contain-right" href="MainController?action=click">
                 <img src="img/Rectangle_5.png">
                 <h3>FEMALE</h3>
             </a>

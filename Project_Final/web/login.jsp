@@ -115,12 +115,18 @@
 
         <div class="login">
             <h2>SIGN IN</h2>
-            <form class="login-form">
-                <input class="login-sign" type="text" placeholder="Enter username"/>
-                <input class="login-sign"type="password" placeholder="Enter password"/>
+            <form class="login-form" action="MainController" method="post">
+                <input type="hidden" name="action" value="login">
+                <input class="login-sign" type="text" name="txtUserName" placeholder="Enter username"/>
+                <input class="login-sign"type="password" name="txtPassword" placeholder="Enter password"/>
                 <button class="login-btn">
                     SIGN IN
                 </button>
+                <%
+                    String loginMessage = request.getAttribute("loginMessage") + "";
+                    loginMessage = loginMessage.equals("null") ? "" : loginMessage;
+                %>
+                <div style="color: red"><%=loginMessage%></div>
             </form>
             <div class="login-mid">
                 <div>
