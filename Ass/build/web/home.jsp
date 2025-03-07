@@ -19,6 +19,10 @@
                 border: none;
                 list-style-type: none;
             }
+            
+            body {
+                background-color: #EAE4DA;
+            }
             .banner {
                 position: relative;
                 text-align: center;
