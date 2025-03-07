@@ -184,7 +184,7 @@
                     </a>
                 </div>
                 <div class="nav-menu">
-                    <a href="" class="nav-product">Product</a>
+                    <a href="product.jsp" class="nav-product">Product</a>
                     <a href="" class="nav-about">About us</a>
                 </div>
             </div>
