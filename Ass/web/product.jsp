@@ -53,6 +53,12 @@
                 flex-wrap: wrap;
             }
 
+            .product-item {
+                display: flex;  
+                flex-direction: column;
+                gap: 4px;
+            }
+
             .product-item p{
                 display: block;
             }
@@ -111,7 +117,7 @@
                 flex-direction: column;
                 gap: 16px;
                 margin-left: 40px;
-                transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+                transition: 300ms ease-in-out;
             }
 
             .choice-list-color {
@@ -120,7 +126,7 @@
                 gap: 8px;
                 overflow: hidden;
                 max-height: 0;
-                transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+                /*                transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;*/
             }
 
             .choice-list-color a {
@@ -184,18 +190,63 @@
             .sale-text {
                 text-decoration: line-through;
             }
-            
+
             .img-sale {
                 position: relative;
-                z-index: -1000;
+                display: inline-block;
             }
-            
-            .img-sale h3 {
+
+            .label-sale {
                 position: absolute;
                 top: 40px;
                 padding: 4px 8px;
-                background-color: #C63F3E;
+                background-color: #1d1d1b;
                 color: #FFF;
+            }
+
+            .love-list {
+                position: absolute;
+                font-size: 35px;
+                bottom: 8px;
+                right: 20px;
+                color: #C63F3E;
+            }
+
+            .hover-buy {
+                position: absolute;
+                bottom: 5px;
+                right: 60px;
+                left: 60px;
+                padding: 12px 8px;
+                color: #FFF;
+                background-color: #C63F3E;
+                opacity: 0;
+                transition: 0.6s;
+            }
+
+            .div-hover-buy {
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                top: 0;
+            }
+
+            .img-sale:hover .div-hover-buy{
+                background: rgba(0, 0, 0, 0.1);
+            }
+
+            .img-sale:hover .hover-buy {
+                opacity: 1;
+            }
+
+            .product-name {
+                font-size: 18px;
+                font-weight: 700;
+                color: #1d1d1b;
+            }
+
+            .product-name:hover {
+                color: #C63F3E;
             }
         </style>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -321,42 +372,86 @@
                 </div>
             </div>
             <div class="product-detail">
-                <a class="product-item">
-                    <img src="img/Rectangle_16.jpg">
-                    <p>abc xyz  </p>
-                    <p>Color</p>
-                    <div class="product-price">
-                        <p>XXX.XXXVND</p>
-                    </div>
-                </a>
-                <a class="product-item">
+                <div class="product-item">
                     <div class="img-sale">
-                        <h3>SALE OFF</h3>
-                        <img src="img/Rectangle_16.jpg">
+                        <h3 class="label-sale">SALE OFF</h3>
+                        <a><img src="img/Rectangle_16.jpg"></a>
+                        <div class="div-hover-buy">
+                            <h3 class="hover-buy">BUY</h3>
+                        </div>
+                        <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
                     </div>
-                    <p>abc xyz  </p>
+                    <a href="#" class="product-name">Abc xyz</a>
                     <p>Color</p>
                     <div class="product-price">
                         <p>XXX.XXXVND</p>
                         <p class="sale-text">XXX.XXXVND</p>
                     </div>
-                </a>
-                <a class="product-item">
-                    <img src="img/Rectangle_16.jpg">
-                    <p>abc xyz  </p>
+                </div>
+                <div class="product-item">
+                    <div class="img-sale">
+                        <h3 class="label-sale">SALE OFF</h3>
+                        <a><img src="img/Rectangle_16.jpg"></a>
+                        <div class="div-hover-buy">
+                            <h3 class="hover-buy">BUY</h3>
+                        </div>
+                        <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
+                    </div>
+                    <a href="#" class="product-name">Abc xyz</a>
                     <p>Color</p>
                     <div class="product-price">
                         <p>XXX.XXXVND</p>
+                        <p class="sale-text">XXX.XXXVND</p>
                     </div>
-                </a>
-                <a class="product-item">
-                    <img src="img/Rectangle_16.jpg">
-                    <p>abc xyz  </p>
+                </div>
+                <div class="product-item">
+                    <div class="img-sale">
+                        <h3 class="label-sale">SALE OFF</h3>
+                        <a><img src="img/Rectangle_16.jpg"></a>
+                        <div class="div-hover-buy">
+                            <h3 class="hover-buy">BUY</h3>
+                        </div>
+                        <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
+                    </div>
+                    <a href="#" class="product-name">Abc xyz</a>
                     <p>Color</p>
                     <div class="product-price">
                         <p>XXX.XXXVND</p>
+                        <p class="sale-text">XXX.XXXVND</p>
                     </div>
-                </a>
+                </div>
+                <div class="product-item">
+                    <div class="img-sale">
+                        <h3 class="label-sale">SALE OFF</h3>
+                        <a><img src="img/Rectangle_16.jpg"></a>
+                        <div class="div-hover-buy">
+                            <h3 class="hover-buy">BUY</h3>
+                        </div>
+                        <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
+                    </div>
+                    <a href="#" class="product-name">Abc xyz</a>
+                    <p>Color</p>
+                    <div class="product-price">
+                        <p>XXX.XXXVND</p>
+                        <p class="sale-text">XXX.XXXVND</p>
+                    </div>
+                </div>
+                <div class="product-item">
+                    <div class="img-sale">
+                        <h3 class="label-sale">SALE OFF</h3>
+                        <a><img src="img/Rectangle_16.jpg"></a>
+                        <div class="div-hover-buy">
+                            <h3 class="hover-buy">BUY</h3>
+                        </div>
+                        <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
+                    </div>
+                    <a href="#" class="product-name">Abc xyz</a>
+                    <p>Color</p>
+                    <div class="product-price">
+                        <p>XXX.XXXVND</p>
+                        <p class="sale-text">XXX.XXXVND</p>
+                    </div>
+                </div>
             </div>
         </div>
         <%@include file = "footer.jsp" %>
@@ -395,6 +490,20 @@
                         icon.classList.replace("fa-chevron-down", "fa-chevron-up");
                     } else {
                         icon.classList.replace("fa-chevron-up", "fa-chevron-down");
+                    }
+                });
+            });
+
+            document.querySelectorAll(".love-list").forEach(link => {
+                link.addEventListener("click", function () {
+                    let icon = this.querySelector("i");
+                    event.preventDefault();
+                    this.classList.toggle("added");
+
+                    if (this.classList.contains("added")) {
+                        icon.classList.replace("fa-regular", "fa-solid");
+                    } else {
+                        icon.classList.replace("fa-solid", "fa-regular");
                     }
                 });
             });

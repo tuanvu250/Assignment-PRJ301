@@ -113,7 +113,7 @@
                 <input class="signup-input"type="password" placeholder="Enter password"/>
                 <input class="signup-input"type="password" placeholder="Confirm password"/>
                 <input class="signup-input" type="text" placeholder="Enter fullname"/>
-                <input class="signup-input" type="text" placeholder="Enter email"/>
+                <input class="signup-input" type="email" placeholder="Enter email"/>
                 <input class="signup-input" type="tel" placeholder="Enter phone number"/>
                 <button class="signup-btn">
                     SIGN UP

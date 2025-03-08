@@ -34,6 +34,7 @@
                 position: sticky;
                 top: 0;
                 backdrop-filter: blur(45px);
+                z-index: 1000;
             }
 
             .navbar {
@@ -185,7 +186,7 @@
                 </div>
                 <div class="nav-menu">
                     <a href="product.jsp" class="nav-product">Product</a>
-                    <a href="" class="nav-about">About us</a>
+                    <a href="about.jsp" class="nav-about">About us</a>
                 </div>
             </div>
             <div class="nav-right">
@@ -200,8 +201,8 @@
                     </form>
                 </div>
                 <div class="nav-ic">
-                    <a href=""><i class="fa-solid fa-heart"></i></a>
-                    <a href=""><i class="fa-solid fa-bag-shopping"></i></a>
+                    <a href="favouriteList.jsp"><i class="fa-solid fa-heart"></i></a>
+                    <a href="cartList.jsp"><i class="fa-solid fa-cart-shopping"></i></a>
                     <a href="login.jsp"><i class="fa-solid fa-user"></i></a>
 
                 </div>
