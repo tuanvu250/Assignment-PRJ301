@@ -60,7 +60,7 @@
             }
             
             .container img {
-                width: 30vh;
+                width: 100%;
             }
             
             .container h3 {
