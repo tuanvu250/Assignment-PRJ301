@@ -35,13 +35,14 @@
                 top: 0;
                 backdrop-filter: blur(45px);
                 z-index: 1000;
+                width: 100%;
             }
 
             .navbar {
                 display: flex;
                 padding: 0 5vw; /* Thay 80px bằng vw */
                 align-items: center;
-                gap: 10vw; /* Thay 227px bằng vw */
+                gap: 12vw; /* Thay 227px bằng vw */
                 background-color: #C63F3E;
                 justify-content: center;
             }
@@ -61,14 +62,14 @@
                 width: 30vw; /* Điều chỉnh để phù hợp màn hình nhỏ */
                 height: 70px;
                 align-items: center;
-                gap: 5vw; /* Thay 71px bằng vw */
+                gap: 6vw; /* Thay 71px bằng vw */
                 flex-shrink: 0;
             }
 
             .nav-right {
                 display: flex;
                 align-items: center;
-                gap: 4vw; /* Thay 52px bằng vw */
+                gap: 7vw; /* Thay 52px bằng vw */
                 flex-shrink: 0;
             }
 
@@ -89,7 +90,7 @@
 
             .nav-search {
                 display: flex;
-                width: 25vw; /* Thay 400px bằng vw */
+                width: 30vw; /* Thay 400px bằng vw */
                 height: 40px;
                 padding: 8px 1rem;
                 align-items: center;
@@ -118,7 +119,7 @@
             }
 
             .nav-search-form input {
-                width: 90%;
+                width: 100%;
             }
 
             .nav-search-form button {

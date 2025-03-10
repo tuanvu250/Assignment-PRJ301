@@ -29,6 +29,10 @@
                 margin: 30px 0;
                 z-index: -1000;
             }
+            
+            .banner img {
+                width: 100%;
+            }
 
             .banner h2 {
                 color: #FFF;
@@ -48,10 +52,15 @@
             }
             
             .container {
+                width: 100 vw;
                 display: flex;
                 justify-content: center;
                 gap: 56px;
                 margin-bottom: 80px;
+            }
+            
+            .container img {
+                width: 30vh;
             }
             
             .container h3 {
