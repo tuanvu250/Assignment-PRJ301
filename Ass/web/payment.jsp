@@ -34,7 +34,7 @@
             }
 
             .payment {
-                padding: 80px;
+                padding: 80px 30px;
                 display: flex;  
                 gap: 40px;
             }
@@ -43,6 +43,7 @@
                 display: flex;
                 flex-direction: column;
                 gap: 20px;
+                width: 70vw;
             }
 
             .deli-info, .payment-method {
@@ -54,7 +55,7 @@
             .payment-info h2{
                 background-color: rgba(0,0,0,0.1);
                 padding: 8px 10px;
-                width: 700px;
+                width: 100%;
             }
 
             .payment-form , .payment-checkbox{
@@ -64,7 +65,7 @@
             }
 
             .payment-form input{
-                width: 550px;
+                width: 80%;
                 padding: 8px 10px;
             }
 

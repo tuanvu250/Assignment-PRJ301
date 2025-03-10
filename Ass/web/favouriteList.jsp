@@ -52,7 +52,7 @@
                 gap: 36px;
                 justify-content: center;
                 align-items: center;
-                padding: 40px 80px;
+                padding: 30px 80px;
             }
 
             .favourite-info {
@@ -122,7 +122,7 @@
             .favourite-btn a {
                 padding: 16px 32px;
                 font-size: 18px;
-                width: 160px;
+                width: 10vw;
             }
 
             .favourite-cart {
@@ -170,7 +170,7 @@
             }
             
             .favourite-footer a{
-                width: 160px;
+                width: 10vw;
                 color: #EAE4DA;
                 background-color: #1d1d1b;
                 padding: 16px 0;

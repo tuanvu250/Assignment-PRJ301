@@ -52,14 +52,15 @@
             }
             
             .container {
-                width: 100 vw;
+                width: 100%;
                 display: flex;
                 justify-content: center;
-                gap: 56px;
+                gap: 5vw;
+                padding: 0 5vw;
                 margin-bottom: 80px;
             }
             
-            .container img {
+            .container a img {
                 width: 100%;
             }
             
@@ -89,15 +90,15 @@
         
         <div class="container">
             <a class="contain-left" href="">
-                <img src="img/Rectangle_5.png">
+                <img src="img/home_sale.jpg">
                 <h3>SALE OFF</h3>
             </a>
             <a class="contain-mid">
-                <img src="img/Rectangle_5.png">
+                <img src="img/home_male.jpg">
                 <h3>MALE</h3>
             </a>
             <a class="contain-right">
-                <img src="img/Rectangle_5.png">
+                <img src="img/home_female.jpg">
                 <h3>FEMALE</h3>
             </a>
         </div>

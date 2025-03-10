@@ -48,7 +48,7 @@
                 gap: 28px;
                 justify-content: center;
                 align-items: center;
-                padding: 40px 0;
+                padding: 30px 0;
             }
 
             .favourite-info {
@@ -167,7 +167,7 @@
             }
 
             .favourite-footer a{
-                width: 160px;
+                width: 10vw;
                 color: #EAE4DA;
                 background-color: #1d1d1b;
                 padding: 16px 0;

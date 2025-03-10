@@ -52,9 +52,9 @@
             
             .about img {
                 position: absolute;
-                width: 500px;
+                width: 45%;
                 right: 60px;
-                bottom: -20px;
+                top: 60%;
                 z-index: -1000;
             }
         </style>

@@ -39,7 +39,7 @@
 
 
             .product {
-                margin: 83px;
+                padding: 5vw;
                 display: flex;
                 gap: 60px;
                 color: #1d1d1b;
@@ -49,7 +49,7 @@
             .product-detail {
                 display: flex;
                 text-align: center;
-                gap: 60px;
+                gap: 5vw;
                 flex-wrap: wrap;
             }
 
@@ -57,6 +57,11 @@
                 display: flex;  
                 flex-direction: column;
                 gap: 4px;
+                width: 28%;
+            }
+            
+            .product-item img {
+                width: 100%;
             }
 
             .product-item p{
@@ -72,7 +77,7 @@
             .product-gender {
                 display: flex;
                 gap: 10px;
-                font-size: 20px;
+                font-size: 18px;
                 font-weight: 700;
                 border-bottom: solid 3px #1d1d1b;
                 padding-bottom: 12px;
@@ -103,7 +108,7 @@
             }
 
             .product-choice h3 {
-                font-size: 20px;
+                font-size: 18px;
             }
 
             .product-choice h3.active {
