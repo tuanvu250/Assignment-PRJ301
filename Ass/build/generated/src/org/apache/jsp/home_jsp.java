@@ -147,6 +147,7 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                position: sticky;\r\n");
       out.write("                top: 0;\r\n");
       out.write("                backdrop-filter: blur(45px);\r\n");
+      out.write("                z-index: 1000;\r\n");
       out.write("            }\r\n");
       out.write("\r\n");
       out.write("            .navbar {\r\n");
@@ -298,7 +299,7 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                </div>\r\n");
       out.write("                <div class=\"nav-menu\">\r\n");
       out.write("                    <a href=\"product.jsp\" class=\"nav-product\">Product</a>\r\n");
-      out.write("                    <a href=\"\" class=\"nav-about\">About us</a>\r\n");
+      out.write("                    <a href=\"about.jsp\" class=\"nav-about\">About us</a>\r\n");
       out.write("                </div>\r\n");
       out.write("            </div>\r\n");
       out.write("            <div class=\"nav-right\">\r\n");
@@ -313,8 +314,8 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                    </form>\r\n");
       out.write("                </div>\r\n");
       out.write("                <div class=\"nav-ic\">\r\n");
-      out.write("                    <a href=\"\"><i class=\"fa-solid fa-heart\"></i></a>\r\n");
-      out.write("                    <a href=\"\"><i class=\"fa-solid fa-bag-shopping\"></i></a>\r\n");
+      out.write("                    <a href=\"favouriteList.jsp\"><i class=\"fa-solid fa-heart\"></i></a>\r\n");
+      out.write("                    <a href=\"cartList.jsp\"><i class=\"fa-solid fa-cart-shopping\"></i></a>\r\n");
       out.write("                    <a href=\"login.jsp\"><i class=\"fa-solid fa-user\"></i></a>\r\n");
       out.write("\r\n");
       out.write("                </div>\r\n");
