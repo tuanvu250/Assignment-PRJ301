@@ -21,13 +21,13 @@
                 list-style-type: none;
             }
 
-            *{
+            * {
                 user-select: none;
                 cursor: default;
             }
 
             input:hover {
-                cursor:text;
+                cursor: text;
             }
 
             header {
@@ -39,58 +39,59 @@
 
             .navbar {
                 display: flex;
-                padding: 0px 80px;
+                padding: 0 5vw; /* Thay 80px bằng vw */
                 align-items: center;
-                gap: 227px;
+                gap: 10vw; /* Thay 227px bằng vw */
                 background-color: #C63F3E;
+                justify-content: center;
             }
 
             .navbar a {
                 color: #FFFFFF;
-                font-size: 18px;
+                font-size: 1rem;
             }
 
-            .nav-ic i{
-                font-size: 25px;
+            .nav-ic i {
+                font-size: 1.5rem;
                 transition: transform 0.3s;
             }
 
             .nav-left {
                 display: flex;
-                width: 465px;
+                width: 30vw; /* Điều chỉnh để phù hợp màn hình nhỏ */
                 height: 70px;
                 align-items: center;
-                gap: 71px;
+                gap: 5vw; /* Thay 71px bằng vw */
                 flex-shrink: 0;
             }
 
             .nav-right {
                 display: flex;
                 align-items: center;
-                gap: 52px;
+                gap: 4vw; /* Thay 52px bằng vw */
                 flex-shrink: 0;
             }
 
             .nav-menu {
                 display: flex;
-                width: 232px;
-                padding: 20px 0px;
+                width: 15vw; /* Thay 232px bằng vw */
+                padding: 1.5rem 0;
                 align-items: flex-start;
-                gap: 58px;
+                gap: 4vw; /* Thay 58px bằng vw */
                 flex-shrink: 0;
             }
 
             .nav-ic {
                 display: flex;
                 align-items: flex-end;
-                gap: 50px;
+                gap: 3vw; /* Thay 50px bằng vw */
             }
 
             .nav-search {
                 display: flex;
-                width: 400px;
+                width: 25vw; /* Thay 400px bằng vw */
                 height: 40px;
-                padding: 8px 17px;
+                padding: 8px 1rem;
                 align-items: center;
                 flex-shrink: 0;
                 border-radius: 20.5px;
@@ -109,25 +110,26 @@
 
             .nav-search-form {
                 display: flex;
-                gap: 10px;
+                gap: 0.5rem;
             }
+
             .nav-search input::placeholder {
                 color: #FFFFFF;
             }
-            
+
             .nav-search-form input {
-                width: 350px;
+                width: 90%;
             }
-            
+
             .nav-search-form button {
                 background-color: #C63F3E;
             }
-            
+
             .nav-search-form svg {
-                height: 100%;   
+                height: 100%;
             }
 
-            .nav-ic i:hover{
+            .nav-ic i:hover {
                 transform: scale(1.2);
                 color: #fbe385;
             }
@@ -136,11 +138,10 @@
                 transition: transform 0.3s;
             }
 
-            .nav-menu a:hover{
+            .nav-menu a:hover {
                 transform: scale(1.2);
                 color: #fbe385;
             }
-
 
         </Style>
         <meta charset="UTF-8">
@@ -186,7 +187,8 @@
                 </div>
                 <div class="nav-menu">
                     <a href="product.jsp" class="nav-product">Product</a>
-                    <a href="about.jsp" class="nav-about">About us</a>
+                    <a href="about.jsp
+                       " class="nav-about">About us</a>
                 </div>
             </div>
             <div class="nav-right">
