@@ -195,7 +195,10 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                top: 0;\r\n");
       out.write("                backdrop-filter: blur(45px);\r\n");
       out.write("                z-index: 1000;\r\n");
+<<<<<<< Updated upstream
       out.write("                width: 100vw;\r\n");
+=======
+>>>>>>> Stashed changes
       out.write("            }\r\n");
       out.write("\r\n");
       out.write("            .navbar {\r\n");
@@ -277,11 +280,19 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("            .nav-search input::placeholder {\r\n");
       out.write("                color: #FFFFFF;\r\n");
       out.write("            }\r\n");
+<<<<<<< Updated upstream
       out.write("\r\n");
       out.write("            .nav-search-form input {\r\n");
       out.write("                width: 100%;\r\n");
       out.write("            }\r\n");
       out.write("\r\n");
+=======
+      out.write("            \r\n");
+      out.write("            .nav-search-form input {\r\n");
+      out.write("                width: 350px;\r\n");
+      out.write("            }\r\n");
+      out.write("            \r\n");
+>>>>>>> Stashed changes
       out.write("            .nav-search-form button {\r\n");
       out.write("                background-color: #C63F3E;\r\n");
       out.write("            }\r\n");
@@ -348,8 +359,12 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                </div>\r\n");
       out.write("                <div class=\"nav-menu\">\r\n");
       out.write("                    <a href=\"product.jsp\" class=\"nav-product\">Product</a>\r\n");
+<<<<<<< Updated upstream
       out.write("                    <a href=\"about.jsp\r\n");
       out.write("                       \" class=\"nav-about\">About us</a>\r\n");
+=======
+      out.write("                    <a href=\"about.jsp\" class=\"nav-about\">About us</a>\r\n");
+>>>>>>> Stashed changes
       out.write("                </div>\r\n");
       out.write("            </div>\r\n");
       out.write("            <div class=\"nav-right\">\r\n");
@@ -440,7 +455,11 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("\r\n");
       out.write("            footer {\r\n");
       out.write("                height: 400px;\r\n");
+<<<<<<< Updated upstream
       out.write("                width: 100vw;\r\n");
+=======
+      out.write("                width: 100%;\r\n");
+>>>>>>> Stashed changes
       out.write("                background-color: #C63F3E;\r\n");
       out.write("                position: relative;\r\n");
       out.write("                bottom: 0;\r\n");
