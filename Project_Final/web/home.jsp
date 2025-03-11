@@ -20,11 +20,19 @@
                 border: none;
                 list-style-type: none;
             }
+
+            body {
+                background-color: #EAE4DA;
+            }
             .banner {
                 position: relative;
                 text-align: center;
                 margin: 30px 0;
                 z-index: -1000;
+            }
+
+            .banner img {
+                width: 100%;
             }
 
             .banner h2 {
@@ -45,10 +53,15 @@
             }
 
             .container {
+                width: 100 vw;
                 display: flex;
                 justify-content: center;
                 gap: 56px;
                 margin-bottom: 80px;
+            }
+
+            .container img {
+                width: 100%;
             }
 
             .container h3 {
@@ -68,11 +81,14 @@
     <body>
         <%@include file = "header.jsp" %>
         <%
-            if (session.getAttribute("user") != null) {
-                UserDTO user = (UserDTO) session.getAttribute("user");
+            UserDTO user = (UserDTO) session.getAttribute("user");
+            if (user != null) {
+        %>
+        <h2 style="color: black"><%= user.getFull_name()%></h2>
+        <%
+            }
 
-        %><h2>Welcome <%=user.getFullName()%></h2>
-        <%}%>
+        %>
         <div class="banner">
             <img src="img/Rectangle_4.png">
             <h2>DISCOVER</h2>
@@ -81,15 +97,15 @@
         <h1>CATEGORY</h1>
 
         <div class="container">
-            <a class="contain-left" href="MainController?action=click">
+            <a class="contain-left" href="">
                 <img src="img/Rectangle_5.png">
                 <h3>SALE OFF</h3>
             </a>
-            <a class="contain-mid" href="MainController?action=click">
+            <a class="contain-mid">
                 <img src="img/Rectangle_5.png">
                 <h3>MALE</h3>
             </a>
-            <a class="contain-right" href="MainController?action=click">
+            <a class="contain-right">
                 <img src="img/Rectangle_5.png">
                 <h3>FEMALE</h3>
             </a>

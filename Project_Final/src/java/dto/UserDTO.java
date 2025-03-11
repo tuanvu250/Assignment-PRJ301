@@ -2,49 +2,63 @@ package dto;
 
 public class UserDTO {
 
-    private String userID;
-    private String userName;
+    private String user_id;
+    private String full_name;
+    private String user_name;
     private String password;
-    private String fullName;
     private String email;
-    private int phone_number;
-    private String role;
+    private String phone_number;
+    private int role_id;
 
     public UserDTO() {
+        this.full_name= "";
+        this.user_name = "";
+        this.password = "";
+        this.email = "";
+        this.phone_number = "";
     }
 
-    public UserDTO(String userID, String userName, String password, String fullName, String email, int phone_number, String role) {
-        this.userID = userID;
-        this.userName = userName;
+    public UserDTO(String user_id, String full_name, String user_name, String password, String email, String phone_number, int role_id) {
+        this.user_id = user_id;
+        this.full_name = full_name;
+        this.user_name = user_name;
         this.password = password;
-        this.fullName = fullName;
         this.email = email;
         this.phone_number = phone_number;
-        this.role = role;
+        this.role_id = role_id;
     }
 
-    public UserDTO(String userName, String password, String fullName, String email, int phone_number, String role) {
-        this.userName = userName;
+    public UserDTO(String full_name, String user_name, String password, String email, String phone_number, int role_id) {
+        this.full_name = full_name;
+        this.user_name = user_name;
         this.password = password;
-        this.fullName = fullName;
         this.email = email;
         this.phone_number = phone_number;
-        this.role = role;
-    }
-    public String getUserID() {
-        return userID;
+        this.role_id = role_id;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getFull_name() {
+        return full_name;
+    }
+
+    public void setFull_name(String full_name) {
+        this.full_name = full_name;
     }
 
     public String getPassword() {
@@ -55,14 +69,6 @@ public class UserDTO {
         this.password = password;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -71,25 +77,19 @@ public class UserDTO {
         this.email = email;
     }
 
-    public int getPhone_number() {
+    public String getPhone_number() {
         return phone_number;
     }
 
-    public void setPhone_number(int phone_number) {
+    public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
     }
 
-    public String getRole() {
-        return role;
+    public int getRole_id() {
+        return role_id;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRole_id(int role_id) {
+        this.role_id = role_id;
     }
-
-    @Override
-    public String toString() {
-        return "UserDTO{" + "userID=" + userID + ", userName=" + userName + ", password=" + password + ", fullName=" + fullName + ", email=" + email + ", phone_number=" + phone_number + ", role=" + role + '}';
-    }
-
 }
