@@ -94,9 +94,11 @@ public class UserController extends HttpServlet {
                 String hashPassword = PasswordUtils.hashPassword(newUser.getPassword());
                 newUser.setPassword(hashPassword);
                 userDao.create(newUser);
-                HttpSession session = request.getSession();
-                session.setAttribute("currentUser", newUser);
-                url = HOME_PAGE;
+                if (AuthUtils.verifyUser(newUser.getUser_name(), newUser.getPassword())) {
+                    url = HOME_PAGE;
+                    UserDTO user = AuthUtils.getUser(newUser.getUser_name());
+                    request.getSession().setAttribute("user", user);
+                }
             }
         } catch (Exception e) {
             log("ERROR: " + e.toString());
