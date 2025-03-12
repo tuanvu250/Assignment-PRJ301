@@ -97,15 +97,16 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("            }\r\n");
       out.write("            \r\n");
       out.write("            .container {\r\n");
-      out.write("                width: 100 vw;\r\n");
+      out.write("                width: 100%;\r\n");
       out.write("                display: flex;\r\n");
       out.write("                justify-content: center;\r\n");
-      out.write("                gap: 56px;\r\n");
+      out.write("                gap: 5vw;\r\n");
+      out.write("                padding: 0 5vw;\r\n");
       out.write("                margin-bottom: 80px;\r\n");
       out.write("            }\r\n");
       out.write("            \r\n");
       out.write("            .container a img {\r\n");
-      out.write("                \r\n");
+      out.write("                width: 100%;\r\n");
       out.write("            }\r\n");
       out.write("            \r\n");
       out.write("            .container h3 {\r\n");
@@ -116,7 +117,7 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("            }\r\n");
       out.write("            \r\n");
       out.write("            .container h3:hover{\r\n");
-      out.write("                color: #C63F3E\r\n");
+      out.write("                color: #C63F3E;\r\n");
       out.write("            }\r\n");
       out.write("        </style>\r\n");
       out.write("        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\r\n");

@@ -111,23 +111,23 @@
 
             .detail-container {
                 display: flex;  
-                padding: 80px 8vw;
+                padding: 40px  8vw;
                 gap: 5vw;
             }
-            
+
             .detail-info {
                 display: flex;
                 flex-direction: column;
                 gap: 4vh;
                 flex: 1;
             }
-            
+
             .detail-text {
                 display: flex;
                 flex-direction: column;
                 gap: 4vh;
             }
-            
+
             .detail-color {
                 display: flex;
                 gap: 10px;
@@ -142,20 +142,20 @@
                 justify-content: center;
                 align-items: center;
             }
-            
+
             .detail-color a {
                 display: inline-block;
                 height: 30px;
                 width: 30px;
                 background-color: red; 
             }
-            
+
             .size-quantity {
                 display: flex;
                 justify-content: space-between;
-                
+
             }
-            
+
             .btn-size select, .btn-quantity select {
                 width: 10vw;
                 height: 5vh;
@@ -168,13 +168,13 @@
                 flex-direction: column;
                 gap: 4vh;
             }
-            
+
             .detail-cart {
                 height: 100%;
                 display: flex;
-                gap: 5vw;
+                gap: 2vw;
             }
-            
+
             .detail-cart a{
                 font-size: 18px;
                 width: 70%;
@@ -185,15 +185,15 @@
                 align-items: center;
                 justify-content: center;
             }
-            
+
             .order-now {
                 display: flex;
                 justify-content: center;
             }
-            
+
             .order-now a{
                 font-size: 18px;
-                width: 80%;
+                width: 100%;
                 height: 9vh;
                 background-color: #C63F3E;
                 color: #FFF;
@@ -201,12 +201,64 @@
                 align-items: center;
                 justify-content: center;
             }
+
+            .product-link {
+                display: flex;
+                gap: 1vw;
+                margin: 0 6vw;
+                margin-top: 6vh;
+                border-bottom: solid 2px #1d1d1b;
+                padding-bottom: 10px;
+            }
+
+            .product-link a {
+                border-right: solid 2px #1d1d1b;
+                padding-right: 10px;
+            }
+
+            .product-link a:last-child {
+                border: none;
+            }
+
+            .info-detail {
+                display: flex;
+                flex-direction: column;
+                gap: 1vh;
+                border-bottom: solid 2px #1d1d1b;
+                padding-bottom: 10px;
+            }
+            
+            .info-detail div{
+                display: flex;
+                flex-direction: column;
+                gap: 1vh;
+                overflow: hidden;
+                max-height: 0;
+                transition: 0.5s;
+            }
+
+            .info-detail p{
+                padding-left: 20px;
+            }
+            
+            .info-detail div.show{
+                max-height: 100%;
+            }
+            
+            .info-detail h3.active {
+                color: #C63F3E;
+            }
         </style>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Product Detail</title>
     </head>
     <body>
         <%@include file="header.jsp" %>
+        <div class="product-link">
+            <a>Product</a>
+            <a>Product line</a>
+            <a>Product Name</a>
+        </div>
         <div class="detail-container">
             <div class="slider-container">
                 <div class="img-slider">
@@ -263,12 +315,12 @@
                         </div>
                         <div class="btn-quantity">
                             <label>Quantity</label>
-                                <select>
-                                    <option selected hidden></option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                </select>
+                            <select>
+                                <option selected hidden></option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                            </select>
                         </div>
                     </div>
                     <div class="detail-cart">
@@ -279,13 +331,15 @@
                         <a>ORDER NOW</a>
                     </div>
                 </div>
-                <div>
-                    <h3>Product infomation <i class="fa-solid fa-chevron-up"></i></h3>
-                    <p>abc xyz</p>
-                    <p>abc xyz</p>
-                    <p>abc xyz</p>
-                    <p>abc xyz</p>
-                    <img src="img/info-table.jpg">
+                <div class="info-detail">
+                    <h3 class="">Product infomation <i class="fa-solid fa-chevron-down"></i></h3>
+                    <div>
+                        <p>abc xyz</p>
+                        <p>abc xyz</p>
+                        <p>abc xyz</p>
+                        <p>abc xyz</p>
+                        <img src="img/info-table.jpg">
+                    </div>
                 </div>
             </div>
         </div>
@@ -327,6 +381,25 @@
             });
 
             updateThumbnail();
+            
+            document.querySelectorAll(".info-detail").forEach(button => {
+                button.addEventListener("click", function () {
+                   
+                    let choiceList = this.querySelector(".info-detail div"); // Chọn đúng dropdown trong div cha
+                    let icon = this.querySelector("i"); // `this` là icon đang bấm
+                    let title = this.querySelector("h3");
+
+                    choiceList.classList.toggle("show");
+                    title.classList.toggle("active");
+
+                    // Đổi icon giữa chevron-down và chevron-up
+                    if (choiceList.classList.contains("show")) {
+                        icon.classList.replace("fa-chevron-down", "fa-chevron-up");
+                    } else {
+                        icon.classList.replace("fa-chevron-up", "fa-chevron-down");
+                    }
+                });
+            });
         </script>
     </body>
 </html>

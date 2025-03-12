@@ -26,6 +26,10 @@
                 cursor: default;
             }
 
+            a:hover {
+                cursor: pointer;
+            }
+
             input:hover {
                 cursor: text;
             }
