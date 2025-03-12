@@ -117,7 +117,7 @@ public final class home_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("            }\r\n");
       out.write("            \r\n");
       out.write("            .container h3:hover{\r\n");
-      out.write("                color: #C63F3E\r\n");
+      out.write("                color: #C63F3E;\r\n");
       out.write("            }\r\n");
       out.write("        </style>\r\n");
       out.write("        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\r\n");

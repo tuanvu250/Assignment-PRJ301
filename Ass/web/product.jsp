@@ -122,7 +122,7 @@
                 flex-direction: column;
                 gap: 16px;
                 margin-left: 40px;
-                transition: 300ms ease-in-out;
+                transition: 0.5s;
             }
 
             .choice-list-color {
@@ -131,7 +131,7 @@
                 gap: 8px;
                 overflow: hidden;
                 max-height: 0;
-                /*                transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;*/
+                transition: 0.5s;
             }
 
             .choice-list-color a {
@@ -203,7 +203,7 @@
 
             .label-sale {
                 position: absolute;
-                top: 40px;
+                top: 5%;
                 padding: 4px 8px;
                 background-color: #1d1d1b;
                 color: #FFF;
@@ -304,42 +304,7 @@
                         <a>< 200k VND <i class="fa-solid fa-xmark"></i></a>
                     </div>
                 </div>
-                <div class="product-choice">
-                    <h3 class="active toggle-btn">COLLECTION <i class="fa-solid fa-chevron-up"></i></h3>
-                    <div class="choice-list show">
-                        <a>Denim <i class="fa-solid fa-xmark"></i></a>
-                        <a>Day Slide <i class="fa-solid fa-xmark"></i></a>
-                        <a>Public 2000s <i class="fa-solid fa-xmark"></i></a>
-                        <a>Vivu <i class="fa-solid fa-xmark"></i></a>
-                        <a>Nauda <i class="fa-solid fa-xmark"></i></a>
-                        <a>Tomo <i class="fa-solid fa-xmark"></i></a>
-                        <a>2.Blues <i class="fa-solid fa-xmark"></i></a>
-                        <a>Jazico <i class="fa-solid fa-xmark"></i></a>
-                        <a>I.S.E.E <i class="fa-solid fa-xmark"></i></a>
-                        <a>Soda Pop <i class="fa-solid fa-xmark"></i></a>
-                        <a>LandFforms <i class="fa-solid fa-xmark"></i></a>
-                        <a>SC <i class="fa-solid fa-xmark"></i></a>
-                        <a>Workaday <i class="fa-solid fa-xmark"></i></a>
-                        <a>Evergreen <i class="fa-solid fa-xmark"></i></a>
-                        <a>RAW <i class="fa-solid fa-xmark"></i></a>
-                        <a>Polka Dots <i class="fa-solid fa-xmark"></i></a>
-                        <a>Retrospective <i class="fa-solid fa-xmark"></i></a>
-                        <a>Aunter <i class="fa-solid fa-xmark"></i></a>
-                        <a>Monoguso <i class="fa-solid fa-xmark"></i></a>
-                        <a>Ruler <i class="fa-solid fa-xmark"></i></a>
-                        <a>Flannel <i class="fa-solid fa-xmark"></i></a>
-                        <a>Class E <i class="fa-solid fa-xmark"></i></a>
-                        <a>Love+ <i class="fa-solid fa-xmark"></i></a>
-                        <a>OG <i class="fa-solid fa-xmark"></i></a>
-                        <a>ALL Suede <i class="fa-solid fa-xmark"></i></a>
-                        <a>Corluray <i class="fa-solid fa-xmark"></i></a>
-                        <a>Mister <i class="fa-solid fa-xmark"></i></a>
-                        <a>Simple Life <i class="fa-solid fa-xmark"></i></a>
-                        <a>Mono Black <i class="fa-solid fa-xmark"></i></a>
-                        <a>Hook n'Loop <i class="fa-solid fa-xmark"></i></a>
-                        <a>Bumper Gum <i class="fa-solid fa-xmark"></i></a>
-                    </div>
-                </div>
+                
                 <div class="product-choice">
                     <h3 class="active toggle-btn">MATERIAL <i class="fa-solid fa-chevron-up"></i></h3>
                     <div class="choice-list show">
@@ -380,7 +345,7 @@
                 <div class="product-item">
                     <div class="img-sale">
                         <h3 class="label-sale">SALE OFF</h3>
-                        <a><img src="img/Rectangle_16.jpg"></a>
+                        <a><img src="img/SP001_1.jpg"></a>
                         <div class="div-hover-buy">
                             <h3 class="hover-buy">BUY</h3>
                         </div>
@@ -396,7 +361,7 @@
                 <div class="product-item">
                     <div class="img-sale">
                         <h3 class="label-sale">SALE OFF</h3>
-                        <a><img src="img/Rectangle_16.jpg"></a>
+                        <a><img src="img/SP001_1.jpg"></a>
                         <div class="div-hover-buy">
                             <h3 class="hover-buy">BUY</h3>
                         </div>
@@ -412,7 +377,7 @@
                 <div class="product-item">
                     <div class="img-sale">
                         <h3 class="label-sale">SALE OFF</h3>
-                        <a><img src="img/Rectangle_16.jpg"></a>
+                        <a><img src="img/SP001_1.jpg"></a>
                         <div class="div-hover-buy">
                             <h3 class="hover-buy">BUY</h3>
                         </div>
@@ -428,7 +393,7 @@
                 <div class="product-item">
                     <div class="img-sale">
                         <h3 class="label-sale">SALE OFF</h3>
-                        <a><img src="img/Rectangle_16.jpg"></a>
+                        <a><img src="img/SP001_1.jpg"></a>
                         <div class="div-hover-buy">
                             <h3 class="hover-buy">BUY</h3>
                         </div>
@@ -444,7 +409,7 @@
                 <div class="product-item">
                     <div class="img-sale">
                         <h3 class="label-sale">SALE OFF</h3>
-                        <a><img src="img/Rectangle_16.jpg"></a>
+                        <a><img src="img/SP001_1.jpg"></a>
                         <div class="div-hover-buy">
                             <h3 class="hover-buy">BUY</h3>
                         </div>

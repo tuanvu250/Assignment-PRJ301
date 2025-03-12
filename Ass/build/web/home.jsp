@@ -72,7 +72,7 @@
             }
             
             .container h3:hover{
-                color: #C63F3E
+                color: #C63F3E;
             }
         </style>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

@@ -45,7 +45,7 @@
                 flex-direction: column;
                 margin: 80px 0;
                 align-items: center;
-                gap: 20px
+                gap: 20px;
             }
             .login-sign {
                 font-size: 16px;
