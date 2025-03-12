@@ -4,6 +4,8 @@
     Author     : ADMIN
 --%>
 
+<%@page import="utils.AuthUtils"%>
+<%@page import="dto.UserDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,6 +20,10 @@
                 outline: none;
                 border: none;
                 list-style-type: none;
+            }
+
+            body {
+                background-color: #EAE4DA;
             }
 
             *{
@@ -104,14 +110,84 @@
         <%@include file = "header.jsp" %>
         <div class="signup">
             <h2>REGISTER</h2>
-            <form class="signup-form" action="MainController" method="post">
+            <%
+                UserDTO newUser = new UserDTO();
+                try {
+                    newUser = (UserDTO) request.getAttribute("newUser");
+                } catch (Exception e) {
+                    newUser = new UserDTO();
+                }
+                if (newUser == null) {
+                    newUser = new UserDTO();
+                }
+                String errorUsername = request.getAttribute("errorMessUsername") + "";
+                errorUsername = errorUsername.equals("null") ? "" : errorUsername;
+                String errorPassword = request.getAttribute("errorMessPassword") + "";
+                errorPassword = errorPassword.equals("null") ? "" : errorPassword;
+                String errorCfPassword = request.getAttribute("errorMessCfPassword") + "";
+                errorCfPassword = errorCfPassword.equals("null") ? "" : errorCfPassword;
+                String errorFullname = request.getAttribute("errorMessFullname") + "";
+                errorFullname = errorFullname.equals("null") ? "" : errorFullname;
+                String errorEmail = request.getAttribute("errorMessEmail") + "";
+                errorEmail = errorEmail.equals("null") ? "" : errorEmail;
+                String errorPhone = request.getAttribute("errorMessPhone") + "";
+                errorPhone = errorPhone.equals("null") ? "" : errorPhone;
+            %>
+            <form class="signup-form" action="UserController" method="post">
                 <input type="hidden" name="action" value="register">
-                <input class="signup-input" type="text" placeholder="Enter username" name="registerUSName"/>
-                <input class="signup-input"type="password" placeholder="Enter password" name="registerPassword"/>
-                <input class="signup-input"type="password" placeholder="Confirm password" name="registerCFPassword"/>
-                <input class="signup-input" type="text" placeholder="Enter fullname" name="registerFullName"/>
-                <input class="signup-input" type="text" placeholder="Enter email" name="registerEmail"/>
-                <input class="signup-input" type="tel" placeholder="Enter phone number" name="registerPhone"/>
+                <input class="signup-input" type="text" placeholder="Enter username" name="regUsername" value="<%=newUser.getUser_name()%>"/> 
+                <%
+                    if (!errorUsername.isEmpty()) {
+                %>
+                <div style="color: red"><%=errorUsername%></div>
+                <%
+                    }
+                %>
+
+                <input class="signup-input"type="password" placeholder="Enter password" name="regPassword"/>
+                <%
+                    if (!errorPassword.isEmpty()) {
+                %>
+                <div style="color: red"><%=errorPassword%></div>
+                <%
+                    }
+                %>
+                <input class="signup-input"type="password" placeholder="Confirm password" name="regCfPassword"/>
+
+                <%
+                    if (!errorCfPassword.isEmpty()) {
+                %>
+                <div style="color: red"><%=errorCfPassword%></div>
+                <%
+                    }
+                %>
+                <input class="signup-input" type="text" placeholder="Enter fullname" name="regFullname" value="<%=newUser.getFull_name()%>"/>
+
+                <%
+                    if (!errorFullname.isEmpty()) {
+                %>
+                <div style="color: red"><%=errorFullname%></div>
+                <%
+                    }
+                %>
+                <input class="signup-input" type="email" placeholder="Enter email" name="regEmail" value="<%=newUser.getEmail()%>"/>
+                <%
+                    if (!errorEmail.isEmpty()) {
+                %>
+                <div style="color: red"><%=errorEmail%></div>
+                <%
+                    }
+                %>
+
+                <input class="signup-input" type="tel" placeholder="Enter phone number" name="regPhone" value="<%=newUser.getPhone_number()%>"/>
+
+                <%
+                    if (!errorPhone.isEmpty()) {
+                %>
+                <div style="color: red"><%=errorPhone%></div>
+                <%
+                    }
+                %>
                 <button class="signup-btn">
                     SIGN UP
                 </button>

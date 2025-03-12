@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 public class DBUtils {
 
-    private static final String DB_Name = "assignment_PRJ";
+    private static final String DB_Name = "Assignment_PRJ1";
     private static final String DB_Username = "sa";
     private static final String DB_Password = "12345";
 
