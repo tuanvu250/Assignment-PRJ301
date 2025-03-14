@@ -1,6 +1,7 @@
 package utils;
 
 import dao.UserDAO;
+import dto.ShoesProductDTO;
 import dto.UserDTO;
 import javax.servlet.http.HttpSession;
 
@@ -19,5 +20,15 @@ public class AuthUtils {
     public static boolean isLoggedIn(HttpSession session) {
         return session.getAttribute("currentUser") != null;
     }
+    
+    public static boolean isSale(ShoesProductDTO shoes) {
+        return shoes.getStatus().equals("Sale");
+    }
+    
+    public static boolean isSoldout(ShoesProductDTO shoes) {
+        return shoes.getStatus().equals("Soldout");
+    }
+    
+
     
 }

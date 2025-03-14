@@ -4,6 +4,18 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dto.ProductStyleDTO"%>
+<%@page import="dao.ProductStyleDAO"%>
+<%@page import="utils.AuthUtils"%>
+<%@page import="utils.DBUtils"%>
+<%@page import="dto.ShoesProductDTO"%>
+<%@page import="dto.ProductColorDTO"%>
+<%@page import="dao.ProductColorDAO"%>
+<%@page import="dto.ProductMaterialDTO"%>
+<%@page import="dao.ProductMaterialDAO"%>
+<%@page import="dao.ProductLineDAO"%>
+<%@page import="java.util.List"%>
+<%@page import="dto.ProductLineDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -37,6 +49,9 @@
                 color: #C63F3E;
             }
 
+            .product-list a{
+                color: #1d1d1b;
+            }
 
             .product {
                 padding: 5vw;
@@ -58,8 +73,10 @@
                 flex-direction: column;
                 gap: 4px;
                 width: 28%;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                padding-bottom: 10px;
             }
-            
+
             .product-item img {
                 width: 100%;
             }
@@ -90,6 +107,7 @@
             .product-gender a {
                 border-right: 3px solid #1d1d1b;
                 padding-right: 10px;
+                color: #1d1d1b;
             }
 
             .product-gender a:last-child{
@@ -122,23 +140,24 @@
                 flex-direction: column;
                 gap: 16px;
                 margin-left: 40px;
-                transition: 300ms ease-in-out;
+                transition: 0.5s;
             }
 
             .choice-list-color {
+                max-width: 20vw;
                 display: flex;
                 flex-wrap: wrap;
                 gap: 8px;
                 overflow: hidden;
                 max-height: 0;
-                /*                transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;*/
+                transition: 0.5s;
             }
 
             .choice-list-color a {
                 display: inline-block;
                 height: 30px;
                 width: 30px;
-                background-color: red;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             }
 
             .choice-list-color div {
@@ -203,10 +222,11 @@
 
             .label-sale {
                 position: absolute;
-                top: 40px;
+                top: 5%;
                 padding: 4px 8px;
                 background-color: #1d1d1b;
                 color: #FFF;
+                z-index: 500;
             }
 
             .love-list {
@@ -243,6 +263,10 @@
             .img-sale:hover .hover-buy {
                 opacity: 1;
             }
+            
+            .img-sale:hover .hidden-img {
+                opacity: 1;
+            }
 
             .product-name {
                 font-size: 18px;
@@ -253,6 +277,15 @@
             .product-name:hover {
                 color: #C63F3E;
             }
+            
+            .hidden-img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                opacity: 0;
+            }
+            
+            
         </style>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Product Page</title>
@@ -262,205 +295,165 @@
         <div class="product">
             <div class="product-list">
                 <div class="product-gender">
-                    <a>ALL</a>
-                    <a>MALE</a>
-                    <a>FEMALE</a>
+                    <a href="" 
+                       data-filter="gender" data-value="">ALL</a> 
+                    <a href=""
+                       data-filter="gender" data-value="Male">MALE</a>
+                    <a href=""
+                       data-filter="gender" data-value="Female">FEMALE</a>
                 </div>
                 <div class="product-choice">    
                     <h3 class="active toggle-btn">STATUS <i class="fa-solid fa-chevron-up"></i></h3>
                     <div class="choice-list show">
-                        <a>Sale off <i class="fa-solid fa-xmark hidden"></i></a>
-                        <a>Pre-order <i class="fa-solid fa-xmark hidden"></i></a>
+                        <a  data-filter="status" data-value="Sale">Sale off <i class="fa-solid fa-xmark hidden"></i></a>
+                        <a data-filter="status" data-value="Soldout">Pre-order <i class="fa-solid fa-xmark hidden"></i></a>
                     </div>
                 </div>
                 <div class="product-choice">
                     <h3 class="active toggle-btn">STYLE <i class="fa-solid fa-chevron-up"></i></h3>
                     <div class="choice-list show">
-                        <a>Low Top <i class="fa-solid fa-xmark"></i></a>
-                        <a>High Top <i class="fa-solid fa-xmark"></i></a>
-                        <a>Slip-on <i class="fa-solid fa-xmark"></i></a>
-                        <a>Mid Top <i class="fa-solid fa-xmark"></i></a>
-                        <a>Mule <i class="fa-solid fa-xmark"></i></a>
+                        <%
+                            ProductStyleDAO styDAO = new ProductStyleDAO();
+                            List<ProductStyleDTO> listProductSty = styDAO.readAll();
+                            for (ProductStyleDTO sty : listProductSty) {
+                        %>
+                        <a data-filter="style" data-value="<%=sty.getStyle_id()%>"><%=sty.getStyle_name()%> <i class="fa-solid fa-xmark"></i></a>
+                            <%}%>
                     </div>
                 </div>
                 <div class="product-choice">
                     <h3 class="active toggle-btn">PRODUCT LINE <i class="fa-solid fa-chevron-up"></i></h3>
                     <div class="choice-list show">
-                        <a>Basas <i class="fa-solid fa-xmark"></i></a>
-                        <a>Vintas <i class="fa-solid fa-xmark"></i></a>
-                        <a>Urbas <i class="fa-solid fa-xmark"></i></a>
-                        <a>Pattas <i class="fa-solid fa-xmark"></i></a>
-                        <a>Track 6 <i class="fa-solid fa-xmark"></i></a>
+                        <%
+                            ProductLineDAO lineDAO = new ProductLineDAO();
+                            List<ProductLineDTO> listProductLine = lineDAO.readAll();
+                            for (ProductLineDTO line : listProductLine) {
+                        %>
+                        <a data-filter="productLine" data-value="<%=line.getLine_id()%>"><%=line.getLine_name()%> <i class="fa-solid fa-xmark"></i></a>
+                            <%}%>
                     </div>
                 </div>
                 <div class="product-choice">
                     <h3 class="active toggle-btn">PRICE <i class="fa-solid fa-chevron-up"></i></h3>
                     <div class="choice-list show">
-                        <a>> 600k VND <i class="fa-solid fa-xmark"></i></a>
-                        <a>500k - 599k VND <i class="fa-solid fa-xmark"></i></a>
-                        <a>400k - 499k VND <i class="fa-solid fa-xmark"></i></a>
-                        <a>300k - 399k VND <i class="fa-solid fa-xmark"></i></a>
-                        <a>200k - 299k VND <i class="fa-solid fa-xmark"></i></a>
-                        <a>< 200k VND <i class="fa-solid fa-xmark"></i></a>
-                    </div>
-                </div>
-                <div class="product-choice">
-                    <h3 class="active toggle-btn">COLLECTION <i class="fa-solid fa-chevron-up"></i></h3>
-                    <div class="choice-list show">
-                        <a>Denim <i class="fa-solid fa-xmark"></i></a>
-                        <a>Day Slide <i class="fa-solid fa-xmark"></i></a>
-                        <a>Public 2000s <i class="fa-solid fa-xmark"></i></a>
-                        <a>Vivu <i class="fa-solid fa-xmark"></i></a>
-                        <a>Nauda <i class="fa-solid fa-xmark"></i></a>
-                        <a>Tomo <i class="fa-solid fa-xmark"></i></a>
-                        <a>2.Blues <i class="fa-solid fa-xmark"></i></a>
-                        <a>Jazico <i class="fa-solid fa-xmark"></i></a>
-                        <a>I.S.E.E <i class="fa-solid fa-xmark"></i></a>
-                        <a>Soda Pop <i class="fa-solid fa-xmark"></i></a>
-                        <a>LandFforms <i class="fa-solid fa-xmark"></i></a>
-                        <a>SC <i class="fa-solid fa-xmark"></i></a>
-                        <a>Workaday <i class="fa-solid fa-xmark"></i></a>
-                        <a>Evergreen <i class="fa-solid fa-xmark"></i></a>
-                        <a>RAW <i class="fa-solid fa-xmark"></i></a>
-                        <a>Polka Dots <i class="fa-solid fa-xmark"></i></a>
-                        <a>Retrospective <i class="fa-solid fa-xmark"></i></a>
-                        <a>Aunter <i class="fa-solid fa-xmark"></i></a>
-                        <a>Monoguso <i class="fa-solid fa-xmark"></i></a>
-                        <a>Ruler <i class="fa-solid fa-xmark"></i></a>
-                        <a>Flannel <i class="fa-solid fa-xmark"></i></a>
-                        <a>Class E <i class="fa-solid fa-xmark"></i></a>
-                        <a>Love+ <i class="fa-solid fa-xmark"></i></a>
-                        <a>OG <i class="fa-solid fa-xmark"></i></a>
-                        <a>ALL Suede <i class="fa-solid fa-xmark"></i></a>
-                        <a>Corluray <i class="fa-solid fa-xmark"></i></a>
-                        <a>Mister <i class="fa-solid fa-xmark"></i></a>
-                        <a>Simple Life <i class="fa-solid fa-xmark"></i></a>
-                        <a>Mono Black <i class="fa-solid fa-xmark"></i></a>
-                        <a>Hook n'Loop <i class="fa-solid fa-xmark"></i></a>
-                        <a>Bumper Gum <i class="fa-solid fa-xmark"></i></a>
+                        <a data-filter="price" data-value="600k">> 600k VND <i class="fa-solid fa-xmark"></i></a>
+                        <a data-filter="price" data-value="500k-599k">500k - 599k VND <i class="fa-solid fa-xmark"></i></a>
+                        <a data-filter="price" data-value="400k-499k">400k - 499k VND <i class="fa-solid fa-xmark"></i></a>
+                        <a data-filter="price" data-value="300k-399k">300k - 399k VND <i class="fa-solid fa-xmark"></i></a>
+                        <a data-filter="price" data-value="300k">< 300k VND <i class="fa-solid fa-xmark"></i></a>
                     </div>
                 </div>
                 <div class="product-choice">
                     <h3 class="active toggle-btn">MATERIAL <i class="fa-solid fa-chevron-up"></i></h3>
                     <div class="choice-list show">
-                        <a>Canvas <i class="fa-solid fa-xmark"></i></a>
-                        <a>Suede <i class="fa-solid fa-xmark"></i></a>
-                        <a>Leathe <i class="fa-solid fa-xmark"></i></a>
-                        <a>Cotton <i class="fa-solid fa-xmark"></i></a>
-                        <a>Denim <i class="fa-solid fa-xmark"></i></a>
-                        <a>Flannel <i class="fa-solid fa-xmark"></i></a>
-                        <a>Corduroy <i class="fa-solid fa-xmark"></i></a>
+                        <%
+                            ProductMaterialDAO matDAO = new ProductMaterialDAO();
+                            List<ProductMaterialDTO> listProductMat = matDAO.readAll();
+                            for (ProductMaterialDTO mat : listProductMat) {
+                        %>
+                        <a data-filter="material" data-value="<%=mat.getMat_id()%>"><%=mat.getMat_name()%> <i class="fa-solid fa-xmark"></i></a>
+                            <%}%>
                     </div>
                 </div>
                 <div class="product-choice">
                     <h3 class="active toggle-btn">COLOR <i class="fa-solid fa-chevron-up"></i></h3>
                     <div class="choice-list-color show">
+                        <%
+                            ProductColorDAO colDAO = new ProductColorDAO();
+                            List<ProductColorDTO> listProductColor = colDAO.readAll();
+                            for (ProductColorDTO color : listProductColor) {
+                        %>
                         <div>
-                            <a></a>
+                            <a data-filter="color" data-value="<%=color.getColor_id()%>" style="background-color: <%=color.getColor_code()%>"></a>
                         </div>
-                        <div>
-                            <a></a>
-                        </div>
-                        <div>
-                            <a></a>
-                        </div>
-                        <div>
-                            <a></a>
-                        </div>
-                        <div>
-                            <a></a>
-                        </div>
-                        <div>
-                            <a></a>
-                        </div>
+                        <%}%>
                     </div>
                 </div>
             </div>
             <div class="product-detail">
+                <%
+                    if (request.getAttribute("listShoesProduct") != null) {
+                        Exception e = (Exception) request.getAttribute("javax.servlet.error.exception");
+                        if (e != null) {
+                            e.printStackTrace(new java.io.PrintWriter(out));
+                        }
+                        List<ShoesProductDTO> listShoes = (List<ShoesProductDTO>) request.getAttribute("listShoesProduct");
+                        for (ShoesProductDTO shoes : listShoes) {
+                %>
                 <div class="product-item">
                     <div class="img-sale">
-                        <h3 class="label-sale">SALE OFF</h3>
-                        <a><img src="img/Rectangle_16.jpg"></a>
-                        <div class="div-hover-buy">
-                            <h3 class="hover-buy">BUY</h3>
+                        <% if (AuthUtils.isSale(shoes)) { %>
+                        <h3 class="label-sale">SALE OFF</h3> 
+                        <%} else if (AuthUtils.isSoldout(shoes)) {%>
+                        <h3 class="label-sale">SOLDOUT</h3>
+                        <%}%>
+                        <a>
+                            <img src="asset/<%=shoes.getShoes_id()%>_1.jpg">
+                            <img class="hidden-img" src="asset/<%=shoes.getShoes_id()%>_2.jpg">
+                        </a>
+                            <div class="div-hover-buy" <% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: rgba(0,0,0,0.3);"<%}%>>
+                            <h3 class="hover-buy"<% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: #1d1d1b; opacity: 1;"<%}%>>
+                                <% if (AuthUtils.isSoldout(shoes)) { %>PRE-ORDER<%} else {%>BUY<%}%>
+                            </h3>
                         </div>
                         <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
                     </div>
-                    <a href="#" class="product-name">Abc xyz</a>
+                    <a href="#" class="product-name"><%=shoes.getShoes_name()%></a>
                     <p>Color</p>
                     <div class="product-price">
-                        <p>XXX.XXXVND</p>
-                        <p class="sale-text">XXX.XXXVND</p>
+                        <p><%=shoes.getPrice()%> VND</p>
+                        <% if (AuthUtils.isSale(shoes)) { %>
+                        <p class="sale-text">XXX.XXX VND</p>
+                        <%}%>
                     </div>
                 </div>
-                <div class="product-item">
-                    <div class="img-sale">
-                        <h3 class="label-sale">SALE OFF</h3>
-                        <a><img src="img/Rectangle_16.jpg"></a>
-                        <div class="div-hover-buy">
-                            <h3 class="hover-buy">BUY</h3>
-                        </div>
-                        <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
-                    </div>
-                    <a href="#" class="product-name">Abc xyz</a>
-                    <p>Color</p>
-                    <div class="product-price">
-                        <p>XXX.XXXVND</p>
-                        <p class="sale-text">XXX.XXXVND</p>
-                    </div>
-                </div>
-                <div class="product-item">
-                    <div class="img-sale">
-                        <h3 class="label-sale">SALE OFF</h3>
-                        <a><img src="img/Rectangle_16.jpg"></a>
-                        <div class="div-hover-buy">
-                            <h3 class="hover-buy">BUY</h3>
-                        </div>
-                        <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
-                    </div>
-                    <a href="#" class="product-name">Abc xyz</a>
-                    <p>Color</p>
-                    <div class="product-price">
-                        <p>XXX.XXXVND</p>
-                        <p class="sale-text">XXX.XXXVND</p>
-                    </div>
-                </div>
-                <div class="product-item">
-                    <div class="img-sale">
-                        <h3 class="label-sale">SALE OFF</h3>
-                        <a><img src="img/Rectangle_16.jpg"></a>
-                        <div class="div-hover-buy">
-                            <h3 class="hover-buy">BUY</h3>
-                        </div>
-                        <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
-                    </div>
-                    <a href="#" class="product-name">Abc xyz</a>
-                    <p>Color</p>
-                    <div class="product-price">
-                        <p>XXX.XXXVND</p>
-                        <p class="sale-text">XXX.XXXVND</p>
-                    </div>
-                </div>
-                <div class="product-item">
-                    <div class="img-sale">
-                        <h3 class="label-sale">SALE OFF</h3>
-                        <a><img src="img/Rectangle_16.jpg"></a>
-                        <div class="div-hover-buy">
-                            <h3 class="hover-buy">BUY</h3>
-                        </div>
-                        <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
-                    </div>
-                    <a href="#" class="product-name">Abc xyz</a>
-                    <p>Color</p>
-                    <div class="product-price">
-                        <p>XXX.XXXVND</p>
-                        <p class="sale-text">XXX.XXXVND</p>
-                    </div>
-                </div>
+                <%}
+                    }%>
             </div>
         </div>
         <%@include file = "footer.jsp" %>
         <script>
+            document.querySelectorAll(".product-gender a").forEach(link => {
+                link.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    let dataFilter = this.getAttribute("data-filter");
+                    let dataValue = this.getAttribute("data-value");
+                    updateFilter(dataFilter, dataValue);
+                });
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+                let url = new URL(window.location.href);
+                let params = new URLSearchParams(url.search);
+
+                document.querySelectorAll(".product-gender a").forEach(link => {
+                    let dataFilter = link.getAttribute("data-filter");
+                    let dataValue = link.getAttribute("data-value");
+
+                    if (params.get(dataFilter) === dataValue) {
+                        link.classList.add("active");
+                    }
+                });
+                
+                document.querySelectorAll(".choice-list a").forEach(link => {
+                    let dataFilter = link.getAttribute("data-filter");
+                    let dataValue = link.getAttribute("data-value");
+
+                    if (params.get(dataFilter) === dataValue) {
+                        link.classList.add("active");
+                    }
+                });
+                
+                document.querySelectorAll(".choice-list-color a").forEach(link => {
+                    let dataFilter = link.getAttribute("data-filter");
+                    let dataValue = link.getAttribute("data-value");
+
+                    if (params.get(dataFilter) === dataValue) {
+                        link.parentElement.classList.add("active");
+                    }
+                });
+            });
+
             document.querySelectorAll(".toggle-btn").forEach(button => {
                 button.addEventListener("click", function () {
                     let parent = this.closest(".product-choice"); // Tìm div cha gần nhất
@@ -513,23 +506,21 @@
                 });
             });
 
-            document.querySelectorAll(".product-gender a").forEach(link => {
-                link.addEventListener("click", function () {
-                    document.querySelectorAll(".product-gender a").forEach(item => item.classList.remove("active"));
-
-                    this.classList.add("active");
-                });
-            });
-
             document.querySelectorAll(".choice-list a").forEach(link => {
-                link.addEventListener("click", function () {
-                    this.classList.toggle("active");
+                link.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    let dataFilter = this.getAttribute("data-filter");
+                    let dataValue = this.getAttribute("data-value");
+                    updateFilter(dataFilter, dataValue);
                 });
             });
 
-            document.querySelectorAll(".choice-list-color div").forEach(link => {
+            document.querySelectorAll(".choice-list-color a").forEach(link => {
                 link.addEventListener("click", function () {
-                    this.classList.toggle("active");
+                    event.preventDefault();
+                    let dataFilter = this.getAttribute("data-filter");
+                    let dataValue = this.getAttribute("data-value");
+                    updateFilter(dataFilter, dataValue);
                 });
             });
         </script>

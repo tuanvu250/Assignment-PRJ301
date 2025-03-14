@@ -116,6 +116,7 @@
             .nav-search-form {
                 display: flex;
                 gap: 0.5rem;
+                width: 100%;
             }
 
             .nav-search input::placeholder {
@@ -191,7 +192,7 @@
                     </a>
                 </div>
                 <div class="nav-menu">
-                    <a href="product.jsp" class="nav-product">Product</a>
+                    <a onclick="updateFilter('gender', '')" class="nav-product">Product</a>
                     <a href="about.jsp
                        " class="nav-about">About us</a>
                 </div>
@@ -216,4 +217,22 @@
             </div>
         </div>
     </header>
+    <script>
+        function updateFilter(param, value) {
+            let newController = "/Project_Final_Dux/searchFilter"; // Controller mới
+            let url = new URL(window.location.href);
+            let params = new URLSearchParams(url.search); // Lấy các tham số hiện có
+
+            // Nếu tham số đã tồn tại với giá trị đúng => Xóa (bỏ lọc)
+            if (params.get(param) === value) {
+                params.delete(param);
+            } else {
+                params.set(param, value);
+            }
+
+            // Cập nhật URL với Controller mới + các tham số đã lọc
+            window.location.href = url.origin + newController + "?" + params.toString();
+        }
+
+    </script>
 </html>

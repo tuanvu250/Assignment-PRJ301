@@ -97,15 +97,15 @@
         <h1>CATEGORY</h1>
 
         <div class="container">
-            <a class="contain-left" href="">
+            <a  class="contain-left" onclick="updateFilter('status', 'Sale')">
                 <img src="img/Rectangle_5.png">
                 <h3>SALE OFF</h3>
             </a>
-            <a class="contain-mid">
+            <a  class="contain-mid" onclick="updateFilter('gender', 'Male')">
                 <img src="img/Rectangle_5.png">
                 <h3>MALE</h3>
             </a>
-            <a class="contain-right">
+            <a  class="contain-right" onclick="updateFilter('gender', 'Female')">
                 <img src="img/Rectangle_5.png">
                 <h3>FEMALE</h3>
             </a>
