@@ -1,9 +1,3 @@
-<%-- 
-    Document   : register
-    Created on : Mar 3, 2025, 3:01:09 PM
-    Author     : ADMIN
---%>
-
 <%@page import="utils.AuthUtils"%>
 <%@page import="dto.UserDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -41,21 +35,21 @@
                 String errorPhone = request.getAttribute("errorMessPhone") + "";
                 errorPhone = errorPhone.equals("null") ? "" : errorPhone;
             %>
-            <form class="signup-form" action="UserController" method="post">
+            <form class="signup-form" action="<%= request.getContextPath()%>/UserController" method="post">
                 <input type="hidden" name="action" value="register">
                 <input class="signup-input" type="text" placeholder="Enter username" name="regUsername" value="<%=newUser.getUser_name()%>"/> 
                 <%
                     if (!errorUsername.isEmpty()) {
                 %>
-                <div style="color: red"><%=errorUsername%></div>
-                <%
-                    }
-                %>
+                <p style="color: red"><%=errorUsername%><p>
+                    <%
+                        }
+                    %>
 
-                <input class="signup-input"type="password" placeholder="Enter password" name="regPassword"/>
-                <%
-                    if (!errorPassword.isEmpty()) {
-                %>
+                    <input class="signup-input"type="password" placeholder="Enter password" name="regPassword"/>
+                    <%
+                        if (!errorPassword.isEmpty()) {
+                    %>
                 <div style="color: red"><%=errorPassword%></div>
                 <%
                     }
@@ -106,12 +100,20 @@
                 <div class="signup-linee"></div>
             </div>
 
-            <div class="signup-end">    
+            <div class="signup-end">
                 Already have an account?
                 <a href="login.jsp" >Sign in</a>
             </div>
-
-        </div>
+            <%
+                String errorRegister = request.getAttribute("errorRegister") + "";
+                errorRegister = errorRegister.equals("null") ? "" : errorRegister;
+                if (!errorRegister.isEmpty()) {
+            %>
+            <div style="color: red"> <%=errorRegister%><div>
+                    <%
+                        }
+                    %>
+                </div>
                 <%@include file="../includes/footer.jsp" %>
-    </body>
-</html>
+                </body>
+                </html>

@@ -1,3 +1,4 @@
+<%@page import="utils.AuthUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -71,15 +72,15 @@
                         </a>
                         <div class="user-dropdown">
                             <div class="user-avatar" id="userDropdownToggle">
-                                <!-- If user has profile image -->
-                                <!--                            <img src="img/avt-user-test.jpg" alt="User"> -->
-                                <!-- If no profile image -->
-                                <a href="<%= request.getContextPath()%>/user/login.jsp"><i class="fas fa-user"></i></a>
+                                <%
+                                    if (AuthUtils.isLoggedIn(session)) {
+                                %> <img src="<%= request.getContextPath()%>/assets/img/img-users/avt-user-test.jpg" alt="User"> <% } else {
+                                %><a href="<%= request.getContextPath()%>/user/login.jsp"><i class="fas fa-user"></i></a><%}%>
                             </div>
                             <div class="user-dropdown-content" id="userDropdownMenu">
                                 <a href="<%= request.getContextPath()%>/user/profile.jsp"><i class="fas fa-user-circle"></i> My Profile</a>
                                 <div class="dropdown-divider"></div>
-                                <a href=""><i class="fas fa-sign-out-alt"></i> Logout</a>
+                                <a href="<%= request.getContextPath()%>/UserController?action=logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
                             </div>
                         </div>
                     </div>

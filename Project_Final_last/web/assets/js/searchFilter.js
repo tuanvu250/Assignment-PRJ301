@@ -1,5 +1,7 @@
 function updateFilter(param, value) {
-    let newController = "/Project_Final_last/searchFilter";
+    let contextPath = "/" + window.location.pathname.split("/")[1]; // Lấy contextPath động
+    let newController = contextPath + "/searchFilter"; 
+
     let url = new URL(window.location.href);
     let params = new URLSearchParams(url.search);
 

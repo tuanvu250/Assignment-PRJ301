@@ -135,46 +135,46 @@
             %>
             <form class="signup-form" action="UserController" method="post">
                 <input type="hidden" name="action" value="register">
-                <input class="signup-input" type="text" placeholder="Enter username" name="regUsername" value="<%=newUser.getUser_name()%>"/> 
+                <input class="signup-input" type="text" placeholder="Enter username" name="regUsername" value="<%=newUser.getUser_name()%>"/>  
                 <%
                     if (!errorUsername.isEmpty()) {
                 %>
-                <div style="color: red"><%=errorUsername%></div>
+                <div style="color: red"><%=errorUsername%></div> 
                 <%
                     }
                 %>
 
-                <input class="signup-input"type="password" placeholder="Enter password" name="regPassword"/>
+                <input class="signup-input"type="password" placeholder="Enter password" name="regPassword"/> 
                 <%
                     if (!errorPassword.isEmpty()) {
                 %>
-                <div style="color: red"><%=errorPassword%></div>
+                <div style="color: red"><%=errorPassword%></div> 
                 <%
                     }
                 %>
-                <input class="signup-input"type="password" placeholder="Confirm password" name="regCfPassword"/>
+                <input class="signup-input"type="password" placeholder="Confirm password" name="regCfPassword"/> 
 
                 <%
                     if (!errorCfPassword.isEmpty()) {
                 %>
-                <div style="color: red"><%=errorCfPassword%></div>
+                <div style="color: red"><%=errorCfPassword%></div> 
                 <%
                     }
                 %>
-                <input class="signup-input" type="text" placeholder="Enter fullname" name="regFullname" value="<%=newUser.getFull_name()%>"/>
+                <input class="signup-input" type="text" placeholder="Enter fullname" name="regFullname" value="<%=newUser.getFull_name()%>"/> 
 
                 <%
                     if (!errorFullname.isEmpty()) {
                 %>
-                <div style="color: red"><%=errorFullname%></div>
+                <div style="color: red"><%=errorFullname%></div> 
                 <%
                     }
                 %>
-                <input class="signup-input" type="email" placeholder="Enter email" name="regEmail" value="<%=newUser.getEmail()%>"/>
+                <input class="signup-input" type="email" placeholder="Enter email" name="regEmail" value="<%=newUser.getEmail()%>"/> 
                 <%
                     if (!errorEmail.isEmpty()) {
                 %>
-                <div style="color: red"><%=errorEmail%></div>
+                <div style="color: red"><%=errorEmail%></div> 
                 <%
                     }
                 %>
@@ -184,7 +184,7 @@
                 <%
                     if (!errorPhone.isEmpty()) {
                 %>
-                <div style="color: red"><%=errorPhone%></div>
+                <div style="color: red"><%=errorPhone%></div> 
                 <%
                     }
                 %>

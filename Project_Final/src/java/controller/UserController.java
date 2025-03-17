@@ -12,10 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.eclipse.jdt.internal.compiler.batch.Main.Logger;
 import services.VerifyRegister;
 import utils.AuthUtils;
-import utils.DBUtils;
 import utils.EmailUtils;
 import utils.PasswordUtils;
 
@@ -98,7 +96,7 @@ public class UserController extends HttpServlet {
             }
             if (!VerifyRegister.verifyPhoneNumber(phone)) {
                 checkRegister = false;
-                request.setAttribute("errorMessUsername", "Invalid phone number. Please enter a valid one!");
+                request.setAttribute("errorMessPhone", "Invalid phone number. Please enter a valid one!");
             }
 
             String token = UUID.randomUUID().toString();
@@ -106,7 +104,7 @@ public class UserController extends HttpServlet {
             UserDTO newUser = new UserDTO(fullname, username, password, email, phone, 3, "ACTIVE", token);
             UserDTO existUser = userDao.readByUsName(newUser.getUser_name());
             if (existUser != null) {
-                request.setAttribute("error", "User ID already exists. Please choose another one.");
+                request.setAttribute("errorMessUsername", "User ID already exists. Please choose another one.");
                 checkRegister = false;
             }
             UserDTO existEmail = userDao.readByEmail(email);
