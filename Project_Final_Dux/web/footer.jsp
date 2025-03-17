@@ -26,18 +26,16 @@
                 cursor: default;
             }
 
-            input:hover {
-                cursor: text;
+            input:hover, button:hover {
+                cursor: pointer;
             }
 
             .footer a {
                 color: #FFF;
+                transition: color 0.3s ease;
             }
 
-
-
             footer {
-                height: 400px;
                 width: 100%;
                 background-color: #C63F3E;
                 position: relative;
@@ -46,37 +44,74 @@
 
             .footer {
                 display: flex;
-                align-items: start;
-                justify-content: space-evenly;
+                align-items: flex-start;
+                justify-content: space-between;
                 color: #FFF;
-                padding-top: 80px;
-                padding-bottom: 80px;
+                padding: 80px 0;
                 margin: 0 10%;
                 border-bottom: solid #EAE4DA 1px;
             }
 
-            .foot-left p {
+            @media (max-width: 992px) {
+                .footer {
+                    flex-direction: column;
+                    gap: 40px;
+                    padding: 40px 0;
+                }
+            }
+
+            .foot-left {
+                flex: 1;
                 max-width: 400px;
-                margin-top: 16px;
-                margin-bottom: 16px;
+            }
+
+            .foot-left p {
+                margin: 16px 0;
+                line-height: 1.6;
             }
 
             .foot-left div {
-                gap: 16px
+                display: flex;
+                gap: 16px;
             }
 
             .foot-mid {
-                margin-right: 100px;
+                flex: 1;
+                margin-right: 40px;
+            }
+
+            @media (max-width: 992px) {
+                .foot-mid {
+                    margin-right: 0;
+                }
             }
 
             .social-ic i {
                 color: #EAE4DA;
                 font-size: 30px;
                 margin-right: 16px;
+                transition: transform 0.3s ease, color 0.3s ease;
             }
 
-            .foot-mid li,h2 {
+            .social-ic i:hover {
+                transform: translateY(-3px);
+                color: #fbe385;
+                cursor: pointer;
+            }
+
+            .foot-mid li, h2 {
                 margin-bottom: 8px;
+            }
+
+            .foot-mid li {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: transform 0.3s ease;
+            }
+
+            .foot-mid li:hover {
+                transform: translateX(5px);
             }
 
             .foot-mid i {
@@ -86,20 +121,35 @@
             .foot-contact {
                 display: flex;
                 flex-direction: column;
-            }
-
-            .foot-contact {
                 margin: 12px 0;
             }
 
             .foot-contact a {
                 margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .foot-contact a:hover {
+                transform: translateX(5px);
             }
 
             .Email {
-                padding: 8px 12px;
+                padding: 12px;
                 margin-bottom: 16px;
-                border-bottom: solid #EAE4DA 5px;
+                border-bottom: solid #EAE4DA 3px;
+                background-color: rgba(255, 255, 255, 0.1);
+                color: #FFF;
+                transition: background-color 0.3s ease;
+            }
+
+            .Email::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            .Email:focus {
+                background-color: rgba(255, 255, 255, 0.2);
             }
 
             .foot-right form {
@@ -107,19 +157,43 @@
                 flex-direction: column;
                 gap: 2px;
             }
-            
+
             .btn-submit {
                 padding: 12px 24px;
                 background-color: #1d1d1b;
                 color: #FFF;
+                font-weight: bold;
+                transition: background-color 0.3s ease;
+            }
+
+            .btn-submit:hover {
+                background-color: #333;
+                cursor: pointer;
             }
 
             .footer a:hover {
                 color: #fbe385;
+                cursor: pointer;
             }
-            
+
+            .foot-right {
+                flex: 1;
+            }
+
             .foot-right input {
-                width: 250px;
+                width: 100%;
+                max-width: 250px;
+            }
+
+            @media (max-width: 768px) {
+                .footer {
+                    margin: 0 5%;
+                }
+
+                .foot-left, .foot-mid, .foot-right {
+                    width: 100%;
+                    max-width: 100%;
+                }
             }
         </style>
         <meta charset="UTF-8">

@@ -24,17 +24,23 @@
                 background-color: #EAE4DA;
             }
 
-            *{
+            * {
                 user-select: none;
                 cursor: default;
             }
 
-            input:hover {
-                cursor:text;
+            input:hover, select:hover {
+                cursor: pointer;
             }
 
             .favourite {
                 margin: 80px;
+            }
+
+            @media (max-width: 992px) {
+                .favourite {
+                    margin: 40px 20px;
+                }
             }
 
             .favourite h1 {
@@ -55,6 +61,34 @@
                 padding: 30px 80px;
             }
 
+            @media (max-width: 1200px) {
+                .favourite-item {
+                    padding: 30px 40px;
+                }
+            }
+
+            @media (max-width: 992px) {
+                .favourite-item {
+                    padding: 30px 20px;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .favourite-item {
+                    flex-direction: column;
+                    text-align: center;
+                    padding: 20px 10px;
+                }
+
+                .favourite-info {
+                    align-items: center;
+                }
+
+                .favourite-btn {
+                    flex-direction: row;
+                }
+            }
+
             .favourite-info {
                 display: flex;
                 flex-direction: column;
@@ -70,13 +104,20 @@
 
             .sale-price {
                 text-decoration: line-through;
-                color: graytext;
+                color: #888;
             }
 
             .favourite-choice {
                 display: flex;
                 gap: 20px;
                 align-items: flex-end;
+                flex-wrap: wrap;
+            }
+
+            @media (max-width: 768px) {
+                .favourite-choice {
+                    justify-content: center;
+                }
             }
 
             .favourite-color {
@@ -84,11 +125,17 @@
                 gap: 8px;
             }
 
-            .favourite-color a{
+            .favourite-color a {
                 display: inline-block;
                 height: 30px;
                 width: 30px;
                 background-color: red;  
+                border-radius: 50%;
+                transition: transform 0.2s ease;
+            }
+
+            .favourite-color a:hover {
+                transform: scale(1.1);
             }
 
             .favourite-color div {
@@ -97,9 +144,10 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                transition: all 0.2s ease;
             }
 
-            .favourite-size{
+            .favourite-size {
                 display: flex;
                 flex-direction: column;
                 gap: 4px;
@@ -110,6 +158,9 @@
                 width: 80px;
                 height: 40px;
                 text-align: center;
+                border: 1px solid #1d1d1b;
+                background-color: #fff;
+                border-radius: 4px;
             }
 
             .favourite-btn {
@@ -123,6 +174,18 @@
                 padding: 16px 32px;
                 font-size: 18px;
                 width: 10vw;
+                min-width: 120px;
+                border-radius: 4px;
+                transition: all 0.3s ease;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            @media (max-width: 992px) {
+                .favourite-btn a {
+                    width: 150px;
+                }
             }
 
             .favourite-cart {
@@ -140,10 +203,12 @@
                 font-size: 18px;
                 color: #1d1d1b;
                 font-weight: 600;
+                transition: color 0.3s ease;
             }
 
             .favourite-name:hover {
                 color: #C63F3E;
+                cursor: pointer;
             }
 
             .favourite-item {
@@ -160,32 +225,47 @@
 
             .favourite-btn a:hover {
                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                cursor: pointer;
+                transform: translateY(-2px);
             }
-            
+
             .favourite-footer {
                 margin-top: 40px;
                 display: flex;
                 justify-content: space-between;
                 text-align: center;
             }
-            
-            .favourite-footer a{
+
+            .favourite-footer a {
                 width: 10vw;
+                min-width: 120px;
                 color: #EAE4DA;
                 background-color: #1d1d1b;
                 padding: 16px 0;
+                border-radius: 4px;
+                transition: background-color 0.3s ease, transform 0.2s ease;
             }
-            
-            .favourite-footer a:hover{
+
+            @media (max-width: 768px) {
+                .favourite-footer a {
+                    width: 45%;
+                }
+            }
+
+            .favourite-footer a:hover {
                 background-color: #C63F3E;
+                cursor: pointer;
+                transform: translateY(-2px);
             }
-            
+
             .favourite-cart.added {
                 background-color: #C63F3E;
+                color: #FFF;
             }
-            
+
             .favourite-color div.added {
                 border: solid 2px #1d1d1b;
+                border-radius: 50%;
             }
         </style>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
