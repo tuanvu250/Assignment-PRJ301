@@ -34,7 +34,8 @@ public class VerifyRegister {
     }
 
     public static boolean verifyPassword(String password) {
-        return !(password == null || password.trim().isEmpty());
+        String regex = "^.{8,}$";
+        return password != null && password.matches(regex);
     }
 
     public static boolean verifyConfirmPassword(String password, String cfPassword) {

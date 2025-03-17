@@ -1,8 +1,6 @@
 package dto;
 
 public class UserDTO {
-
-    private String user_id;
     private String full_name;
     private String user_name;
     private String password;
@@ -18,31 +16,13 @@ public class UserDTO {
         this.phone_number = "";
     }
 
-    public UserDTO(String user_id, String full_name, String user_name, String password, String email, String phone_number, int role_id) {
-        this.user_id = user_id;
+    public UserDTO( String full_name, String user_name, String password, String email, String phone_number, int role_id) {
         this.full_name = full_name;
         this.user_name = user_name;
         this.password = password;
         this.email = email;
         this.phone_number = phone_number;
         this.role_id = role_id;
-    }
-
-    public UserDTO(String full_name, String user_name, String password, String email, String phone_number, int role_id) {
-        this.full_name = full_name;
-        this.user_name = user_name;
-        this.password = password;
-        this.email = email;
-        this.phone_number = phone_number;
-        this.role_id = role_id;
-    }
-
-    public String getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
     }
 
     public String getUser_name() {
