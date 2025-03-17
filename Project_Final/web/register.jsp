@@ -202,8 +202,16 @@
                 Already have an account?
                 <a href="login.jsp" >Sign in</a>
             </div>
-
-        </div>
-        <%@include file = "footer.jsp" %>
-    </body>
-</html>
+            <%
+                String errorRegister = request.getAttribute("errorRegister") + "";
+                errorRegister = errorRegister.equals("null") ? "" : errorRegister;
+                if (!errorRegister.isEmpty()) {
+            %>
+            <div style="color: red"> <%=errorRegister%><div>
+                    <%
+                        }
+                    %>
+                </div>
+                <%@include file = "footer.jsp" %>
+                </body>
+                </html>
