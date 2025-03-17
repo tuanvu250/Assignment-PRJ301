@@ -1,165 +1,317 @@
-<%-- 
-    Document   : header
-    Created on : Feb 28, 2025, 6:10:44 PM
-    Author     : ADMIN
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <Style>
-            * {
-                font-family: "Montserrat", sans-serif;
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-                text-decoration: none;
-                outline: none;
-                border: none;
-                list-style-type: none;
-            }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: "Montserrat", sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+            outline: none;
+            border: none;
+            list-style-type: none;
+        }
 
-            * {
-                user-select: none;
-                cursor: default;
-            }
+        * {
+            user-select: none;
+            cursor: default;
+        }
 
-            a:hover {
-                cursor: pointer;
-            }
+        a:hover {
+            cursor: pointer;
+        }
 
-            input:hover {
-                cursor: text;
-            }
+        input:hover {
+            cursor: text;
+        }
 
-            header {
-                position: sticky;
-                top: 0;
-                backdrop-filter: blur(45px);
-                z-index: 1000;
-                width: 100%;
-            }
+        header {
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(45px);
+            z-index: 1000;
+            width: 100%;
+        }
 
-            .navbar {
-                display: flex;
-                padding: 0 5vw; /* Thay 80px bằng vw */
-                align-items: center;
-                gap: 12vw; /* Thay 227px bằng vw */
-                background-color: #C63F3E;
-                justify-content: center;
-            }
+        .navbar {
+            display: flex;
+            padding: 0 5vw;
+            align-items: center;
+            background-color: #C63F3E;
+            justify-content: space-between;
+        }
 
-            .navbar a {
-                color: #FFFFFF;
-                font-size: 1rem;
-            }
+        .navbar a {
+            color: #FFFFFF;
+            font-size: 1rem;
+        }
 
-            .nav-ic i {
-                font-size: 1.5rem;
-                transition: transform 0.3s;
-            }
+        .nav-ic i {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
 
-            .nav-left {
-                display: flex;
-                width: 30vw; /* Điều chỉnh để phù hợp màn hình nhỏ */
-                height: 70px;
-                align-items: center;
-                gap: 6vw; /* Thay 71px bằng vw */
-                flex-shrink: 0;
-            }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            height: 70px;
+        }
 
-            .nav-right {
-                display: flex;
-                align-items: center;
-                gap: 7vw; /* Thay 52px bằng vw */
-                flex-shrink: 0;
-            }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+        }
 
-            .nav-menu {
-                display: flex;
-                width: 15vw; /* Thay 232px bằng vw */
-                padding: 1.5rem 0;
-                align-items: flex-start;
-                gap: 4vw; /* Thay 58px bằng vw */
-                flex-shrink: 0;
-            }
+        .nav-menu {
+            display: flex;
+            padding: 1.5rem 0;
+            align-items: center;
+            gap: 3rem;
+        }
 
-            .nav-ic {
-                display: flex;
-                align-items: flex-end;
-                gap: 3vw; /* Thay 50px bằng vw */
-            }
+        .nav-ic {
+            display: flex;
+            align-items: center;
+            gap: 2rem;  
+        }
 
+        .nav-search {
+            display: flex;
+            width: 400px;
+            height: 40px;
+            padding: 8px 1rem;
+            align-items: center;
+            border-radius: 20.5px;
+            border: 1px solid #FFF;
+        }
+
+        .search {
+            background-color: transparent;
+            color: #FFFFFF;
+            width: 100%;
+        }
+
+        .nav-search a {
+            height: 20px;
+        }
+
+        .nav-search-form {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .nav-search input::placeholder {
+            color: #FFFFFF;
+        }
+
+        .nav-search-form input {
+            width: 100%;
+        }
+
+        .nav-search-form button {
+            background-color: transparent;
+            color: #FFFFFF;
+        }
+
+        .nav-search-form svg {
+            height: 100%;
+        }
+
+        .nav-ic i:hover {
+            transform: scale(1.2);
+            color: #fbe385;
+        }
+
+        .nav-menu a {
+            transition: transform 0.3s;
+        }
+
+        .nav-menu a:hover {
+            transform: scale(1.2);
+            color: #fbe385;
+        }
+
+        /* User dropdown styles */
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 45px;
+            background-color: white;
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .user-dropdown-content a {
+            color: #333 !important;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s;
+        }
+
+        .user-dropdown-content a:hover {
+            background-color: #f1f1f1;
+            transform: none;
+            color: #C63F3E !important;
+        }
+
+        .user-dropdown-content a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .user-dropdown-content .dropdown-divider {
+            height: 1px;
+            background-color: #e9e9e9;
+            margin: 0;
+        }
+
+        .user-dropdown-content.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid #fff;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-avatar i {
+            color: #C63F3E;
+            font-size: 1.2rem;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(-10px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: white;
+            background: none;
+            cursor: pointer;
+        }
+
+        /* Media queries for responsive design */
+        @media (max-width: 992px) {
             .nav-search {
-                display: flex;
-                width: 30vw; /* Thay 400px bằng vw */
-                height: 40px;
-                padding: 8px 1rem;
-                align-items: center;
-                flex-shrink: 0;
-                border-radius: 20.5px;
-                border: 1px solid #FFF;
+                width: 200px;
             }
+        }
 
-            .search {
-                background-color: transparent;
-                color: #FFFFFF;
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+                padding: 0 3vw;
+            }
+            
+            .nav-left {
                 width: 100%;
+                justify-content: space-between;
             }
-
-            .nav-search a {
-                height: 20px;
-            }
-
-            .nav-search-form {
-                display: flex;
-                gap: 0.5rem;
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
                 width: 100%;
-            }
-
-            .nav-search input::placeholder {
-                color: #FFFFFF;
-            }
-
-            .nav-search-form input {
-                width: 100%;
-            }
-
-            .nav-search-form button {
                 background-color: #C63F3E;
+                flex-direction: column;
+                padding: 1rem 0;
+                gap: 1rem;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+                z-index: 1001;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .nav-right {
+                width: 100%;
+                justify-content: space-between;
+                padding: 10px 0;
+            }
+            
+            .nav-search {
+                width: 70%;
+                order: 1;
+            }
+            
+            .nav-ic {
+                order: 2;
+                gap: 1rem;
             }
 
-            .nav-search-form svg {
-                height: 100%;
+            .user-dropdown-content {
+                right: 0;
+                top: 45px;
+                width: 200px;
             }
+        }
 
-            .nav-ic i:hover {
-                transform: scale(1.2);
-                color: #fbe385;
+        @media (max-width: 480px) {
+            .nav-search {
+                width: 60%;
             }
-
-            .nav-menu a {
-                transition: transform 0.3s;
+            
+            .nav-ic {
+                gap: 0.8rem;
             }
-
-            .nav-menu a:hover {
-                transform: scale(1.2);
-                color: #fbe385;
+            
+            .nav-ic i {
+                font-size: 1.2rem;
             }
-
-        </Style>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-              integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-              crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    </head>
+        }
+    </style>
+</head>
+<body>
     <header>
         <div class="navbar">
             <div class="nav-left">
@@ -188,36 +340,72 @@
                         <image id="image0_106_7478" width="65" height="36" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEEAAAAkCAYAAADWzlesAAAAAXNSR0IArs4c6QAAAXpJREFUaEPtmcESwiAMROup//+5PakcOsNgYXeTEO2IZ8JuHyFJ62Nbv+2xGGwLQkmClQnREI7jeNbXa9/3qZCj9EJMtmZmg4jWc0MYGTphRGbEDD0XBMZQAREFYZaeBIE10bZdK4QsPQqC1cxoBhmBydYbQphhZlQ0s/VOLwvCaE6YfSpt58jWqzOymwmKqfp+K3F151DiIvQgBNZQr7ip8er6tuCy8b12fZkJzKao7Sl7KGt7Hcezx4JgLYwoC8ppoZNp9/C+D6h6sCagh0AQLIY8ECx6FIQRCCuEX4uDw5L1ZHpxVgDoBcyqBzMBpdeVMRTjfVdQaggC13YYc3ewfKD1zhWqJsq+7nVAJ6oaQV+ZsvWu/H9kQrapbL2vQvjVq1CgpGXC30Pwdga1DrEFcTgnMPe0CLHr0EOw+7DrkB7VItlpEZlSToQZeiL14LCkkqzNKQ+u6tTrT80IPeprs8fsHWIXhOg/ZO9w6tSwdNcH8fhe1+FN7wUH2TA0Sp1XggAAAABJRU5ErkJggg=="/>
                         </defs>
                         </svg>
-
                     </a>
                 </div>
-                <div class="nav-menu">
-                    <a onclick="updateFilter('gender', '')" class="nav-product">Product</a>
-                    <a href="about.jsp
-                       " class="nav-about">About us</a>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="nav-menu" id="navMenu">
+                    <a onclick="updateFilter('gender', '')">Products</a>
+                    <a href="about.jsp">About Us</a>
                 </div>
             </div>
             <div class="nav-right">
                 <div class="nav-search">
-                    <form class="nav-search-form">
-                        <button>
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path id="Vector" d="M19.0002 19.0001L14.6572 14.6571M14.6572 14.6571C15.4001 13.9142 15.9894 13.0323 16.3914 12.0616C16.7935 11.091 17.0004 10.0507 17.0004 9.0001C17.0004 7.9495 16.7935 6.90918 16.3914 5.93855C15.9894 4.96792 15.4001 4.08599 14.6572 3.3431C13.9143 2.60021 13.0324 2.01092 12.0618 1.60887C11.0911 1.20682 10.0508 0.999893 9.00021 0.999893C7.9496 0.999893 6.90929 1.20682 5.93866 1.60887C4.96803 2.01092 4.08609 2.60021 3.34321 3.3431C1.84288 4.84343 1 6.87831 1 9.0001C1 11.1219 1.84288 13.1568 3.34321 14.6571C4.84354 16.1574 6.87842 17.0003 9.00021 17.0003C11.122 17.0003 13.1569 16.1574 14.6572 14.6571Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                    <form class="nav-search-form" action="search.jsp" method="get">
+                        <input type="text" name="query" placeholder="Search..." class="search">
+                        <button type="submit">
+                            <i class="fas fa-search"></i>
                         </button>
-                        <input type="text" class="search" placeholder="Search product">
                     </form>
                 </div>
                 <div class="nav-ic">
-                    <a href="favouriteList.jsp"><i class="fa-solid fa-heart"></i></a>
-                    <a href="cartList.jsp"><i class="fa-solid fa-cart-shopping"></i></a>
-                    <a href="login.jsp"><i class="fa-solid fa-user"></i></a>
-
+                    <a href="favouriteList.jsp">
+                        <i class="fas fa-heart"></i>
+                    </a>
+                    <a href="cartList.jsp">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+                    <div class="user-dropdown">
+                        <div class="user-avatar" id="userDropdownToggle">
+                            <!-- If user has profile image -->
+<!--                            <img src="img/avt-user-test.jpg" alt="User"> -->
+                            <!-- If no profile image -->
+                            <a href="login.jsp"><i class="fas fa-user"></i></a>
+                        </div>
+                        <div class="user-dropdown-content" id="userDropdownMenu">
+                            <a href="profile.jsp"><i class="fas fa-user-circle"></i> My Profile</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="logout.jsp"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
+
     <script>
+        // Toggle mobile menu
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+
+        // Toggle user dropdown
+        document.getElementById('userDropdownToggle').addEventListener('click', function(e) {
+            document.getElementById('userDropdownMenu').classList.toggle('show');
+            e.stopPropagation();
+        });
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(e) {
+            if (!e.target.matches('.user-dropdown *')) {
+                var dropdown = document.getElementById('userDropdownMenu');
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        });
+        
         function updateFilter(param, value) {
             let newController = "/Project_Final_Dux/searchFilter"; // Controller mới
             let url = new URL(window.location.href);
@@ -233,6 +421,6 @@
             // Cập nhật URL với Controller mới + các tham số đã lọc
             window.location.href = url.origin + newController + "?" + params.toString();
         }
-
     </script>
+</body>
 </html>

@@ -26,7 +26,7 @@
                 background-color: #EAE4DA;
             }
 
-            *{
+            * {
                 user-select: none;
                 cursor: default;
             }
@@ -36,71 +36,125 @@
                 cursor: text;
             }
 
-            .signup h2{
+            .signup h2 {
                 text-align: center;
-                width: 500px;
+                width: 100%;
+                max-width: 500px;
                 padding-bottom: 20px;
                 border-bottom: solid 3px #1d1d1b;
+                font-size: 28px;
+                letter-spacing: 1px;
             }
 
-            .signup{
+            .signup {
                 display: flex;
                 flex-direction: column;
-                margin: 80px 0;
+                margin: 60px auto;
                 align-items: center;
-                gap: 20px
+                gap: 20px;
+                width: 90%;
+                max-width: 500px;
             }
 
             .signup-input {
                 font-size: 16px;
                 padding: 12px 20px;
-                width: 500px;
+                width: 100%;
                 border-radius: 50px;
-                border: 1px solid #000;
+                border: 1px solid #1d1d1b;
+                background-color: rgba(255, 255, 255, 0.7);
+                transition: all 0.3s ease;
+            }
+
+            .signup-input:focus {
+                border-color: #C63F3E;
+                background-color: #fff;
+                box-shadow: 0 0 0 2px rgba(198, 63, 62, 0.2);
             }
 
             .signup-line {
                 display: flex;
                 align-items: center;
                 gap: 20px;
+                width: 100%;
+                margin: 10px 0;
             }
 
             .signup-line h3 {
-                font-weight: initial;
+                font-weight: normal;
+                color: #666;
             }
 
             .signup-linee {
-                width: 220px;
+                flex: 1;
                 height: 1px;
                 background-color: #1d1d1b;
+                opacity: 0.3;
             }
 
             .signup-btn {
-                padding: 12px 20px;
-                width: 500px;
+                padding: 14px 20px;
+                width: 100%;
                 text-align: center;
                 background-color: #1d1d1b;
                 border-radius: 50px;
                 color: #FFF;
+                font-weight: bold;
+                letter-spacing: 1px;
+                transition: all 0.3s ease;
+                cursor: pointer;
             }
 
             .signup-form {
                 display: flex;
                 flex-direction: column;
-                gap: 20px;
+                gap: 15px;
+                width: 100%;
             }
 
             .signup-btn:hover {
                 background-color: #C63F3E;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .signup-end {
+                margin-top: 10px;
+                text-align: center;
+                font-size: 15px;
             }
 
             .signup-end a {
                 color: #1d1d1b;
                 font-weight: bold;
+                transition: color 0.3s ease;
             }
 
             .signup-end a:hover {
                 color: #C63F3E;
+                cursor: pointer;
+            }
+
+            /* Error message styling */
+            div[style*="color: red"] {
+                margin-top: -10px;
+                margin-bottom: 5px;
+                font-size: 14px;
+                padding-left: 20px;
+            }
+
+            @media (max-width: 576px) {
+                .signup {
+                    margin: 40px auto;
+                }
+
+                .signup h2 {
+                    font-size: 24px;
+                }
+
+                .signup-input, .signup-btn {
+                    padding: 10px 16px;
+                }
             }
         </style>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

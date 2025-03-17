@@ -30,65 +30,112 @@
                 outline: none;
                 border: none;
                 list-style-type: none;
-            }
-
-            body {
-                background-color: #EAE4DA;
-            }
-
-            *{
                 user-select: none;
                 cursor: default;
             }
 
-            input:hover {
-                cursor:text;
-            }
-
-            .product-list a:hover{
-                color: #C63F3E;
-            }
-
-            .product-list a{
+            body {
+                background-color: #EAE4DA;
                 color: #1d1d1b;
             }
 
+            input:hover {
+                cursor: text;
+            }
+
+            a {
+                color: #1d1d1b;
+                transition: color 0.3s ease;
+            }
+
+            a:hover {
+                cursor: pointer;
+            }
+
+            .product-list a:hover {
+                color: #C63F3E;
+            }
+
+            /* Product Container */
             .product {
                 padding: 5vw;
                 display: flex;
                 gap: 60px;
-                color: #1d1d1b;
                 align-items: flex-start;
             }
 
+            @media (max-width: 768px) {
+                .product {
+                    flex-direction: column;
+                    padding: 20px;
+                    gap: 30px;
+                }
+            }
+
+            /* Product Grid */
             .product-detail {
                 display: flex;
                 text-align: center;
-                gap: 5vw;
+                gap: 30px;
                 flex-wrap: wrap;
+                justify-content: flex-start;
             }
 
             .product-item {
                 display: flex;  
                 flex-direction: column;
-                gap: 4px;
-                width: 28%;
+                gap: 8px;
+                width: calc(33.33% - 20px);
                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-                padding-bottom: 10px;
+                padding-bottom: 15px;
+                background-color: #fff;
+                border-radius: 4px;
+                overflow: hidden;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .product-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            }
+
+            @media (max-width: 1200px) {
+                .product-item {
+                    width: calc(50% - 15px);
+                }
+            }
+
+            @media (max-width: 768px) {
+                .product-item {
+                    width: 100%;
+                }
             }
 
             .product-item img {
                 width: 100%;
-            }
-
-            .product-item p{
                 display: block;
             }
 
+            .product-item p {
+                display: block;
+                margin: 0 10px;
+            }
+
+            /* Filter Sidebar */
             .product-list {
                 display: flex;
                 flex-direction: column;
                 gap: 20px;
+                max-width: 250px;
+                position: sticky;
+                top: 20px;
+            }
+
+            @media (max-width: 768px) {
+                .product-list {
+                    position: static;
+                    width: 100%;
+                }
             }
 
             .product-gender {
@@ -99,24 +146,26 @@
                 border-bottom: solid 3px #1d1d1b;
                 padding-bottom: 12px;
                 justify-content: center;
-                padding-left: 10px;
-                padding-right: 10px;
+                padding: 0 10px 12px;
                 align-items: center;
             }
 
             .product-gender a {
                 border-right: 3px solid #1d1d1b;
                 padding-right: 10px;
-                color: #1d1d1b;
             }
 
-            .product-gender a:last-child{
+            .product-gender a:last-child {
                 border: none;
                 padding-right: 0;
             }
 
+            .product-gender a.active {
+                color: #C63F3E;
+            }
+
             .product-choice {
-                padding-left: 10px;
+                padding: 0 10px;
                 display: flex;
                 flex-direction: column;
                 gap: 16px;
@@ -127,6 +176,15 @@
 
             .product-choice h3 {
                 font-size: 18px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+                padding: 5px 0;
+            }
+
+            .product-choice h3:hover {
+                color: #C63F3E;
             }
 
             .product-choice h3.active {
@@ -138,56 +196,26 @@
                 max-height: 0;
                 overflow: hidden;
                 flex-direction: column;
-                gap: 16px;
+                gap: 10px;
                 margin-left: 40px;
-                transition: 0.5s;
-            }
-
-            .choice-list-color {
-                max-width: 20vw;
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px;
-                overflow: hidden;
-                max-height: 0;
-                transition: 0.5s;
-            }
-
-            .choice-list-color a {
-                display: inline-block;
-                height: 30px;
-                width: 30px;
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            }
-
-            .choice-list-color div {
-                height: 40px;
-                width: 40px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+                transition: max-height 0.5s ease;
             }
 
             .choice-list.show {
-                max-height: 100%;
-            }
-
-            .choice-list-color.show {
-                max-height: 100%;
-            }
-
-            .product-gender a.active {
-                color: #C63F3E;
+                max-height: 500px;
             }
 
             .choice-list a {
-                padding: 4px;
-            }
-
-            .choice-list a{
+                padding: 8px;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+                border-radius: 4px;
+                transition: background-color 0.3s ease;
+            }
+
+            .choice-list a:hover {
+                background: rgba(0, 0, 0, 0.05);
             }
 
             .choice-list i {
@@ -202,51 +230,128 @@
                 display: inline;
             }
 
-            .choice-list-color div.active{
-                border: solid #1d1d1b 2px;
+            /* Color Selection */
+            .choice-list-color {
+                max-width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                overflow: hidden;
+                max-height: 0;
+                transition: max-height 0.5s ease;
+                margin-left: 40px;
             }
 
+            .choice-list-color.show {
+                max-height: 500px;
+            }
+
+            .choice-list-color div {
+                height: 40px;
+                width: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .choice-list-color a {
+                display: inline-block;
+                height: 30px;
+                width: 30px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 50%;
+                transition: transform 0.3s ease;
+            }
+
+            .choice-list-color a:hover {
+                transform: scale(1.1);
+            }
+
+            .choice-list-color div.active {
+                border: solid #1d1d1b 2px;
+                border-radius: 50%;
+            }
+
+            /* Product Details */
             .product-price {
                 display: flex;
                 justify-content: space-around;
+                margin-top: 5px;
+                font-weight: 500;
             }
 
             .sale-text {
                 text-decoration: line-through;
+                color: #888;
             }
 
+            .product-name {
+                font-size: 16px;
+                font-weight: 700;
+                padding: 0 10px;
+                margin-top: 5px;
+                transition: color 0.3s ease;
+            }
+
+            .product-name:hover {
+                color: #C63F3E;
+            }
+
+            /* Image and Hover Effects */
             .img-sale {
                 position: relative;
                 display: inline-block;
+                width: 100%;
+                overflow: hidden;
             }
 
             .label-sale {
                 position: absolute;
                 top: 5%;
+                left: 0;
                 padding: 4px 8px;
                 background-color: #1d1d1b;
                 color: #FFF;
-                z-index: 500;
+                z-index: 5;
+                font-size: 14px;
             }
 
             .love-list {
                 position: absolute;
-                font-size: 35px;
-                bottom: 8px;
-                right: 20px;
+                font-size: 28px;
+                bottom: 15px;
+                right: 15px;
                 color: #C63F3E;
+                background: rgba(255, 255, 255, 0.7);
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform 0.3s ease, background-color 0.3s ease;
+                z-index: 10;
+            }
+
+            .love-list:hover {
+                transform: scale(1.1);
+                background: rgba(255, 255, 255, 0.9);
             }
 
             .hover-buy {
                 position: absolute;
-                bottom: 5px;
-                right: 60px;
-                left: 60px;
+                bottom: 15px;
+                right: 70px;
+                left: 15px;
                 padding: 12px 8px;
                 color: #FFF;
                 background-color: #C63F3E;
                 opacity: 0;
-                transition: 0.6s;
+                transition: opacity 0.4s ease;
+                text-align: center;
+                font-weight: 600;
+                border-radius: 4px;
+                z-index: 10;
             }
 
             .div-hover-buy {
@@ -254,38 +359,28 @@
                 width: 100%;
                 position: absolute;
                 top: 0;
+                transition: background-color 0.4s ease;
             }
 
-            .img-sale:hover .div-hover-buy{
+            .img-sale:hover .div-hover-buy {
                 background: rgba(0, 0, 0, 0.1);
             }
 
             .img-sale:hover .hover-buy {
                 opacity: 1;
             }
-            
-            .img-sale:hover .hidden-img {
-                opacity: 1;
-            }
 
-            .product-name {
-                font-size: 18px;
-                font-weight: 700;
-                color: #1d1d1b;
-            }
-
-            .product-name:hover {
-                color: #C63F3E;
-            }
-            
             .hidden-img {
                 position: absolute;
                 top: 0;
                 left: 0;
                 opacity: 0;
+                transition: opacity 0.4s ease;
             }
-            
-            
+
+            .img-sale:hover .hidden-img {
+                opacity: 1;
+            }
         </style>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Product Page</title>
@@ -391,7 +486,7 @@
                             <img src="asset/<%=shoes.getShoes_id()%>_1.jpg">
                             <img class="hidden-img" src="asset/<%=shoes.getShoes_id()%>_2.jpg">
                         </a>
-                            <div class="div-hover-buy" <% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: rgba(0,0,0,0.3);"<%}%>>
+                        <div class="div-hover-buy" <% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: rgba(0,0,0,0.3);"<%}%>>
                             <h3 class="hover-buy"<% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: #1d1d1b; opacity: 1;"<%}%>>
                                 <% if (AuthUtils.isSoldout(shoes)) { %>PRE-ORDER<%} else {%>BUY<%}%>
                             </h3>
@@ -434,7 +529,7 @@
                         link.classList.add("active");
                     }
                 });
-                
+
                 document.querySelectorAll(".choice-list a").forEach(link => {
                     let dataFilter = link.getAttribute("data-filter");
                     let dataValue = link.getAttribute("data-value");
@@ -443,7 +538,7 @@
                         link.classList.add("active");
                     }
                 });
-                
+
                 document.querySelectorAll(".choice-list-color a").forEach(link => {
                     let dataFilter = link.getAttribute("data-filter");
                     let dataValue = link.getAttribute("data-value");

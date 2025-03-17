@@ -24,13 +24,13 @@
                 background-color: #EAE4DA;
             }
 
-            *{
+            * {
                 user-select: none;
                 cursor: default;
             }
 
-            input:hover {
-                cursor:text;
+            input:hover, select:hover {
+                cursor: pointer;
             }
 
             .favourite h1 {
@@ -66,13 +66,14 @@
 
             .sale-price {
                 text-decoration: line-through;
-                color: graytext;
+                color: #888;
             }
 
             .favourite-choice {
                 display: flex;
                 gap: 20px;
                 align-items: flex-end;
+                flex-wrap: wrap;
             }
 
             .favourite-color {
@@ -80,11 +81,17 @@
                 gap: 8px;
             }
 
-            .favourite-color a{
+            .favourite-color a {
                 display: inline-block;
                 height: 30px;
                 width: 30px;
                 background-color: red;  
+                border-radius: 50%;
+                transition: transform 0.2s ease;
+            }
+
+            .favourite-color a:hover {
+                transform: scale(1.1);
             }
 
             .favourite-color div {
@@ -93,9 +100,10 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                transition: all 0.2s ease;
             }
 
-            .favourite-size{
+            .favourite-size {
                 display: flex;
                 flex-direction: column;
                 gap: 4px;
@@ -106,6 +114,9 @@
                 width: 80px;
                 height: 40px;
                 text-align: center;
+                border: 1px solid #1d1d1b;
+                background-color: #fff;
+                border-radius: 4px;
             }
 
             .favourite-btn {
@@ -119,6 +130,11 @@
                 padding: 8px 16px;
                 font-size: 18px;
                 width: 100px;
+                border-radius: 4px;
+                transition: all 0.3s ease;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
 
             .favourite-cart {
@@ -136,10 +152,12 @@
                 font-size: 18px;
                 color: #1d1d1b;
                 font-weight: 600;
+                transition: color 0.3s ease;
             }
 
             .favourite-name:hover {
                 color: #C63F3E;
+                cursor: pointer;
             }
 
             .favourite-item {
@@ -150,13 +168,14 @@
                 border-bottom: solid #1d1d1b 2px;
             }
 
-
             .favourite-item:first-child {
                 border-top: solid #1d1d1b 2px;
             }
 
             .favourite-btn a:hover {
                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                cursor: pointer;
+                transform: translateY(-2px);
             }
 
             .favourite-footer {
@@ -166,21 +185,33 @@
                 text-align: center;
             }
 
-            .favourite-footer a{
+            .favourite-footer a {
                 width: 10vw;
+                min-width: 120px;
                 color: #EAE4DA;
                 background-color: #1d1d1b;
                 padding: 16px 0;
+                border-radius: 4px;
+                transition: background-color 0.3s ease, transform 0.2s ease;
             }
 
-            .favourite-footer a:hover{
+            .favourite-footer a:hover {
                 background-color: #C63F3E;
+                cursor: pointer;
+                transform: translateY(-2px);
             }
 
             .cart {
                 display: flex;
-                margin: 80px;
+                margin: 40px;
                 gap: 40px;
+            }
+
+            @media (max-width: 992px) {
+                .cart {
+                    flex-direction: column;
+                    margin: 40px 20px;
+                }
             }
 
             .cart-bill h1 {
@@ -189,6 +220,7 @@
             }
 
             .cart-bill {
+                flex: 1;
                 background-color: #FFF;
                 width: 100%;
                 padding: 20px 40px;
@@ -196,11 +228,14 @@
                 flex-direction: column;
                 gap: 32px;
                 align-self: flex-start;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             }
 
             .cart-bill form {
                 display: flex;
                 gap: 20px;
+                flex-wrap: wrap;
             }
 
             .discount-code {
@@ -208,6 +243,8 @@
                 padding: 8px 16px;
                 border: solid #1d1d1b 2px;
                 text-transform: uppercase;
+                border-radius: 4px;
+                flex: 1;
             }
 
             .discount-btn {
@@ -215,6 +252,13 @@
                 color: #FFF;
                 background-color: #1d1d1b;
                 font-weight: 600;
+                border-radius: 4px;
+                transition: background-color 0.3s ease;
+            }
+
+            .discount-btn:hover {
+                background-color: #C63F3E;
+                cursor: pointer;
             }
 
             .cart-price {
@@ -242,14 +286,44 @@
                 background-color: #C63F3E;
                 color: #FFF;
                 padding: 20px 0;
+                border-radius: 4px;
+                transition: background-color 0.3s ease, transform 0.2s ease;
+            }
+
+            .cart-btn:hover {
+                background-color: #a53332;
+                cursor: pointer;
+                transform: translateY(-2px);
             }
 
             .favourite-cart.added {
                 background-color: #C63F3E;
+                color: #FFF;
             }
 
             .favourite-color div.added {
                 border: solid 2px #1d1d1b;
+                border-radius: 50%;
+            }
+
+            @media (max-width: 768px) {
+                .favourite-item {
+                    flex-direction: column;
+                    text-align: center;
+                    padding: 20px 0;
+                }
+
+                .favourite-info {
+                    align-items: center;
+                }
+
+                .favourite-btn {
+                    flex-direction: row;
+                }
+
+                .favourite-footer a {
+                    width: 45%;
+                }
             }
         </style>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
