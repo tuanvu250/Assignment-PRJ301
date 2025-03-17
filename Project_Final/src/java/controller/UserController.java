@@ -68,7 +68,7 @@ public class UserController extends HttpServlet {
             }
             if (!VerifyRegister.verifyPassword(password)) {
                 checkRegister = false;
-                request.setAttribute("errorMessPassword", "This field is required. Please input!");
+                request.setAttribute("errorMessPassword","Password must be at least 8 characters long!");
             }
             if (!VerifyRegister.verifyConfirmPassword(password, cfPassword)) {
                 checkRegister = false;
