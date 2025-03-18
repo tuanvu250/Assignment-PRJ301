@@ -18,7 +18,7 @@ public class AuthUtils {
     }
 
     public static boolean isLoggedIn(HttpSession session) {
-        return session.getAttribute("currentUser") != null;
+        return session.getAttribute("user") != null;
     }
     
     public static boolean isSale(ShoesProductDTO shoes) {

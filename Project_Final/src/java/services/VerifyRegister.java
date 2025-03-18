@@ -50,7 +50,7 @@ public class VerifyRegister {
         if (email == null || email.trim().isEmpty()) {
             return false;
         }
-        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@(gmail\\.com|yahoo\\.com|outlook\\.com|hotmail\\.com|icloud\\.com)$";
         return Pattern.matches(emailRegex, email);
     }
 

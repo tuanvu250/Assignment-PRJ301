@@ -3,6 +3,8 @@ package controller;
 import dao.UserDAO;
 import dto.UserDTO;
 import java.io.IOException;
+import java.util.UUID;
+import java.util.logging.Level;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,17 +14,17 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import services.VerifyRegister;
 import utils.AuthUtils;
-import utils.DBUtils;
+import utils.EmailUtils;
 import utils.PasswordUtils;
 
 @WebServlet(name = "UserController", urlPatterns = {"/UserController"})
 public class UserController extends HttpServlet {
 
-    private static final String HOME_PAGE = "home.jsp";
-    private static final String LOGIN_PAGE = "login.jsp";
-    private static final String REGISTER_PAGE = "register.jsp";
-    private static final String PRODUCT_PAGE = "product.jsp";
+    private static final String HOME_PAGE = "/home/home.jsp";
+    private static final String LOGIN_PAGE = "/user/login.jsp";
+    private static final String REGISTER_PAGE = "/user/register.jsp";
     private static UserDAO userDao = new UserDAO();
+    private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(UserController.class.getName());
 
     protected String processLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -51,6 +53,15 @@ public class UserController extends HttpServlet {
         return url;
     }
 
+    private boolean sendCongratulationsEmail(String email, String fullName, String userName) {
+        try {
+            return EmailUtils.sendRegistrationEmail(email, fullName, userName);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error sending congratulations email: {0}", e.getMessage());
+            return false;
+        }
+    }
+
     protected String processRegister(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME_PAGE;
@@ -68,7 +79,7 @@ public class UserController extends HttpServlet {
             }
             if (!VerifyRegister.verifyPassword(password)) {
                 checkRegister = false;
-                request.setAttribute("errorMessPassword", "This field is required. Please input!");
+                request.setAttribute("errorMessPassword", "Password must be at least 8 characters long!");
             }
             if (!VerifyRegister.verifyConfirmPassword(password, cfPassword)) {
                 checkRegister = false;
@@ -86,17 +97,47 @@ public class UserController extends HttpServlet {
                 checkRegister = false;
                 request.setAttribute("errorMessPhone", "Invalid phone number. Please enter a valid one!");
             }
-            UserDTO newUser = new UserDTO(fullname, username, password, email, phone, 3);
+
+            String token = UUID.randomUUID().toString();
+
+            UserDTO newUser = new UserDTO(fullname, username, password, email, phone, 3, "ACTIVE", token);
+            UserDTO existUser = userDao.readByUsName(newUser.getUser_name());
+            if (existUser != null) {
+                request.setAttribute("errorMessUsername", "User ID already exists. Please choose another one.");
+                checkRegister = false;
+            }
+            UserDTO existEmail = userDao.readByEmail(email);
+            if (existEmail != null) {
+                request.setAttribute("errorMessEmail", "Email already in use. Please use another email address.");
+                checkRegister = false;
+            }
             if (!checkRegister) {
                 url = REGISTER_PAGE;
                 request.setAttribute("newUser", newUser);
             } else {
                 String hashPassword = PasswordUtils.hashPassword(newUser.getPassword());
                 newUser.setPassword(hashPassword);
-                userDao.create(newUser);
-                HttpSession session = request.getSession();
-                session.setAttribute("currentUser", newUser);
-                url = HOME_PAGE;
+                boolean result = userDao.create(newUser);
+                if (result) {
+                    boolean emailSent = sendCongratulationsEmail(newUser.getEmail(), newUser.getFull_name(), newUser.getUser_name());
+
+                    if (emailSent) {
+                        LOGGER.log(Level.INFO, "Congratulations email sent to {0}", email);
+                        request.setAttribute("success", "Registration successful! Welcome email has been sent to your email address. You can now login.");
+                    } else {
+                        LOGGER.log(Level.WARNING, "Failed to send congratulations email to {0}", email);
+                        request.setAttribute("success", "Registration successful! You can now login. (Note: Welcome email could not be sent)");
+                    }
+                } else {
+                    url = REGISTER_PAGE;
+                    request.setAttribute("errorRegister", "Registration failed. Please try again!");
+                }
+                // tự đăng nhập khi đăng ký thành công
+                if (AuthUtils.verifyUser(newUser.getUser_name(), newUser.getPassword())) {
+                    url = HOME_PAGE;
+                    UserDTO user = AuthUtils.getUser(newUser.getUser_name());
+                    request.getSession().setAttribute("user", user);
+                }
             }
         } catch (Exception e) {
             log("ERROR: " + e.toString());
@@ -126,6 +167,7 @@ public class UserController extends HttpServlet {
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
+            //response.sendRedirect(request.getContextPath() + url);
         }
     }
 

@@ -18,11 +18,11 @@
 
         <div class="login">
             <h2>LOGIN</h2>
-            <form class="login-form" action="UserController" method="post">
+            <form class="login-form" action="<%= request.getContextPath()%>/UserController" method="post">
                 <input type="hidden" name="action" value="login" />
-                <input class="login-sign" type="text" placeholder="Enter username" name="username"/>
-                <input class="login-sign"type="password" placeholder="Enter password" name="password"/>
-                <button class="login-btn">
+                <input class="login-sign" type="text" placeholder="Enter username" name="username" required/>
+                <input class="login-sign"type="password" placeholder="Enter password" name="password" required/>
+                <button type="submit" class="login-btn">
                     LOGIN
                 </button>
             </form>

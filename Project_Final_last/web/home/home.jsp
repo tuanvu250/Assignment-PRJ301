@@ -15,17 +15,8 @@
     </head>
     <body>
         <%@include file="../includes/header.jsp" %>
-        <%
-            UserDTO user = (UserDTO) session.getAttribute("user");
-            if (user != null) {
-        %>
-        <h2 style="color: black"><%= user.getFull_name()%></h2>
-        <%
-            }
-
-        %>
         <div class="banner">
-            <img src="../assets/img/img-home/banner.png">
+            <img src="<%= request.getContextPath()%>/assets/img/img-home/banner.png">
             <h2>DISCOVER</h2>
         </div>
 
@@ -33,15 +24,15 @@
 
         <div class="container">
             <a  class="contain-left" onclick="updateFilter('status', 'Sale')">
-                <img src="../assets/img/img-home/home_sale.jpg">
+                <img src="<%= request.getContextPath()%>/assets/img/img-home/home_sale.jpg">
                 <h3>SALE OFF</h3>
             </a>
             <a  class="contain-mid" onclick="updateFilter('gender', 'Male')">
-                <img src="../assets/img/img-home/home_male.jpg">
+                <img src="<%= request.getContextPath()%>/assets/img/img-home/home_male.jpg">
                 <h3>MALE</h3>
             </a>
             <a  class="contain-right" onclick="updateFilter('gender', 'Female')">
-                <img src="../assets/img/img-home/home_female.jpg">
+                <img src="<%= request.getContextPath()%>/assets/img/img-home/home_female.jpg">
                 <h3>FEMALE</h3>
             </a>
         </div>
