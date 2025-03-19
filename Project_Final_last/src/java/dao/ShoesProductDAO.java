@@ -327,7 +327,7 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             String favId = null;
-            if (!rs.next()){
+            if (!rs.next()) {
                 String getMaxFavIdQuery = "SELECT MAX(FAV_ID) FROM FAVOURITE";
                 Statement st = conn.createStatement();
                 rs = st.executeQuery(getMaxFavIdQuery);
@@ -360,8 +360,32 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         }
         return false;
     }
-    
+
     public List<ShoesProductDTO> readAllFav(String username) {
         return null;
+    }
+
+    public boolean checkFav(String shoesId, String username) {
+        String sql = "SELECT COUNT(*) AS is_favourite "
+                + "FROM FAVOURITE_DETAIL FD "
+                + "JOIN FAVOURITE F ON FD.FAV_ID = F.FAV_ID "
+                + "WHERE F.USER_NAME = ? AND FD.SHOES_ID = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, shoesId);
+            ResultSet rs = ps.executeQuery();
+            boolean isFavourite = false;
+            if (rs.next()) {
+                isFavourite = rs.getInt("is_favourite") > 0;
+            }
+            return isFavourite;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 }

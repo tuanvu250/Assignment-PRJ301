@@ -64,19 +64,28 @@
                             </button>
                         </form>
                     </div>
+                    <%
+                        String username = null;
+                        if (AuthUtils.isLoggedIn(session)) {
+                            UserDTO user = (UserDTO) session.getAttribute("user");
+                            username = user.getUser_name();
+                        }
+                    %>
                     <div class="nav-ic">
-                        <a href="../favourite/favouriteList.jsp">
+                        <a href="FavController?action=readAll&username=<%=username%>" id="fav-link">
                             <i class="fas fa-heart"></i>
                         </a>
-                        <a href="../cart/cartList.jsp">
+                        <a href="<%= request.getContextPath()%>/cart/cartList.jsp" id="cart-link">
                             <i class="fas fa-shopping-cart"></i>
                         </a>
                         <div class="user-dropdown">
                             <div class="user-avatar" id="userDropdownToggle">
+
                                 <%
                                     if (AuthUtils.isLoggedIn(session)) {
                                         UserDTO user = AuthUtils.getUser(session);
                                         String imageUser = user.getImage();
+                                        ;
                                         if (imageUser == null) {
                                             imageUser = request.getContextPath() + "/assets/img/img-users/default-avatar.jpg";
                                         } else {
@@ -95,7 +104,49 @@
                 </div>
             </div>
         </header>
+        <%@include file="../includes/popupNoti.jsp"%>
         <script src="<%= request.getContextPath()%>/assets/js/header.js"></script>
-        <script src="../assets/js/searchFilter.js" ></script>
+        <script src="<%= request.getContextPath()%>/assets/js/searchFilter.js" ></script>
+        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const favLink = document.getElementById('fav-link');
+                                const cartLink = document.getElementById('cart-link');
+                                const overlay = document.getElementById('overlay');
+                                const cancelButton = document.querySelector('.cancel-button');
+
+
+                                let isLogin = <%=AuthUtils.isLoggedIn(session) ? "true" : "false"%>;
+
+                                favLink.addEventListener('click', function (event) {
+                                    if (!isLogin) {
+                                        event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                                        overlay.classList.add('active');
+                                        document.body.style.overflow = 'hidden'; // Ngăn cuộn
+                                    }
+                                });
+
+                                cartLink.addEventListener('click', function (event) {
+                                    if (!isLogin) {
+                                        event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                                        overlay.classList.add('active');
+                                        document.body.style.overflow = 'hidden'; // Ngăn cuộn
+                                    }
+                                });
+
+                                // Đóng popup khi bấm Cancel
+                                cancelButton.addEventListener('click', function () {
+                                    overlay.classList.remove('active');
+                                    document.body.style.overflow = ''; // Cho phép cuộn lại
+                                });
+
+                                // Đóng popup khi click ra ngoài
+                                overlay.addEventListener('click', function (event) {
+                                    if (event.target === overlay) {
+                                        overlay.classList.remove('active');
+                                        document.body.style.overflow = ''; // Cho phép cuộn lại
+                                    }
+                                });
+                            });
+        </script>
     </body>
 </html>

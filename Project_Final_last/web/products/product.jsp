@@ -201,14 +201,6 @@
                                         });
                                     });
 
-                                    cartLink.addEventListener('click', function (event) {
-                                        if (!isLogin) {
-                                            event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
-                                            overlay.classList.add('active');
-                                            document.body.style.overflow = 'hidden'; // Ngăn cuộn
-                                        }
-                                    });
-
                                     // Đóng popup khi bấm Cancel
                                     cancelButton.addEventListener('click', function () {
                                         overlay.classList.remove('active');

@@ -134,6 +134,7 @@
             </div>
         </div>
         <%}%>
+        <%@include file="../includes/popupNoti.jsp"%>
         <%@include file="../includes/footer.jsp" %>
         <script src="<%= request.getContextPath()%>/assets/js/productDetail.js"></script>
         <script>
