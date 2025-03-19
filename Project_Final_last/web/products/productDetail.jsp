@@ -21,7 +21,7 @@
     <body>
         <%@include file="../includes/header.jsp" %>
         <%
-            if(request.getAttribute("shoesId") != null && request.getAttribute("colorIndex") != null) {
+            if (request.getAttribute("shoesId") != null && request.getAttribute("colorIndex") != null) {
                 String shoesId = request.getAttribute("shoesId") + "";
                 String colorIndex = request.getAttribute("colorIndex") + "";
                 int index = Integer.parseInt(colorIndex) + 0;
@@ -72,14 +72,15 @@
                 </div>
                 <div class="detail-color">
                     <%
-                        for(int i = 1; i <= size; i++) {
-                            ProductColorDTO color = listColor.get(i-1);
+                        for (int i = 1; i <= size; i++) {
+                            ProductColorDTO color = listColor.get(i - 1);
                     %>
                     <div>
                         <a href="ShoesProductController?shoesId=<%=shoesId%>&colorIndex=<%=i%>"
-                            style="background-color: <%=color.getColor_code()%>"> </a>
+                           style="background-color: <%=color.getColor_code()%>"> </a>
                     </div>
-                    <%;}%>
+                    <%;
+                        }%>
                 </div>
                 <div class="detail-btn">
                     <div class="size-quantity">
@@ -89,12 +90,12 @@
                                 <option selected hidden></option>
                                 <%
                                     String colorId = null;
-                                    if(request.getAttribute("colorId") != null) {
+                                    if (request.getAttribute("colorId") != null) {
                                         colorId = request.getAttribute("colorId") + "";
                                     }
                                     ProductSizeDAO sizeDAO = new ProductSizeDAO();
                                     List<ProductSizeDTO> sizeList = sizeDAO.checkSize(shoesId, colorId);
-                                    for(ProductSizeDTO sizeShoes : sizeList) {
+                                    for (ProductSizeDTO sizeShoes : sizeList) {
                                 %>
                                 <option><%=sizeShoes.getSize_num()%></option>
                                 <%}%>
@@ -105,7 +106,7 @@
                             <select>
                                 <option selected hidden></option>
                                 <%
-                                    for(int i = 1; i <= 10; i++) {
+                                    for (int i = 1; i <= 10; i++) {
                                 %>
                                 <option><%=i%></option>
                                 <%}%>
@@ -113,11 +114,11 @@
                         </div>
                     </div>
                     <div class="detail-cart">
-                        <a>Add to cart</a>
-                        <a><i class="fa-regular fa-heart"></i></a>
+                        <a class="cart-list">Add to cart</a>
+                        <a class="love-list"><i class="fa-regular fa-heart"></i></a>
                     </div>
                     <div class="order-now">
-                        <a>ORDER NOW</a>
+                        <a id="buy-now">ORDER NOW</a>
                     </div>
                 </div>
                 <div class="info-detail">
@@ -132,8 +133,70 @@
                 </div>
             </div>
         </div>
-                    <%}%>
+        <%}%>
         <%@include file="../includes/footer.jsp" %>
         <script src="<%= request.getContextPath()%>/assets/js/productDetail.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const favLinks = document.querySelectorAll('.love-list');
+                const cartLinks = document.querySelectorAll('.cart-list');
+                const buyLink = document.getElementById('buy-now');
+                const overlay = document.getElementById('overlay');
+                const cancelButton = document.querySelector('.cancel-button');
+
+
+                let isLogin = <%=AuthUtils.isLoggedIn(session) ? "true" : "false"%>;
+
+                favLinks.forEach(link => {
+                    link.addEventListener('click', function (event) {
+                        if (!isLogin) {
+                            event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                            overlay.classList.add('active');
+                            document.body.style.overflow = 'hidden';
+                        }
+                    });
+                });
+
+                cartLinks.forEach(link => {
+                    link.addEventListener('click', function (event) {
+                        if (!isLogin) {
+                            event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                            overlay.classList.add('active');
+                            document.body.style.overflow = 'hidden';
+                        }
+                    });
+                });
+
+                buyLink.addEventListener('click', function (event) {
+                    if (!isLogin) {
+                        event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                        overlay.classList.add('active');
+                        document.body.style.overflow = 'hidden'; // Ngăn cuộn
+                    }
+                });
+
+                cartLink.addEventListener('click', function (event) {
+                    if (!isLogin) {
+                        event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                        overlay.classList.add('active');
+                        document.body.style.overflow = 'hidden'; // Ngăn cuộn
+                    }
+                });
+
+                // Đóng popup khi bấm Cancel
+                cancelButton.addEventListener('click', function () {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = ''; // Cho phép cuộn lại
+                });
+
+                // Đóng popup khi click ra ngoài
+                overlay.addEventListener('click', function (event) {
+                    if (event.target === overlay) {
+                        overlay.classList.remove('active');
+                        document.body.style.overflow = ''; // Cho phép cuộn lại
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

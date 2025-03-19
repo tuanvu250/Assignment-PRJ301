@@ -41,7 +41,7 @@
                         <span class="nav-item">Material</span>
                     </a></li>
                 <li><a href="">
-                        <i class="fas fa-tshirt"></i
+                        <i class="fas fa-tshirt"></i>
                         <span class="nav-item">Style</span>
                     </a></li>
                 <li><a href="">

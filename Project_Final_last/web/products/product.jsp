@@ -4,6 +4,7 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dto.UserDTO"%>
 <%@page import="dto.ProductStyleDTO"%>
 <%@page import="dao.ProductStyleDAO"%>
 <%@page import="utils.AuthUtils"%>
@@ -130,7 +131,8 @@
                                     <% if (AuthUtils.isSoldout(shoes)) { %>PRE-ORDER<%} else {%>BUY<%}%>
                                 </a>
                             </div>
-                            <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
+                            <a class="love-list" href="FavController?action=add&username=<%=username%>&shoesId=<%=shoes.getShoes_id()%>" 
+                               id="fav-link"><i class="fa-regular fa-heart "></i></a>
                         </div>
                         <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>&colorIndex=1"
                            class="product-name"><%=shoes.getShoes_name()%></a>
@@ -143,7 +145,7 @@
                         </div>
                     </div>
                     <%}
-                    }%>
+                        }%>
                 </div>
                 <% int currentPage = (int) request.getAttribute("currentPage");
                     int totalPages = (int) request.getAttribute("totalPages");
@@ -153,19 +155,19 @@
                     <ul class="pagination">
                         <li>
                             <a  onclick="updatePage(event, <%= (currentPage > 1) ? (currentPage - 1) : 1%>)" 
-                               class="pagination-button pagination-prev" aria-label="Previous page">
+                                class="pagination-button pagination-prev" aria-label="Previous page">
                                 Previous
                             </a>
                         </li>
                         <% for (int i = 1; i <= totalPages; i++) {%>
                         <li>
-                            <a onclick="updatePage(event, <%= i %>)" 
+                            <a onclick="updatePage(event, <%= i%>)" 
                                class="pagination-button <%= (i == currentPage) ? "active" : ""%>" aria-current="page">
                                 <%=i%></a>
                         </li>
                         <%}%>
                         <li>
-                            <a onclick="updatePage(event, <%= (currentPage < totalPages) ? (currentPage + 1) : totalPages %>)" 
+                            <a onclick="updatePage(event, <%= (currentPage < totalPages) ? (currentPage + 1) : totalPages%>)" 
                                class="pagination-button pagination-next" aria-label="Next page">
                                 Next
                             </a>
@@ -175,8 +177,52 @@
             </div>
         </div>
 
+        <%@include file="../includes/popupNoti.jsp"%>
         <%@include file="../includes/footer.jsp" %>
         <script src="<%= request.getContextPath()%>/assets/js/searchFilter.js"></script>
         <script src="<%= request.getContextPath()%>/assets/js/product.js"></script>
+        <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const favLinks = document.querySelectorAll('.love-list');
+                                    const cartLink = document.getElementById('cart-link');
+                                    const overlay = document.getElementById('overlay');
+                                    const cancelButton = document.querySelector('.cancel-button');
+
+
+                                    let isLogin = <%=AuthUtils.isLoggedIn(session) ? "true" : "false"%>;
+
+                                    favLinks.forEach(link => {
+                                        link.addEventListener('click', function (event) {
+                                            if (!isLogin) {
+                                                event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                                                overlay.classList.add('active');
+                                                document.body.style.overflow = 'hidden';
+                                            }
+                                        });
+                                    });
+
+                                    cartLink.addEventListener('click', function (event) {
+                                        if (!isLogin) {
+                                            event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                                            overlay.classList.add('active');
+                                            document.body.style.overflow = 'hidden'; // Ngăn cuộn
+                                        }
+                                    });
+
+                                    // Đóng popup khi bấm Cancel
+                                    cancelButton.addEventListener('click', function () {
+                                        overlay.classList.remove('active');
+                                        document.body.style.overflow = ''; // Cho phép cuộn lại
+                                    });
+
+                                    // Đóng popup khi click ra ngoài
+                                    overlay.addEventListener('click', function (event) {
+                                        if (event.target === overlay) {
+                                            overlay.classList.remove('active');
+                                            document.body.style.overflow = ''; // Cho phép cuộn lại
+                                        }
+                                    });
+                                });
+        </script>
     </body>
 </html>

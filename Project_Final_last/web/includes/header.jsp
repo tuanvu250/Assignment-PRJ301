@@ -1,3 +1,4 @@
+<%@page import="dto.UserDTO"%>
 <%@page import="utils.AuthUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -52,6 +53,7 @@
                     <div class="nav-menu" id="navMenu">
                         <a onclick="updateFilter('gender', '')">Products</a>
                         <a href="<%= request.getContextPath()%>/home/about.jsp">About Us</a>
+                        <a href="<%= request.getContextPath()%>/admin/dashboard.jsp">Admin dashboard</a>
                     </div>
                 </div>
                 <div class="nav-right">
@@ -69,10 +71,16 @@
                         </form>
                     </div>
                     <div class="nav-ic">
-                        <a href="../favourite/favouriteList.jsp">
+                        <%
+                            String username = null;
+                            if(AuthUtils.isLoggedIn(session)) {
+                            UserDTO user = (UserDTO) session.getAttribute("user");
+                            username = user.getUser_name();}
+                        %>
+                        <a href="FavController?action=readAll&username=<%=username%>" id="fav-link">
                             <i class="fas fa-heart"></i>
                         </a>
-                        <a href="../cart/cartList.jsp">
+                        <a href="<%= request.getContextPath()%>/cart/cartList.jsp" id="cart-link">
                             <i class="fas fa-shopping-cart"></i>
                         </a>
                         <div class="user-dropdown">
@@ -92,7 +100,49 @@
                 </div>
             </div>
         </header>
+        <%@include file="../includes/popupNoti.jsp"%>
         <script src="<%= request.getContextPath()%>/assets/js/header.js"></script>
         <script src="<%= request.getContextPath()%>/assets/js/searchFilter.js" ></script>
+        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const favLink = document.getElementById('fav-link');
+                                const cartLink = document.getElementById('cart-link');
+                                const overlay = document.getElementById('overlay');
+                                const cancelButton = document.querySelector('.cancel-button');
+
+
+                                let isLogin = <%=AuthUtils.isLoggedIn(session) ? "true" : "false"%>;
+
+                                favLink.addEventListener('click', function (event) {
+                                    if (!isLogin) {
+                                        event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                                        overlay.classList.add('active');
+                                        document.body.style.overflow = 'hidden'; // Ngăn cuộn
+                                    }
+                                });
+
+                                cartLink.addEventListener('click', function (event) {
+                                    if (!isLogin) {
+                                        event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                                        overlay.classList.add('active');
+                                        document.body.style.overflow = 'hidden'; // Ngăn cuộn
+                                    }
+                                });
+
+                                // Đóng popup khi bấm Cancel
+                                cancelButton.addEventListener('click', function () {
+                                    overlay.classList.remove('active');
+                                    document.body.style.overflow = ''; // Cho phép cuộn lại
+                                });
+
+                                // Đóng popup khi click ra ngoài
+                                overlay.addEventListener('click', function (event) {
+                                    if (event.target === overlay) {
+                                        overlay.classList.remove('active');
+                                        document.body.style.overflow = ''; // Cho phép cuộn lại
+                                    }
+                                });
+                            });
+        </script>
     </body>
 </html>

@@ -78,19 +78,19 @@ document.querySelectorAll(".toggle-btn").forEach(button => {
     });
 });
 
-document.querySelectorAll(".love-list").forEach(link => {
-    link.addEventListener("click", function () {
-        let icon = this.querySelector("i");
-        event.preventDefault();
-        this.classList.toggle("added");
-
-        if (this.classList.contains("added")) {
-            icon.classList.replace("fa-regular", "fa-solid");
-        } else {
-            icon.classList.replace("fa-solid", "fa-regular");
-        }
-    });
-});
+//document.querySelectorAll(".love-list").forEach(link => {
+//    link.addEventListener("click", function () {
+//        let icon = this.querySelector("i");
+//        event.preventDefault();
+//        this.classList.toggle("added");
+//
+//        if (this.classList.contains("added")) {
+//            icon.classList.replace("fa-regular", "fa-solid");
+//        } else {
+//            icon.classList.replace("fa-solid", "fa-regular");
+//        }
+//    });
+//});
 
 document.querySelectorAll(".choice-list a").forEach(link => {
     link.addEventListener("click", function (event) {
