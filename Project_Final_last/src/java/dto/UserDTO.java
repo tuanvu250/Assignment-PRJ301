@@ -10,6 +10,7 @@ public class UserDTO {
     private int role_id;
     private String status;
     private String token;
+    private String image;
 
     public UserDTO() {
         this.full_name = "";
@@ -17,9 +18,10 @@ public class UserDTO {
         this.password = "";
         this.email = "";
         this.phone_number = "";
+        this.image = "";
     }
 
-    public UserDTO(String full_name, String user_name, String password, String email, String phone_number, int role_id, String status, String token) {
+    public UserDTO(String full_name, String user_name, String password, String email, String phone_number, int role_id, String status, String token, String image) {
         this.full_name = full_name;
         this.user_name = user_name;
         this.password = password;
@@ -28,10 +30,19 @@ public class UserDTO {
         this.role_id = role_id;
         this.status = status;
         this.token = token;
+        this.image = image;
     }
 
     public String getStatus() {
         return status;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public void setStatus(String status) {

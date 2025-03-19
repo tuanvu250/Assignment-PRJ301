@@ -64,7 +64,8 @@ public class UserDAO implements IDAO<UserDTO, String> {
                         rs.getString("PHONE"),
                         rs.getInt("ROLE_ID"),
                         rs.getString("STATUS"),
-                        rs.getString("TOKEN"));
+                        rs.getString("TOKEN"),
+                        rs.getString("profile_image"));
                 list.add(us);
             }
         } catch (ClassNotFoundException ex) {
@@ -96,7 +97,8 @@ public class UserDAO implements IDAO<UserDTO, String> {
                         rs.getString("PHONE"),
                         rs.getInt("ROLE_ID"),
                         rs.getString("STATUS"),
-                        rs.getString("TOKEN"));
+                        rs.getString("TOKEN"),
+                        rs.getString("profile_image"));
                 return us;
             }
         } catch (ClassNotFoundException ex) {
@@ -123,7 +125,8 @@ public class UserDAO implements IDAO<UserDTO, String> {
                         rs.getString("PHONE"),
                         rs.getInt("ROLE_ID"),
                         rs.getString("STATUS"),
-                        rs.getString("TOKEN"));
+                        rs.getString("TOKEN"),
+                        rs.getString("profile_image"));
                 return us;
             }
         } catch (ClassNotFoundException ex) {
@@ -137,7 +140,7 @@ public class UserDAO implements IDAO<UserDTO, String> {
     @Override
     public boolean update(UserDTO object) {
         String sql = "UPDATE [dbo].[USERS] "
-                + "SET [FULLNAME] = ?, [PASSWORD] = ?, [EMAIL] = ?, [PHONE] = ?, [ROLE_ID] = ?, [STATUS] = ?, [TOKEN] = ? "
+                + "SET [FULLNAME] = ?, [PASSWORD] = ?, [EMAIL] = ?, [PHONE] = ?, [ROLE_ID] = ?, [STATUS] = ?, [TOKEN] = ?, [profile_image] = ? "
                 + "WHERE [USER_NAME] = ?";
 
         try {
@@ -150,7 +153,8 @@ public class UserDAO implements IDAO<UserDTO, String> {
             ps.setInt(5, object.getRole_id());
             ps.setString(6, object.getStatus());
             ps.setString(7, object.getToken());
-            ps.setString(8, object.getUser_name());
+            ps.setString(8, object.getImage());
+            ps.setString(9, object.getUser_name());
             int n = ps.executeUpdate();
             return n > 0;
         } catch (ClassNotFoundException ex) {

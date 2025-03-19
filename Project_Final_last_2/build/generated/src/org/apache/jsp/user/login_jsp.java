@@ -3,6 +3,7 @@ package org.apache.jsp.user;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
+import dto.UserDTO;
 import utils.AuthUtils;
 
 public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
@@ -63,6 +64,7 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("    </head>\r\n");
       out.write("    <body>\r\n");
       out.write("        ");
+      out.write("\r\n");
       out.write("\r\n");
       out.write("\r\n");
       out.write("<!DOCTYPE html>\r\n");
@@ -146,17 +148,16 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                                ");
 
                                     if (AuthUtils.isLoggedIn(session)) {
-                                        String imageUser = (String) session.getAttribute("imageUser");
+                                        UserDTO user = AuthUtils.getUser(session);
+                                        String imageUser = user.getImage();
                                         if (imageUser == null) {
-                                            imageUser = "assets/img/img-users/default-avatar.jpg";
+                                            imageUser = request.getContextPath() + "/assets/img/img-users/default-avatar.jpg";
                                         } else {
-                                            imageUser = request.getContextPath() + "/" + imageUser;
+                                            imageUser = request.getContextPath() + "/LoadImageController?image=" + imageUser;
                                         }
                                 
       out.write(" <img src=\"");
-      out.print( imageUser );
-      out.write("?v=");
-      out.print( System.currentTimeMillis() );
+      out.print( imageUser);
       out.write("\" alt=\"User\"> ");
  } else {
                                 
@@ -180,7 +181,9 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                </div>\r\n");
       out.write("            </div>\r\n");
       out.write("        </header>\r\n");
-      out.write("        <script src=\"../assets/js/header.js\"></script>\r\n");
+      out.write("        <script src=\"");
+      out.print( request.getContextPath());
+      out.write("/assets/js/header.js\"></script>\r\n");
       out.write("        <script src=\"../assets/js/searchFilter.js\" ></script>\r\n");
       out.write("    </body>\r\n");
       out.write("</html>");
@@ -198,6 +201,15 @@ public final class login_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("                    LOGIN\r\n");
       out.write("                </button>\r\n");
       out.write("            </form>\r\n");
+      out.write("            ");
+
+                String errorLogin = request.getAttribute("errorLogin") + "";
+                errorLogin = errorLogin.equals("null") ? "" : errorLogin;
+            
+      out.write("\r\n");
+      out.write("            <div style=\"color: red\">");
+      out.print(errorLogin);
+      out.write("</div>\r\n");
       out.write("            <div class=\"login-mid\">\r\n");
       out.write("                <div>\r\n");
       out.write("                    <input type=\"checkbox\"/>\r\n");

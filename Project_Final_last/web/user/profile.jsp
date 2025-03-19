@@ -1,51 +1,76 @@
-<%-- 
-    Document   : profile
-    Created on : Mar 11, 2025, 4:10:13 PM
-    Author     : ADMIN
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="dto.UserDTO" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Profile Page</title>
         <link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/profile.css">    
-
     </head>
     <body>
         <%@include file="../includes/header.jsp" %>
+
+        <%
+            UserDTO user = (UserDTO) session.getAttribute("user");
+            if (user == null) {
+                response.sendRedirect("login.jsp");
+                return;
+            }
+
+            // Lấy ảnh user từ session (nếu có), ngược lại dùng ảnh mặc định
+            String imageUser = user.getImage();
+            if (imageUser == null) {
+                imageUser = request.getContextPath() + "/assets/img/img-users/default-avatar.jpg";
+            } else {
+                imageUser = request.getContextPath() + "/LoadImageController?image=" + imageUser;
+
+            }
+            String uploadFile = request.getAttribute("uploadFile") + "";
+            uploadFile = uploadFile.equals("null") ? "" : uploadFile;
+        %>
+
         <div class="profile">
             <div class="profile-left">
-                <form>
-                    <h2>Profile picture</h2>
-                    <img src="../assets/img/img-users/avt-user-test.jpg" alt="User Profile Picture">
-                    <input type="file" name="file" accept="image/*">
-                    <button type="submit">Update your picture</button>
+                <form action="<%= request.getContextPath()%>/ProfileController" method="post" enctype="multipart/form-data">
+                    <h2>Profile Picture</h2>
+                    <img src="<%= imageUser%>" alt="User Profile Picture" id="profileImagePreview">
+                    <input type="hidden" name="action" value="updateImage">
+                    <input type="file" name="profileImage" accept="image/*" id="profileImageInput">
+                    <button type="submit">Update Picture</button>
                 </form>
+                <p><%=uploadFile%></p>
                 <div class="history-nav">
-                    <a href="#" id="showHistory">History orders</a>
+                    <a href="#" id="showHistory">History Orders</a>
                 </div>
             </div>
             <div class="profile-right">
-                <form class="user-info">
-                    <h2>INFORMATION</h2>
+                <form action="<%= request.getContextPath()%>/ProfileController" method="post">
+                    <input type="hidden" name="action" value="updateInfo">
+                    <div class="user-info">
+                        <h2>INFORMATION</h2>
 
-                    <label for="fullname">Full Name</label>
-                    <input type="text" id="fullname" value="Nguyễn Văn A" readonly>
-
-                    <label for="email">Email</label>
-                    <input type="email" id="email" value="nguyenvana@example.com" readonly>
-
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" value="0123456789" readonly>
-
-                    <div class="buttons">
-                        <button id="editProfile" type="submit">Edit Profile</button>
-                        <button type="button" id="show-popup-btn" class="show-popup-btn">Change Password</button>
-                        <button id="logout">Sign out</button>
+                        <label for="fullname">Full Name</label>
+                        <input type="text" id="fullname" name="fullname" value="<%= user.getFull_name()%>" required>
+                        <p style="color: red"><%=request.getAttribute("errorUpdateFullname") != null ? request.getAttribute("errorUpdateFullname") : ""%></p>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="<%= user.getEmail()%>" required>
+                        <p style="color: red"><%=request.getAttribute("errorUpdateEmail") != null ? request.getAttribute("errorUpdateEmail") : ""%></p>
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" value="<%= user.getPhone_number()%>" required>
+                        <p style="color: red"><%=request.getAttribute("errorUpdatePhone") != null ? request.getAttribute("errorUpdateEmail") : ""%></p>
+                        <div class="buttons">
+                            <button type="submit">Save Changes</button>
+                            <button type="button" class="show-popup-btn">Change Password</button>
+                            <a href="<%= request.getContextPath()%>/UserController?action=logout"><button type="button" id="logout">Sign out</button></a>
+                        </div>
+                        <%
+                            String changeSuccess = request.getAttribute("changeSuccess") + "";
+                            changeSuccess = changeSuccess.equals("null") ? "" : changeSuccess;
+                        %>
+                        <div style="green"><%=changeSuccess%></div>
                     </div>
                 </form>
+
                 <div class="overlay" id="overlay">
                     <div class="popup" role="dialog" aria-labelledby="popup-title" aria-modal="true">
                         <div class="popup-header">
@@ -53,17 +78,18 @@
                             <button class="close-button" id="close-button" aria-label="Close">×</button>
                         </div>
 
-                        <form id="password-form">
+                        <form id="password-form" action="<%= request.getContextPath()%>/UserController" method="post">
+                            <input type="hidden" name="action" value="changePassword">
                             <div class="form-group">
                                 <label for="current-password">Current Password</label>
                                 <input 
                                     type="password" 
                                     id="current-password" 
-                                    name="current-password" 
+                                    name="currentPassword" 
+                                    value="<%=session.getAttribute("currentPW") != null ? session.getAttribute("currentPW") : ""%>"
                                     required 
-                                    autocomplete="current-password"
                                     >
-                                <div class="error-message" id="current-password-error">Please enter your current password</div>
+                                <div class="error-message" id="current-password-error"><%= request.getAttribute("wrongCurrentPassword") != null ? request.getAttribute("wrongCurrentPassword") : ""%></div>
                             </div>
 
                             <div class="form-group">
@@ -71,15 +97,14 @@
                                 <input 
                                     type="password" 
                                     id="new-password" 
-                                    name="new-password" 
+                                    name="newPassword" 
                                     required 
-                                    autocomplete="new-password"
-                                    aria-describedby="password-requirements"
                                     >
                                 <div class="password-requirements" id="password-requirements">
-                                    Password must be at least 8 characters and include a number, a lowercase letter, an uppercase letter, and a special character.
+                                    Password must be at least 8 characters!
                                 </div>
-                                <div class="error-message" id="new-password-error">Password doesn't meet requirements</div>
+                                <div class="error-message" id="new-password-error"><%= request.getAttribute("sameCurrentPassword") != null ? request.getAttribute("sameCurrentPassword") : ""%></div>
+                                <div class="error-message" id="new-password-error"><%= request.getAttribute("wrongNewPassword") != null ? request.getAttribute("wrongNewPassword") : ""%></div>
                             </div>
 
                             <div class="form-group">
@@ -87,21 +112,20 @@
                                 <input 
                                     type="password" 
                                     id="confirm-password" 
-                                    name="confirm-password" 
-                                    required 
-                                    autocomplete="new-password"
+                                    name="confirmPassword" 
+                                    required                                
                                     >
-                                <div class="error-message" id="confirm-password-error">Passwords don't match</div>
+                                <div class="error-message" id="confirm-password-error"><%= request.getAttribute("notMatchPassword") != null ? request.getAttribute("notMatchPassword") : ""%></div>
                             </div>
 
                             <div class="actions">
-                                <button type="button" class="cancel-button" id="cancel-button">Cancel</button>
+                                <button type="reset" class="cancel-button" id="cancel-button">Cancel</button>
                                 <button type="submit" class="submit-button">Change Password</button>
                             </div>
                         </form>
                     </div>
-                </div>
 
+                </div>
                 <div class="order-history" id="orderHistory">
                     <h2>ORDER HISTORY</h2>
                     <table class="order-table">
@@ -115,41 +139,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>#ORD-2025-001</td>
-                                <td>Mar 15, 2025</td>
-                                <td>$125.00</td>
-                                <td><span class="order-status status-completed">Completed</span></td>
-                                <td><a href="#" class="view-details">View Details</a></td>
-                            </tr>
-                            <tr>
-                                <td>#ORD-2025-002</td>
-                                <td>Mar 10, 2025</td>
-                                <td>$78.50</td>
-                                <td><span class="order-status status-completed">Completed</span></td>
-                                <td><a href="#" class="view-details">View Details</a></td>
-                            </tr>
-                            <tr>
-                                <td>#ORD-2025-003</td>
-                                <td>Mar 5, 2025</td>
-                                <td>$210.75</td>
-                                <td><span class="order-status status-processing">Processing</span></td>
-                                <td><a href="#" class="view-details">View Details</a></td>
-                            </tr>
-                            <tr>
-                                <td>#ORD-2025-004</td>
-                                <td>Feb 28, 2025</td>
-                                <td>$45.99</td>
-                                <td><span class="order-status status-cancelled">Cancelled</span></td>
-                                <td><a href="#" class="view-details">View Details</a></td>
-                            </tr>
-                            <tr>
-                                <td>#ORD-2025-005</td>
-                                <td>Feb 20, 2025</td>
-                                <td>$132.25</td>
-                                <td><span class="order-status status-completed">Completed</span></td>
-                                <td><a href="#" class="view-details">View Details</a></td>
-                            </tr>
+                            <!-- Dữ liệu sẽ được load từ database -->
                         </tbody>
                     </table>
                 </div>
@@ -157,12 +147,14 @@
         </div>
         <%@include file="../includes/footer.jsp" %>
         <script src="<%= request.getContextPath()%>/assets/js/profile.js"></script>
+
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const showPopupBtn = document.querySelector('.show-popup-btn');
                 const overlay = document.querySelector('.overlay');
                 const closeButton = document.querySelector('.close-button');
                 const cancelButton = document.querySelector('.cancel-button');
+                const passwordForm = document.getElementById('password-form');
 
                 // Hiển thị popup
                 function showPopup() {
@@ -170,12 +162,11 @@
                     document.body.style.overflow = 'hidden'; // Ngăn cuộn trang
                 }
 
-                // Ẩn popup
+                // Ẩn popup, reset form và xóa session currentPW
                 function hidePopup() {
                     overlay.classList.remove('active');
-                    document.body.style.overflow = ''; // Khôi phục cuộn trang
+                    window.location.reload(); // Reload lại trang
                 }
-
                 // Thêm sự kiện click cho các nút
                 showPopupBtn.addEventListener('click', showPopup);
                 closeButton.addEventListener('click', hidePopup);
@@ -188,6 +179,21 @@
                     }
                 });
             });
+
+
         </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                let showForm = "<%= request.getAttribute("showChangePassword")%>";
+                if (showForm === "true") {
+                    document.getElementById("overlay").classList.add("active");
+                } else {
+                    document.getElementById("overlay").classList.remove("active");
+                }
+            });
+        </script>
+
+
+
     </body>
 </html>

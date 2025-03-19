@@ -7,6 +7,7 @@ package services;
 
 import dao.UserDAO;
 import dto.UserDTO;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -34,7 +35,8 @@ public class VerifyRegister {
     }
 
     public static boolean verifyPassword(String password) {
-        return !(password == null || password.trim().isEmpty());
+        String regex = "^.{8,}$";
+        return password != null && password.matches(regex);
     }
 
     public static boolean verifyConfirmPassword(String password, String cfPassword) {
@@ -49,7 +51,7 @@ public class VerifyRegister {
         if (email == null || email.trim().isEmpty()) {
             return false;
         }
-        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@(gmail\\.com|yahoo\\.com|outlook\\.com|hotmail\\.com|icloud\\.com)$";
         return Pattern.matches(emailRegex, email);
     }
 
@@ -59,5 +61,19 @@ public class VerifyRegister {
         }
         String phoneRegex = "^\\+?[0-9]{1,4}[0-9]{6,14}$";
         return Pattern.matches(phoneRegex, phone);
+    }
+    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp");
+
+    public static boolean verifyImage(String fileName) {
+        if (fileName == null || fileName.trim().isEmpty()) {
+            return false;
+        }
+
+        int dotIndex = fileName.lastIndexOf(".");
+        if (dotIndex > 0) {
+            String fileExtension = fileName.substring(dotIndex).toLowerCase();
+            return ALLOWED_EXTENSIONS.contains(fileExtension);
+        }
+        return false;
     }
 }

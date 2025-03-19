@@ -26,6 +26,11 @@
                     LOGIN
                 </button>
             </form>
+            <%
+                String errorLogin = request.getAttribute("errorLogin") + "";
+                errorLogin = errorLogin.equals("null") ? "" : errorLogin;
+            %>
+            <div style="color: red"><%=errorLogin%></div>
             <div class="login-mid">
                 <div>
                     <input type="checkbox"/>

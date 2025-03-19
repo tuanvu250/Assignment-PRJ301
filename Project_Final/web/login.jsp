@@ -124,29 +124,32 @@
                 <input type="hidden" name="action" value="login" />
                 <input class="login-sign" type="text" placeholder="Enter username" name="username"/>
                 <input class="login-sign"type="password" placeholder="Enter password" name="password"/>
-                <button class="login-btn">
+                <button class="login-btn" type="submit">
                     SIGN IN
                 </button>
-            </form>
-            <div class="login-mid">
-                <div>
-                    <input type="checkbox"/>
-                    Remember me
-                </div>
-                <a href="" >Forgot password?</a>
-            </div>
-            <div class="login-line">
-                <div class="login-linee"></div>
-                <h3>OR</h3>
-                <div class="login-linee"></div>
-            </div>
+                
 
-            <div class="login-end">
-                Don’t have an account?
-                <a href="register.jsp" >Register</a>
-            </div>
+                <div class="login-mid">
+                    <div>
+                        <input type="checkbox"/>
+                        Remember me
+                    </div>
+                    <a href="" >Forgot password?</a>
+                </div>
+                <div class="login-line">
+                    <div class="login-linee"></div>
+                    <h3>OR</h3>
+                    <div class="login-linee"></div>
+                </div>
+
+                <div class="login-end">
+                    Don’t have an account?
+                    <a href="register.jsp" >Register</a>
+                </div>
 
         </div>
         <%@include file="footer.jsp" %>
+
     </body>
 </html>
+:

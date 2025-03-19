@@ -44,28 +44,88 @@
                 </div>
             </div>
             <div class="profile-right">
-                <form action="ProfileController" method="post">
+                <form action="<%= request.getContextPath()%>/ProfileController" method="post">
                     <input type="hidden" name="action" value="updateInfo">
                     <div class="user-info">
                         <h2>INFORMATION</h2>
 
                         <label for="fullname">Full Name</label>
                         <input type="text" id="fullname" name="fullname" value="<%= user.getFull_name()%>" required>
-
+                        <p style="color: red"><%=request.getAttribute("errorUpdateFullname") != null ? request.getAttribute("errorUpdateFullname") : ""%></p>
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" value="<%= user.getEmail()%>" required>
-
+                        <p style="color: red"><%=request.getAttribute("errorUpdateEmail") != null ? request.getAttribute("errorUpdateEmail") : ""%></p>
                         <label for="phone">Phone Number</label>
                         <input type="tel" id="phone" name="phone" value="<%= user.getPhone_number()%>" required>
-
+                        <p style="color: red"><%=request.getAttribute("errorUpdatePhone") != null ? request.getAttribute("errorUpdateEmail") : ""%></p>
                         <div class="buttons">
                             <button type="submit">Save Changes</button>
-                            <a href="<%= request.getContextPath()%>/ProfileController?"><button type="button" id="changePassword">Change Password</button></a>
+                            <button type="button" class="show-popup-btn">Change Password</button>
                             <a href="<%= request.getContextPath()%>/UserController?action=logout"><button type="button" id="logout">Sign out</button></a>
                         </div>
+                        <%
+                            String changeSuccess = request.getAttribute("changeSuccess") + "";
+                            changeSuccess = changeSuccess.equals("null") ? "" : changeSuccess;
+                        %>
+                        <div style="green"><%=changeSuccess%></div>
                     </div>
                 </form>
 
+                <div class="overlay" id="overlay">
+                    <div class="popup" role="dialog" aria-labelledby="popup-title" aria-modal="true">
+                        <div class="popup-header">
+                            <h2 class="popup-title" id="popup-title">Change Password</h2>
+                            <button class="close-button" id="close-button" aria-label="Close">×</button>
+                        </div>
+
+                        <form id="password-form" action="<%= request.getContextPath()%>/UserController" method="post">
+                            <input type="hidden" name="action" value="changePassword">
+                            <div class="form-group">
+                                <label for="current-password">Current Password</label>
+                                <input 
+                                    type="password" 
+                                    id="current-password" 
+                                    name="currentPassword" 
+                                    value="<%=session.getAttribute("currentPW") != null ? session.getAttribute("currentPW") : ""%>"
+                                    required 
+                                    >
+                                <div class="error-message" id="current-password-error"><%= request.getAttribute("wrongCurrentPassword") != null ? request.getAttribute("wrongCurrentPassword") : ""%></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="new-password">New Password</label>
+                                <input 
+                                    type="password" 
+                                    id="new-password" 
+                                    name="newPassword" 
+                                    required 
+                                    >
+                                <div class="password-requirements" id="password-requirements">
+                                    Password must be at least 8 characters!
+                                </div>
+                                <div class="error-message" id="new-password-error"><%= request.getAttribute("sameCurrentPassword") != null ? request.getAttribute("sameCurrentPassword") : ""%></div>
+                                <div class="error-message" id="new-password-error"><%= request.getAttribute("wrongNewpassword") != null ? request.getAttribute("wrongNewpassword") : ""%></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm New Password</label>
+                                <input 
+                                    type="password" 
+                                    id="confirm-password" 
+                                    name="confirmPassword" 
+                                    required                                
+                                    >
+                                <div class="error-message" id="confirm-password-error"><%= request.getAttribute("notMatchPassword") != null ? request.getAttribute("notMatchPassword") : ""%></div>
+                            </div>
+
+                            <div class="actions">
+                                <button type="reset" class="cancel-button" id="cancel-button">Cancel</button>
+                                <button type="submit" class="submit-button">Change Password</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
                 <div class="order-history" id="orderHistory">
                     <h2>ORDER HISTORY</h2>
                     <table class="order-table">
@@ -87,5 +147,51 @@
         </div>
         <%@include file="../includes/footer.jsp" %>
         <script src="<%= request.getContextPath()%>/assets/js/profile.js"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const showPopupBtn = document.querySelector('.show-popup-btn');
+                const overlay = document.querySelector('.overlay');
+                const closeButton = document.querySelector('.close-button');
+                const cancelButton = document.querySelector('.cancel-button');
+
+                // Hiển thị popup
+                function showPopup() {
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Ngăn cuộn trang
+                }
+
+                // Ẩn popup
+                function hidePopup() {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = ''; // Khôi phục cuộn trang
+                }
+
+                // Thêm sự kiện click cho các nút
+                showPopupBtn.addEventListener('click', showPopup);
+                closeButton.addEventListener('click', hidePopup);
+                cancelButton.addEventListener('click', hidePopup);
+
+                // Đóng popup khi click ra ngoài
+                overlay.addEventListener('click', function (event) {
+                    if (event.target === overlay) {
+                        hidePopup();
+                    }
+                });
+            });
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                let showForm = "<%= request.getAttribute("showChangePassword")%>";
+                if (showForm === "true") {
+                    document.getElementById("overlay").classList.add("active");
+                } else {
+                    document.getElementById("overlay").classList.remove("active");
+                }
+            });
+        </script>
+
+
+
     </body>
 </html>

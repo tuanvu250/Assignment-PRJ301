@@ -23,6 +23,7 @@ public class UserController extends HttpServlet {
     private static final String HOME_PAGE = "/home/home.jsp";
     private static final String LOGIN_PAGE = "/user/login.jsp";
     private static final String REGISTER_PAGE = "/user/register.jsp";
+    private static final String PROFILE_PAGE = "/user/profile.jsp";
     private static UserDAO userDao = new UserDAO();
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(UserController.class.getName());
 
@@ -100,7 +101,7 @@ public class UserController extends HttpServlet {
 
             String token = UUID.randomUUID().toString();
 
-            UserDTO newUser = new UserDTO(fullname, username, password, email, phone, 3, "ACTIVE", token);
+            UserDTO newUser = new UserDTO(fullname, username, password, email, phone, 3, "ACTIVE", token, null);
             UserDTO existUser = userDao.readByUsName(newUser.getUser_name());
             if (existUser != null) {
                 request.setAttribute("errorMessUsername", "User ID already exists. Please choose another one.");
@@ -145,6 +146,74 @@ public class UserController extends HttpServlet {
         return url;
     }
 
+    protected String processChangePassword(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String url = HOME_PAGE;
+        HttpSession session = request.getSession();
+
+        if (AuthUtils.isLoggedIn(session)) {
+            url = PROFILE_PAGE;
+
+            // Lấy current password user nhập vào
+            String currentPassword = request.getParameter("currentPassword");
+            String hashedCurrentPassword = PasswordUtils.hashPassword(currentPassword);
+
+            // Lấy user từ session
+            UserDTO user = AuthUtils.getUser(session);
+            String currentPw = user.getPassword();
+
+            // Kiểm tra mật khẩu hiện tại có đúng không
+            if (!currentPw.equals(hashedCurrentPassword)) {
+                request.setAttribute("wrongCurrentPassword", "Wrong Current Password!");
+                request.setAttribute("showChangePassword", true);
+                return url;
+            } else {
+                session.setAttribute("currentPW", currentPassword);
+            }
+
+            // Lấy mật khẩu mới từ input
+            String newPassword = request.getParameter("newPassword");
+
+            // Kiểm tra mật khẩu mới có hợp lệ không (>= 8 ký tự)
+            if (!VerifyRegister.verifyPassword(newPassword)) {
+                request.setAttribute("wrongNewPassword", "Password must be at least 8 characters!");
+                request.setAttribute("showChangePassword", true);
+                return url;
+            }
+
+            // Mã hóa mật khẩu mới
+            String hashedNewPassword = PasswordUtils.hashPassword(newPassword);
+
+            // Kiểm tra mật khẩu mới có trùng với mật khẩu cũ không
+            if (hashedNewPassword.equals(currentPw)) {
+                request.setAttribute("showChangePassword", true);
+                request.setAttribute("sameCurrentPassword", "New password must be different!");
+                return url;
+            }
+
+            // Lấy mật khẩu xác nhận
+            String confirmNewPassword = request.getParameter("confirmPassword");
+
+            // Kiểm tra mật khẩu xác nhận có khớp với mật khẩu mới không
+            if (!confirmNewPassword.equals(newPassword)) {
+                request.setAttribute("notMatchPassword", "Passwords don't match!");
+                request.setAttribute("showChangePassword", true);
+                return url;
+            }
+
+            // Cập nhật mật khẩu trong database
+            user.setPassword(hashedNewPassword);
+            if (userDao.update(user)) {
+                request.setAttribute("changeSuccess", "Change Password successfully!");
+                session.removeAttribute("showChangePassword");
+                session.removeAttribute("currentPW");
+            } else {
+                session.setAttribute("changeFailed", "Change Password Failed!");
+                session.setAttribute("showChangePassword", true);
+            }
+        }
+        return url;
+    }
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -160,6 +229,8 @@ public class UserController extends HttpServlet {
                     url = processLogout(request, response);
                 } else if (action.equals("register")) {
                     url = processRegister(request, response);
+                } else if (action.equals("changePassword")) {
+                    url = processChangePassword(request, response);
                 }
             }
         } catch (Exception e) {
@@ -167,6 +238,7 @@ public class UserController extends HttpServlet {
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
+            //response.sendRedirect(request.getContextPath() + url);
         }
     }
 

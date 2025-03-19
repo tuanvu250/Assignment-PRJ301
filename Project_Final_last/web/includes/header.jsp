@@ -1,3 +1,4 @@
+<%@page import="dto.UserDTO"%>
 <%@page import="utils.AuthUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -56,13 +57,8 @@
                 </div>
                 <div class="nav-right">
                     <div class="nav-search">
-                        <%
-                            String searchTerm = request.getAttribute("searchTerm") + "";
-                            searchTerm = searchTerm.equals("null") ? "" : searchTerm;
-                        %>
-                        <form class="nav-search-form" id="searchForm" action="<%= request.getContextPath()%>/searchFilter">
-                            <input type="text" name="searchTerm" id="searchInput" placeholder="Search..." class="search"  value="<%= request.getParameter("searchTerm") == null ? "" : request.getParameter("searchTerm")%>">
-                            <input type="hidden" name="action" value="searchShoes">
+                        <form class="nav-search-form" action="search.jsp" method="get">
+                            <input type="text" name="query" placeholder="Search..." class="search">
                             <button type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -76,10 +72,17 @@
                             <i class="fas fa-shopping-cart"></i>
                         </a>
                         <div class="user-dropdown">
-                            <div class="user-avatar">
+                            <div class="user-avatar" id="userDropdownToggle">
                                 <%
                                     if (AuthUtils.isLoggedIn(session)) {
-                                %> <img  id="userDropdownToggle" src="<%= request.getContextPath()%>/assets/img/img-users/avt-user-test.jpg" alt="User"> <% } else {
+                                        UserDTO user = AuthUtils.getUser(session);
+                                        String imageUser = user.getImage();
+                                        if (imageUser == null) {
+                                            imageUser = request.getContextPath() + "/assets/img/img-users/default-avatar.jpg";
+                                        } else {
+                                            imageUser = request.getContextPath() + "/LoadImageController?image=" + imageUser;
+                                        }
+                                %> <img src="<%= imageUser%>" alt="User"> <% } else {
                                 %><a href="<%= request.getContextPath()%>/user/login.jsp"><i class="fas fa-user"></i></a><%}%>
                             </div>
                             <div class="user-dropdown-content" id="userDropdownMenu">
@@ -93,6 +96,6 @@
             </div>
         </header>
         <script src="<%= request.getContextPath()%>/assets/js/header.js"></script>
-        <script src="<%= request.getContextPath()%>/assets/js/searchFilter.js" ></script>
+        <script src="../assets/js/searchFilter.js" ></script>
     </body>
 </html>

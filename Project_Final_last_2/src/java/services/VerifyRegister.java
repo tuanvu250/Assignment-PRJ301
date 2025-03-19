@@ -35,7 +35,8 @@ public class VerifyRegister {
     }
 
     public static boolean verifyPassword(String password) {
-        return !(password == null || password.trim().isEmpty());
+        String regex = "^.{8,}$";
+        return password != null && password.matches(regex);
     }
 
     public static boolean verifyConfirmPassword(String password, String cfPassword) {
@@ -50,7 +51,7 @@ public class VerifyRegister {
         if (email == null || email.trim().isEmpty()) {
             return false;
         }
-        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@(gmail\\.com|yahoo\\.com|outlook\\.com|hotmail\\.com|icloud\\.com)$";
         return Pattern.matches(emailRegex, email);
     }
 
@@ -73,6 +74,6 @@ public class VerifyRegister {
             String fileExtension = fileName.substring(dotIndex).toLowerCase();
             return ALLOWED_EXTENSIONS.contains(fileExtension);
         }
-        return false; 
+        return false;
     }
 }
