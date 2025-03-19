@@ -104,7 +104,7 @@
                 </div>
             </div>
         </header>
-        <%@include file="../includes/popupNoti.jsp"%>
+        
         <script src="<%= request.getContextPath()%>/assets/js/header.js"></script>
         <script src="<%= request.getContextPath()%>/assets/js/searchFilter.js" ></script>
         <script>

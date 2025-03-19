@@ -57,7 +57,7 @@
                         <p style="color: red"><%=request.getAttribute("errorUpdateEmail") != null ? request.getAttribute("errorUpdateEmail") : ""%></p>
                         <label for="phone">Phone Number</label>
                         <input type="tel" id="phone" name="phone" value="<%= user.getPhone_number()%>" required>
-                        <p style="color: red"><%=request.getAttribute("errorUpdatePhone") != null ? request.getAttribute("errorUpdateEmail") : ""%></p>
+                        <p style="color: red"><%=request.getAttribute("errorUpdatePhone") != null ? request.getAttribute("errorUpdatePhone") : ""%></p>
                         <div class="buttons">
                             <button type="submit">Save Changes</button>
                             <button type="button" class="show-popup-btn">Change Password</button>
@@ -154,7 +154,6 @@
                 const overlay = document.querySelector('.overlay');
                 const closeButton = document.querySelector('.close-button');
                 const cancelButton = document.querySelector('.cancel-button');
-                const passwordForm = document.getElementById('password-form');
 
                 // Hiển thị popup
                 function showPopup() {
@@ -162,11 +161,14 @@
                     document.body.style.overflow = 'hidden'; // Ngăn cuộn trang
                 }
 
-                // Ẩn popup, reset form và xóa session currentPW
+                // Ẩn popup và reload trang
                 function hidePopup() {
                     overlay.classList.remove('active');
-                    window.location.reload(); // Reload lại trang
+                    setTimeout(() => {
+                        window.location.href = "<%= request.getContextPath()%>/user/profile.jsp";
+                    }, 100);
                 }
+
                 // Thêm sự kiện click cho các nút
                 showPopupBtn.addEventListener('click', showPopup);
                 closeButton.addEventListener('click', hidePopup);
@@ -179,8 +181,6 @@
                     }
                 });
             });
-
-
         </script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
@@ -192,8 +192,5 @@
                 }
             });
         </script>
-
-
-
     </body>
 </html>

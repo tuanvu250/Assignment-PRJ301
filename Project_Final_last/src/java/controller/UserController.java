@@ -166,6 +166,7 @@ public class UserController extends HttpServlet {
             if (!currentPw.equals(hashedCurrentPassword)) {
                 request.setAttribute("wrongCurrentPassword", "Wrong Current Password!");
                 request.setAttribute("showChangePassword", true);
+                session.removeAttribute("currentPW");
                 return url;
             } else {
                 session.setAttribute("currentPW", currentPassword);
@@ -214,6 +215,7 @@ public class UserController extends HttpServlet {
         }
         return url;
     }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
