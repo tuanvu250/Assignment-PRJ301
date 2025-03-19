@@ -126,13 +126,13 @@
                             </a>
                             <div class="div-hover-buy" <% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: rgba(0,0,0,0.3);"<%}%>>
                                 <a class="hover-buy"<% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: #1d1d1b; opacity: 1;"<%} else {%> 
-                                   href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>"<%}%>>
+                                   href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>&colorIndex=1"<%}%>>
                                     <% if (AuthUtils.isSoldout(shoes)) { %>PRE-ORDER<%} else {%>BUY<%}%>
                                 </a>
                             </div>
                             <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
                         </div>
-                        <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>"
+                        <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>&colorIndex=1"
                            class="product-name"><%=shoes.getShoes_name()%></a>
                         <p>Color</p>
                         <div class="product-price">
