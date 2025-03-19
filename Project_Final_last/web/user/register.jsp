@@ -109,11 +109,11 @@
                 errorRegister = errorRegister.equals("null") ? "" : errorRegister;
                 if (!errorRegister.isEmpty()) {
             %>
-            <div style="color: red"> <%=errorRegister%><div>
+            <div style="color: red"> <%=errorRegister%></div>
                     <%
                         }
                     %>
-                </div>
+        </div>
                 <%@include file="../includes/footer.jsp" %>
                 </body>
                 </html>

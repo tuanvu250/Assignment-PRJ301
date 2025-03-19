@@ -142,8 +142,8 @@
                 const favLinks = document.querySelectorAll('.love-list');
                 const cartLinks = document.querySelectorAll('.cart-list');
                 const buyLink = document.getElementById('buy-now');
-                const overlay = document.getElementById('overlay');
-                const cancelButton = document.querySelector('.cancel-button');
+                const overlay = document.getElementById('modal-bg');
+                const cancelButton = document.querySelector('.btn-cancel');
 
 
                 let isLogin = <%=AuthUtils.isLoggedIn(session) ? "true" : "false"%>;
@@ -152,7 +152,7 @@
                     link.addEventListener('click', function (event) {
                         if (!isLogin) {
                             event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
-                            overlay.classList.add('active');
+                            overlay.classList.add('show');
                             document.body.style.overflow = 'hidden';
                         }
                     });
@@ -162,7 +162,7 @@
                     link.addEventListener('click', function (event) {
                         if (!isLogin) {
                             event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
-                            overlay.classList.add('active');
+                            overlay.classList.add('show');
                             document.body.style.overflow = 'hidden';
                         }
                     });
@@ -171,7 +171,7 @@
                 buyLink.addEventListener('click', function (event) {
                     if (!isLogin) {
                         event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
-                        overlay.classList.add('active');
+                        overlay.classList.add('show');
                         document.body.style.overflow = 'hidden'; // Ngăn cuộn
                     }
                 });
@@ -179,21 +179,21 @@
                 cartLink.addEventListener('click', function (event) {
                     if (!isLogin) {
                         event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
-                        overlay.classList.add('active');
+                        overlay.classList.add('show');
                         document.body.style.overflow = 'hidden'; // Ngăn cuộn
                     }
                 });
 
                 // Đóng popup khi bấm Cancel
                 cancelButton.addEventListener('click', function () {
-                    overlay.classList.remove('active');
+                    overlay.classList.remove('show');
                     document.body.style.overflow = ''; // Cho phép cuộn lại
                 });
 
                 // Đóng popup khi click ra ngoài
                 overlay.addEventListener('click', function (event) {
                     if (event.target === overlay) {
-                        overlay.classList.remove('active');
+                        overlay.classList.remove('show');
                         document.body.style.overflow = ''; // Cho phép cuộn lại
                     }
                 });

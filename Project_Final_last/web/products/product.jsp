@@ -185,8 +185,8 @@
                                 document.addEventListener('DOMContentLoaded', function () {
                                     const favLinks = document.querySelectorAll('.love-list');
                                     const cartLink = document.getElementById('cart-link');
-                                    const overlay = document.getElementById('overlay');
-                                    const cancelButton = document.querySelector('.cancel-button');
+                                    const overlay = document.getElementById('modal-bg');
+                                    const cancelButton = document.querySelector('.btn-cancel');
 
 
                                     let isLogin = <%=AuthUtils.isLoggedIn(session) ? "true" : "false"%>;
@@ -195,7 +195,7 @@
                                         link.addEventListener('click', function (event) {
                                             if (!isLogin) {
                                                 event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
-                                                overlay.classList.add('active');
+                                                overlay.classList.add('show');
                                                 document.body.style.overflow = 'hidden';
                                             }
                                         });
@@ -203,14 +203,14 @@
 
                                     // Đóng popup khi bấm Cancel
                                     cancelButton.addEventListener('click', function () {
-                                        overlay.classList.remove('active');
+                                        overlay.classList.remove('show');
                                         document.body.style.overflow = ''; // Cho phép cuộn lại
                                     });
 
                                     // Đóng popup khi click ra ngoài
                                     overlay.addEventListener('click', function (event) {
                                         if (event.target === overlay) {
-                                            overlay.classList.remove('active');
+                                            overlay.classList.remove('show');
                                             document.body.style.overflow = ''; // Cho phép cuộn lại
                                         }
                                     });
