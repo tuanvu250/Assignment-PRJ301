@@ -79,7 +79,7 @@
                             <i class="fas fa-shopping-cart"></i>
                         </a>
                         <div class="user-dropdown">
-                            <div class="user-avatar" <%if(AuthUtils.isLoggedIn(session)) { %>id="userDropdownToggle" <%}%>>
+                            <div class="user-avatar" <%if (AuthUtils.isLoggedIn(session)) { %>id="userDropdownToggle" <%}%>>
 
                                 <%
                                     if (AuthUtils.isLoggedIn(session)) {
@@ -104,7 +104,8 @@
                 </div>
             </div>
         </header>
-        
+
+        <%@include file="../includes/popupNoti.jsp"%>
         <script src="<%= request.getContextPath()%>/assets/js/header.js"></script>
         <script src="<%= request.getContextPath()%>/assets/js/searchFilter.js" ></script>
         <script>
@@ -112,7 +113,7 @@
                                 const favLink = document.getElementById('fav-link');
                                 const cartLink = document.getElementById('cart-link');
                                 const overlay = document.getElementById('modal-bg');
-                                const cancelButton = document.querySelector('btn-cancel');
+                                const cancelButton = document.querySelector('.btn-cancel');
 
 
                                 let isLogin = <%=AuthUtils.isLoggedIn(session) ? "true" : "false"%>;

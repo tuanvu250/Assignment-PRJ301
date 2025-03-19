@@ -46,7 +46,7 @@
 
             <div class="login-end">
                 Don’t have an account?
-                <a href="register.jsp" >Register</a>
+                <a href="<%= request.getContextPath()%>/user/register.jsp" >Register</a>
             </div>
 
         </div>
