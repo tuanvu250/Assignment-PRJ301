@@ -10,6 +10,7 @@ function updateFilter(param, value) {
     } else {
         params.set(param, value);
     }
+    params.set("page", 1);
 
     window.location.href = url.origin + newController + "?" + params.toString();
 }

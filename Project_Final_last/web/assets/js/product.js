@@ -1,5 +1,4 @@
 
-
 document.querySelectorAll(".product-gender a").forEach(link => {
     link.addEventListener("click", function (event) {
         event.preventDefault();
@@ -110,3 +109,14 @@ document.querySelectorAll(".choice-list-color a").forEach(link => {
         updateFilter(dataFilter, dataValue);
     });
 });
+
+function updatePage(event, pageNumber) {
+    event.preventDefault(); // Ngăn chặn tải lại trang mặc định của thẻ <a>
+
+    let url = new URL(window.location.href);
+    let params = new URLSearchParams(url.search);
+
+    params.set("page", pageNumber); // Chỉ cập nhật số trang
+
+    window.location.href = url.origin + url.pathname + "?" + params.toString();
+};

@@ -14,7 +14,7 @@ public interface IDAO<O, K> {
 
     List<O> readAll();
 
-    UserDTO readById(K id);
+    O readById(K id);
 
     boolean update(O object);
 

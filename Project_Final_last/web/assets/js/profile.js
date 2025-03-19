@@ -33,3 +33,34 @@ document.getElementById('editProfile').addEventListener('click', function () {
         alert('Profile updated successfully!');
     }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const showPopupBtn = document.querySelector('.show-popup-btn');
+    const overlay = document.querySelector('.overlay');
+    const closeButton = document.querySelector('.close-button');
+    const cancelButton = document.querySelector('.cancel-button');
+
+    // Hiển thị popup
+    function showPopup() {
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Ngăn cuộn trang
+    }
+
+    // Ẩn popup
+    function hidePopup() {
+        overlay.classList.remove('active');
+        document.body.style.overflow = ''; // Khôi phục cuộn trang
+    }
+
+    // Thêm sự kiện click cho các nút
+    showPopupBtn.addEventListener('click', showPopup);
+    closeButton.addEventListener('click', hidePopup);
+    cancelButton.addEventListener('click', hidePopup);
+
+    // Đóng popup khi click ra ngoài
+    overlay.addEventListener('click', function (event) {
+        if (event.target === overlay) {
+            hidePopup();
+        }
+    });
+});

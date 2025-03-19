@@ -105,47 +105,76 @@
                     </div>
                 </div>
             </div>
-            <div class="product-detail">
-                <%
-                    if (request.getAttribute("listShoesProduct") != null) {
-                        Exception e = (Exception) request.getAttribute("javax.servlet.error.exception");
-                        if (e != null) {
-                            e.printStackTrace(new java.io.PrintWriter(out));
-                        }
-                        List<ShoesProductDTO> listShoes = (List<ShoesProductDTO>) request.getAttribute("listShoesProduct");
-                        for (ShoesProductDTO shoes : listShoes) {
-                %>
-                <div class="product-item">
-                    <div class="img-sale">
-                        <% if (AuthUtils.isSale(shoes)) { %>
-                        <h3 class="label-sale">SALE OFF</h3> 
-                        <%} else if (AuthUtils.isSoldout(shoes)) {%>
-                        <h3 class="label-sale">SOLDOUT</h3>
-                        <%}%>
-                        <a>
-                            <img src="asset/<%=shoes.getShoes_id()%>_1.jpg">
-                            <img class="hidden-img" src="asset/<%=shoes.getShoes_id()%>_2.jpg">
-                        </a>
-                        <div class="div-hover-buy" <% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: rgba(0,0,0,0.3);"<%}%>>
-                            <h3 class="hover-buy"<% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: #1d1d1b; opacity: 1;"<%}%>>
-                                <% if (AuthUtils.isSoldout(shoes)) { %>PRE-ORDER<%} else {%>BUY<%}%>
-                            </h3>
+            <div>
+                <div class="product-detail">
+                    <%
+                        if (request.getAttribute("listShoesProduct") != null) {
+
+                            List<ShoesProductDTO> listShoes = (List<ShoesProductDTO>) request.getAttribute("listShoesProduct");
+                            for (ShoesProductDTO shoes : listShoes) {
+                    %>
+                    <div class="product-item" onclick="redirectToProduct(this)" style="cursor: pointer;">
+                        <div class="img-sale">
+                            <% if (AuthUtils.isSale(shoes)) { %>
+                            <h3 class="label-sale">SALE OFF</h3> 
+                            <%} else if (AuthUtils.isSoldout(shoes)) {%>
+                            <h3 class="label-sale">SOLDOUT</h3>
+                            <%}%>
+                            <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>">
+                                <img src="asset/<%=shoes.getShoes_id()%>_1.jpg">
+                                <img class="hidden-img" src="asset/<%=shoes.getShoes_id()%>_2.jpg">
+                            </a>
+                            <div class="div-hover-buy" <% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: rgba(0,0,0,0.3);"<%}%>>
+                                <a class="hover-buy"<% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: #1d1d1b; opacity: 1;"<%} else {%> 
+                                   href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>"<%}%>>
+                                    <% if (AuthUtils.isSoldout(shoes)) { %>PRE-ORDER<%} else {%>BUY<%}%>
+                                </a>
+                            </div>
+                            <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
                         </div>
-                        <a class="love-list" href="#"><i class="fa-regular fa-heart "></i></a>
+                        <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>"
+                           class="product-name"><%=shoes.getShoes_name()%></a>
+                        <p>Color</p>
+                        <div class="product-price">
+                            <p><%=shoes.getPrice()%> VND</p>
+                            <% if (AuthUtils.isSale(shoes)) { %>
+                            <p class="sale-text">XXX.XXX VND</p>
+                            <%}%>
+                        </div>
                     </div>
-                    <a href="#" class="product-name"><%=shoes.getShoes_name()%></a>
-                    <p>Color</p>
-                    <div class="product-price">
-                        <p><%=shoes.getPrice()%> VND</p>
-                        <% if (AuthUtils.isSale(shoes)) { %>
-                        <p class="sale-text">XXX.XXX VND</p>
-                        <%}%>
-                    </div>
-                </div>
-                <%}
+                    <%}
                     }%>
+                </div>
+                <% int currentPage = (int) request.getAttribute("currentPage");
+                    int totalPages = (int) request.getAttribute("totalPages");
+                %>
+
+                <nav aria-label="Pagination">
+                    <ul class="pagination">
+                        <li>
+                            <a  onclick="updatePage(event, <%= (currentPage > 1) ? (currentPage - 1) : 1%>)" 
+                               class="pagination-button pagination-prev" aria-label="Previous page">
+                                Previous
+                            </a>
+                        </li>
+                        <% for (int i = 1; i <= totalPages; i++) {%>
+                        <li>
+                            <a onclick="updatePage(event, <%= i %>)" 
+                               class="pagination-button <%= (i == currentPage) ? "active" : ""%>" aria-current="page">
+                                <%=i%></a>
+                        </li>
+                        <%}%>
+                        <li>
+                            <a onclick="updatePage(event, <%= (currentPage < totalPages) ? (currentPage + 1) : totalPages %>)" 
+                               class="pagination-button pagination-next" aria-label="Next page">
+                                Next
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
+
         <%@include file="../includes/footer.jsp" %>
         <script src="<%= request.getContextPath()%>/assets/js/searchFilter.js"></script>
         <script src="<%= request.getContextPath()%>/assets/js/product.js"></script>

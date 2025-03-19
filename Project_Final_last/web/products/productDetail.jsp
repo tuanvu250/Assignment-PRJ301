@@ -4,6 +4,10 @@
     Author     : ADMIN
 --%>
 
+<%@page import="java.util.List"%>
+<%@page import="dto.ProductColorDTO"%>
+<%@page import="dto.ShoesProductDTO"%>
+<%@page import="dao.ShoesProductDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,26 +18,34 @@
     </head>
     <body>
         <%@include file="../includes/header.jsp" %>
+        <%
+            if(request.getAttribute("shoesId") != null) {
+                String shoesId = request.getAttribute("shoesId") + "";
+                ShoesProductDAO shoesdao = new ShoesProductDAO();
+                ShoesProductDTO shoes = shoesdao.readById(shoesId);
+                List<ProductColorDTO> listColor = shoesdao.colorOfShoes(shoesId);
+                int size = listColor.size();
+        %>
         <div class="product-link">
             <a>Product</a>
             <a>Product line</a>
-            <a>Product Name</a>
+            <a><%=shoes.getShoes_name()%></a>
         </div>
         <div class="detail-container">
             <div class="slider-container">
                 <div class="img-slider">
                     <div class="img-list">
                         <div>
-                            <img src="img/SP001_1.jpg">
+                            <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_1.jpg">
                         </div>
                         <div>
-                            <img src="img/SP001_2.jpg">
+                            <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_2.jpg">
                         </div>
                         <div>
-                            <img src="img/SP001_3.jpg">
+                            <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_3.jpg">
                         </div>
                         <div>
-                            <img src="img/SP001_4.jpg">
+                            <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_4.jpg">
                         </div>
                     </div>
                     <div class="img-btn">
@@ -42,25 +54,27 @@
                     </div>
                 </div>
                 <ul class="thumnails">
-                    <li><img src="img/SP001_1.jpg" alt="thumnail_1"></li>
-                    <li><img src="img/SP001_2.jpg" alt="thumnail_2"></li>
-                    <li><img src="img/SP001_3.jpg" alt="thumnail_3"></li>
-                    <li><img src="img/SP001_4.jpg" alt="thumnail_4"></li>
+                    <li><img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_1.jpg" alt="thumnail_1"></li>
+                    <li><img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_2.jpg" alt="thumnail_2"></li>
+                    <li><img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_3.jpg" alt="thumnail_3"></li>
+                    <li><img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_4.jpg" alt="thumnail_4"></li>
                 </ul>
             </div>
             <div class="detail-info">
                 <div class="detail-text">
-                    <h2>Abc xyz hello world</h2>
-                    <p>Product ID <span>SPXXX</span></p>
-                    <h2>XXX.XXX VND</h2>
+                    <h2><%=shoes.getShoes_name()%></h2>
+                    <p>Product ID <span><%=shoes.getShoes_id()%></span></p>
+                    <h2><%=shoes.getPrice()%> VND</h2>
                 </div>
                 <div class="detail-color">
+                    <%
+                        for(ProductColorDTO color : listColor) {
+                    %>
                     <div>
-                        <a> </a>
+                        <a href=""
+                            style="background-color: <%=color.getColor_code()%>"> </a>
                     </div>
-                    <div>
-                        <a> </a>
-                    </div>
+                    <%}%>
                 </div>
                 <div class="detail-btn">
                     <div class="size-quantity">
@@ -98,12 +112,13 @@
                         <p>abc xyz</p>
                         <p>abc xyz</p>
                         <p>abc xyz</p>
-                        <img src="../../assets/img/img-home/info-table.jpg">
+                        <img src="<%= request.getContextPath()%>/assets/img/img-home/info-table.jpg">
                     </div>
                 </div>
             </div>
         </div>
+                    <%}%>
         <%@include file="../includes/footer.jsp" %>
-        <script src="../assets/js/productDetail.js"></script>
+        <script src="<%= request.getContextPath()%>/assets/js/productDetail.js"></script>
     </body>
 </html>

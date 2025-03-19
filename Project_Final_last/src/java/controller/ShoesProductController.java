@@ -23,33 +23,30 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "ShoesProductController", urlPatterns = {"/ShoesProductController"})
 public class ShoesProductController extends HttpServlet {
-    private static final String PRODUCT_PAGE = "product.jsp";
+
+    private static final String PRODUCT_PAGE = "/products/product.jsp";
     private ShoesProductDAO shoesDAO = new ShoesProductDAO();
-    
-    
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8"); 
+        response.setContentType("text/html;charset=UTF-8");
         String url = PRODUCT_PAGE;
         try {
-            String action = request.getParameter("action");
-            if(action == null) {
-                url = PRODUCT_PAGE;
-            } else {
-            }
-            
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            String shoesId = request.getParameter("shoesId");
+            request.setAttribute("shoesId", shoesId);
+            url = "/products/productDetail.jsp";
         } catch (Exception e) {
             log("ERROR: " + e.toString());
+        } finally {
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         processRequest(request, response);
     }
 

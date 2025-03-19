@@ -56,8 +56,13 @@
                 </div>
                 <div class="nav-right">
                     <div class="nav-search">
-                        <form class="nav-search-form" action="search.jsp" method="get">
-                            <input type="text" name="query" placeholder="Search..." class="search">
+                        <%
+                            String searchTerm = request.getAttribute("searchTerm") + "";
+                            searchTerm = searchTerm.equals("null") ? "" : searchTerm;
+                        %>
+                        <form class="nav-search-form" id="searchForm" action="<%= request.getContextPath()%>/searchFilter">
+                            <input type="text" name="searchTerm" id="searchInput" placeholder="Search..." class="search"  value="<%= request.getParameter("searchTerm") == null ? "" : request.getParameter("searchTerm")%>">
+                            <input type="hidden" name="action" value="searchShoes">
                             <button type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -71,10 +76,10 @@
                             <i class="fas fa-shopping-cart"></i>
                         </a>
                         <div class="user-dropdown">
-                            <div class="user-avatar" id="userDropdownToggle">
+                            <div class="user-avatar">
                                 <%
                                     if (AuthUtils.isLoggedIn(session)) {
-                                %> <img src="<%= request.getContextPath()%>/assets/img/img-users/avt-user-test.jpg" alt="User"> <% } else {
+                                %> <img  id="userDropdownToggle" src="<%= request.getContextPath()%>/assets/img/img-users/avt-user-test.jpg" alt="User"> <% } else {
                                 %><a href="<%= request.getContextPath()%>/user/login.jsp"><i class="fas fa-user"></i></a><%}%>
                             </div>
                             <div class="user-dropdown-content" id="userDropdownMenu">
@@ -87,7 +92,7 @@
                 </div>
             </div>
         </header>
-        <script src="../assets/js/header.js"></script>
-        <script src="../assets/js/searchFilter.js" ></script>
+        <script src="<%= request.getContextPath()%>/assets/js/header.js"></script>
+        <script src="<%= request.getContextPath()%>/assets/js/searchFilter.js" ></script>
     </body>
 </html>

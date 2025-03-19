@@ -51,10 +51,6 @@ public class ProductMaterialDAO implements IDAO<ProductMaterialDTO, String> {
         return list;
     }
 
-    @Override
-    public UserDTO readById(String id) {
-        return null;
-    }
 
     @Override
     public boolean update(ProductMaterialDTO object) {
@@ -63,6 +59,11 @@ public class ProductMaterialDAO implements IDAO<ProductMaterialDTO, String> {
 
     @Override
     public boolean delete(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ProductMaterialDTO readById(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

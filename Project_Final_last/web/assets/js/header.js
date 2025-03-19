@@ -15,3 +15,10 @@ window.addEventListener('click', function (e) {
         }
     }
 });
+
+document.getElementById("searchForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Ngăn chặn load lại trang mặc định
+    let searchTerm = document.getElementById("searchInput").value;
+    updateFilter("searchTerm", searchTerm);
+});
+

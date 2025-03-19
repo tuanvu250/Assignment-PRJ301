@@ -52,10 +52,6 @@ public class ProductColorDAO implements IDAO<ProductColorDTO, String>{
         return list;
     }
 
-    @Override
-    public UserDTO readById(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public boolean update(ProductColorDTO object) {
@@ -64,6 +60,11 @@ public class ProductColorDAO implements IDAO<ProductColorDTO, String>{
 
     @Override
     public boolean delete(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ProductColorDTO readById(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

@@ -49,7 +49,7 @@ public class searchFilterController extends HttpServlet {
     }
 
     public static String searchPriceMax(String priceMax) {
-        if(priceMax == null) {
+        if (priceMax == null) {
             return null;
         }
         switch (priceMax) {
@@ -72,7 +72,9 @@ public class searchFilterController extends HttpServlet {
             throws ServletException, IOException {
         String url = PRODUCT_PAGE;
         try {
+            String action = request.getParameter("action");
             response.setContentType("text/html;charset=UTF-8");
+            String searchTerm = request.getParameter("searchTerm");
             String gender = request.getParameter("gender");
             String status = request.getParameter("status");
             String style = request.getParameter("style");
@@ -82,9 +84,22 @@ public class searchFilterController extends HttpServlet {
             String priceMin = searchPriceMin(price);
             String priceMax = searchPriceMax(price);
             String color = request.getParameter("color");
-            
-            List<ShoesProductDTO> list = shoesDAO.searchShoes(gender, status, style, productLine, priceMin, priceMax, material, color);
 
+            List<ShoesProductDTO> total = shoesDAO.searchShoes2(searchTerm, gender, status, style, productLine, priceMin, priceMax, material, color);
+            int page = 1;
+            int pageSize = 9; // Số sản phẩm mỗi trang
+            if (request.getParameter("page") != null) {
+                page = Integer.parseInt(request.getParameter("page"));
+            }
+
+            List<ShoesProductDTO> list = shoesDAO.searchShoes(searchTerm, gender, status, style, productLine, priceMin, priceMax, material, color, page, pageSize);
+
+            int totalProducts = total.size();
+            int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+            System.out.println(totalProducts);
+            System.out.println(totalPages);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
             request.setAttribute("listShoesProduct", list);
         } catch (Exception e) {
             log("ERROR: " + e.toString());

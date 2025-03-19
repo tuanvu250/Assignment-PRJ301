@@ -38,6 +38,6 @@
         </div>
 
         <%@include file="../includes/footer.jsp" %>
-        <script src="../assets/js/searchFilter.js" ></script>
+        <script src="<%= request.getContextPath()%>/assets/js/searchFilter.js" ></script>
     </body>
 </html>

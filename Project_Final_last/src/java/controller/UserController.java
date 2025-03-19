@@ -167,7 +167,6 @@ public class UserController extends HttpServlet {
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
-            //response.sendRedirect(request.getContextPath() + url);
         }
     }
 

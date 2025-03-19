@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="profile-right">
-                <div class="user-info">
+                <form class="user-info">
                     <h2>INFORMATION</h2>
 
                     <label for="fullname">Full Name</label>
@@ -41,9 +41,64 @@
                     <input type="tel" id="phone" value="0123456789" readonly>
 
                     <div class="buttons">
-                        <button id="editProfile">Edit Profile</button>
-                        <button id="changePassword">Change Password</button>
+                        <button id="editProfile" type="submit">Edit Profile</button>
+                        <button type="button" id="show-popup-btn" class="show-popup-btn">Change Password</button>
                         <button id="logout">Sign out</button>
+                    </div>
+                </form>
+                <div class="overlay" id="overlay">
+                    <div class="popup" role="dialog" aria-labelledby="popup-title" aria-modal="true">
+                        <div class="popup-header">
+                            <h2 class="popup-title" id="popup-title">Change Password</h2>
+                            <button class="close-button" id="close-button" aria-label="Close">×</button>
+                        </div>
+
+                        <form id="password-form">
+                            <div class="form-group">
+                                <label for="current-password">Current Password</label>
+                                <input 
+                                    type="password" 
+                                    id="current-password" 
+                                    name="current-password" 
+                                    required 
+                                    autocomplete="current-password"
+                                    >
+                                <div class="error-message" id="current-password-error">Please enter your current password</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="new-password">New Password</label>
+                                <input 
+                                    type="password" 
+                                    id="new-password" 
+                                    name="new-password" 
+                                    required 
+                                    autocomplete="new-password"
+                                    aria-describedby="password-requirements"
+                                    >
+                                <div class="password-requirements" id="password-requirements">
+                                    Password must be at least 8 characters and include a number, a lowercase letter, an uppercase letter, and a special character.
+                                </div>
+                                <div class="error-message" id="new-password-error">Password doesn't meet requirements</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm New Password</label>
+                                <input 
+                                    type="password" 
+                                    id="confirm-password" 
+                                    name="confirm-password" 
+                                    required 
+                                    autocomplete="new-password"
+                                    >
+                                <div class="error-message" id="confirm-password-error">Passwords don't match</div>
+                            </div>
+
+                            <div class="actions">
+                                <button type="button" class="cancel-button" id="cancel-button">Cancel</button>
+                                <button type="submit" class="submit-button">Change Password</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
@@ -101,6 +156,38 @@
             </div>
         </div>
         <%@include file="../includes/footer.jsp" %>
-        <script src="../assets/js/profile.js"></script>
+        <script src="<%= request.getContextPath()%>/assets/js/profile.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const showPopupBtn = document.querySelector('.show-popup-btn');
+                const overlay = document.querySelector('.overlay');
+                const closeButton = document.querySelector('.close-button');
+                const cancelButton = document.querySelector('.cancel-button');
+
+                // Hiển thị popup
+                function showPopup() {
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Ngăn cuộn trang
+                }
+
+                // Ẩn popup
+                function hidePopup() {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = ''; // Khôi phục cuộn trang
+                }
+
+                // Thêm sự kiện click cho các nút
+                showPopupBtn.addEventListener('click', showPopup);
+                closeButton.addEventListener('click', hidePopup);
+                cancelButton.addEventListener('click', hidePopup);
+
+                // Đóng popup khi click ra ngoài
+                overlay.addEventListener('click', function (event) {
+                    if (event.target === overlay) {
+                        hidePopup();
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

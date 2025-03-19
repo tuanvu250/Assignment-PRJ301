@@ -53,17 +53,17 @@ public class ProductStyleDAO implements IDAO<ProductStyleDTO, String> {
     }
 
     @Override
-    public UserDTO readById(String id) {
-        return null;
-    }
-
-    @Override
     public boolean update(ProductStyleDTO object) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public boolean delete(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ProductStyleDTO readById(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

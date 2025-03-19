@@ -1,0 +1,92 @@
+* {
+    font-family: "Montserrat", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    outline: none;
+    border: none;
+    list-style-type: none;
+}
+
+* {
+    user-select: none;
+    cursor: default;
+}
+
+body {
+    background-color: #EAE4DA;
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+input:hover {
+    cursor: text;
+}
+
+nav {
+    position: sticky;
+    top: 0;
+    bottom: 0;
+    height: 100vh;
+    left: 0;
+    background: #c63f3e;
+    width: 280px;
+    overflow: hidden;
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    text-align: center;
+    display: flex;
+    margin: 10px 0 0 0;
+    align-items: center;
+}
+
+.logo span {
+    font-weight: bold;
+    padding-left: 15px;
+    font-size: 18px;
+    text-align: center;
+}
+
+a {
+    position: relative;
+    color: #1d1d1b;
+    font-size: 14px;
+    display: table;
+    width: 280px;
+    padding: 10px;
+}
+
+nav .fas,
+nav .fa-solid {
+    position: relative;
+    width: 70px;
+    height: 40px;
+    top: 14px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.nav-item {
+    position: relative;
+    top: 12px;
+    margin-left: 10px;
+}
+
+nav ul li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fbe385;
+}
+
+nav ul li a:hover i {
+    color: #fbe385;
+}
+
+.logout {
+    position: absolute;
+    bottom: 0;
+}       
