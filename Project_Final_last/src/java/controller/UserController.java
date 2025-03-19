@@ -101,7 +101,7 @@ public class UserController extends HttpServlet {
 
             String token = UUID.randomUUID().toString();
 
-            UserDTO newUser = new UserDTO(fullname, username, password, email, phone, 3, "ACTIVE", token, null);
+            UserDTO newUser = new UserDTO(fullname, username, password, email, phone, 2, "ACTIVE", token, null);
             UserDTO existUser = userDao.readByUsName(newUser.getUser_name());
             if (existUser != null) {
                 request.setAttribute("errorMessUsername", "User ID already exists. Please choose another one.");

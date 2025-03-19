@@ -1,3 +1,4 @@
+
 <%@page import="dto.UserDTO"%> <%@page contentType="text/html"
                                        pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -119,8 +120,7 @@
                 Already have an account?
                 <a href="login.jsp">Sign in</a>
             </div>
-
-            <% if (!errorRegister.isEmpty()) {%>
+            <%if (!errorRegister.isEmpty()) {%>
             <div style="color: red"><%=errorRegister%></div>
             <% }%>
         </div>
