@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -182,7 +183,6 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         sql += " ORDER BY sp.SHOES_ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         params.add(offset);
         params.add(pageSize);
-        System.out.println(sql);
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -292,7 +292,7 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         return null;
     }
 
-    public List<ProductColorDTO> colorOfShoes (String id) {
+    public List<ProductColorDTO> colorOfShoes(String id) {
         String sql = "select distinct cl.COLOR_ID, cl.COLOR_NAME, cl.COLOR_CODE "
                 + "from [dbo].[SHOES_COLOR_SIZE] sh join [dbo].[PRODUCT_COLOR] cl on sh.COLOR_ID = cl.COLOR_ID "
                 + "where sh.SHOES_ID = ?";
@@ -302,7 +302,7 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 ProductColorDTO color = new ProductColorDTO(
                         rs.getString("COLOR_ID"),
                         rs.getString("COLOR_NAME"),
@@ -316,6 +316,52 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         } catch (SQLException ex) {
             Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
+    }
+
+    public boolean addToFav(String username, String shoesId) {
+        String sql = "SELECT FAV_ID FROM [dbo].[FAVOURITE] WHERE USER_NAME = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            String favId = null;
+            if (!rs.next()){
+                String getMaxFavIdQuery = "SELECT MAX(FAV_ID) FROM FAVOURITE";
+                Statement st = conn.createStatement();
+                rs = st.executeQuery(getMaxFavIdQuery);
+                String newFavId = "FAV001"; // Mặc định nếu chưa có bản ghi nào
+                if (rs.next() && rs.getString(1) != null) {
+                    String lastId = rs.getString(1); // Lấy mã FAV cuối cùng (FAV002, FAV003,...)
+                    int number = Integer.parseInt(lastId.substring(3)) + 1; // Cắt "FAV" và chuyển số
+                    newFavId = String.format("FAV%03d", number); // Định dạng thành FAVxxx
+                }
+
+                // Chèn bản ghi mới vào FAVOURITE
+                String insertFavQuery = "INSERT INTO [dbo].[FAVOURITE] (FAV_ID, USER_NAME) VALUES (?, ?)";
+                ps = conn.prepareStatement(insertFavQuery);
+                ps.setString(1, newFavId);
+                ps.setString(2, username);
+                ps.executeUpdate();
+                favId = newFavId;
+            } else {
+                favId = rs.getString("FAV_ID");
+            }
+            sql = "INSERT INTO [dbo].[FAVOURITE_DETAIL] (FAV_ID, SHOES_ID) VALUES (?, ?)";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, favId);
+            ps.setString(2, shoesId);
+            return ps.executeUpdate() > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public List<ShoesProductDTO> readAllFav(String username) {
         return null;
     }
 }

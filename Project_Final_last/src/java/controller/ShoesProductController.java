@@ -6,6 +6,7 @@
 package controller;
 
 import dao.ShoesProductDAO;
+import dto.ProductColorDTO;
 import dto.ShoesProductDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -33,7 +34,13 @@ public class ShoesProductController extends HttpServlet {
         String url = PRODUCT_PAGE;
         try {
             String shoesId = request.getParameter("shoesId");
+            String colorIndex = request.getParameter("colorIndex");
+            int index = Integer.parseInt(colorIndex);
+            List<ProductColorDTO> list = shoesDAO.colorOfShoes(shoesId);
+            String colorId = list.get(index-1).getColor_id();
+            request.setAttribute("colorId", colorId);
             request.setAttribute("shoesId", shoesId);
+            request.setAttribute("colorIndex", colorIndex);
             url = "/products/productDetail.jsp";
         } catch (Exception e) {
             log("ERROR: " + e.toString());
