@@ -28,95 +28,80 @@
             a:hover {
                 cursor: pointer;
             }
-            .overlay {
+            .modal-bg {
                 position: fixed;
                 top: 0;
                 left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: rgba(0, 0, 0, 0.5);
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6);
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                z-index: 1000;
                 visibility: hidden;
                 opacity: 0;
-                transition: opacity 0.3s, visibility 0.3s;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+                z-index: 1000;
             }
 
-            .overlay.active {
+            .modal-bg.show {
                 visibility: visible;
                 opacity: 1;
             }
 
-            .popup {
-                background-color: white;
-                border-radius: 8px;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-                width: 90%;
-                max-width: 300px;
-                padding: 24px;
-                transform: translateY(-20px);
-                transition: transform 0.3s;
+            .modal-box {
+                background: #ffffff;
+                width: 350px;
+                padding: 25px;
+                border-radius: 10px;
+                box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+                transform: scale(0.9);
+                transition: transform 0.3s ease;
             }
 
-            .overlay.active .popup {
-                transform: translateY(0);
+            .modal-bg.show .modal-box {
+                transform: scale(1);
             }
 
-            .popup-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 20px;
-            }
-
-            .popup-title {
-                font-size: 1.25rem;
-                font-weight: 600;
-                color: #111827;
+            .modal-header {
                 text-align: center;
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 15px;
             }
 
-            label {
-                display: block;
-                margin-bottom: 6px;
-                font-size: 0.875rem;
-                font-weight: 500;
-                color: #111827;
-            }
-
-            .popup-button {
+            .modal-actions {
                 display: flex;
                 justify-content: space-between;
                 margin-top: 20px;
             }
 
-            .cancel-button {
-                background-color: #f3f4f6;
-                color: #374151;
-                border: none;
-                padding: 16px 32px;
+            .btn-cancel, .btn-login {
+                padding: 12px 24px;
                 border-radius: 6px;
-                font-size: 0.875rem;
-                font-weight: 500;
+                font-size: 0.9rem;
+                font-weight: bold;
                 cursor: pointer;
-                transition: background-color 0.2s;
+                transition: background 0.2s ease;
             }
 
-            .login-button {
-                background-color: #C63F3E;               
-                border: none;
-                padding: 16px 32px;
-                border-radius: 6px;
-                cursor: pointer;
-                transition: background-color 0.2s;
+            .btn-cancel {
+                background: #e0e0e0;
+                color: #333;
             }
-            
-            .login-button a {
+
+            .btn-cancel:hover {
+                background: #d6d6d6;
+            }
+
+            .btn-login {
+                background: #C63F3E;
                 color: white;
-                font-size: 0.875rem;
-                font-weight: 500;
+            }
+
+            .btn-login:hover {
+                background: #e04350;
             }
         </style>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -124,15 +109,12 @@
     </head>
     <body>
 
-        <div class="overlay" id="overlay">
-            <div class="popup" role="dialog" aria-labelledby="popup-title" aria-modal="true">
-                <div class="popup-header">
-                    <h2 class="popup-title" id="popup-title">You must login to continue</h2>
-                </div>
-                <div class="popup-button">
-                    <button class="cancel-button" type="button">Cancel</button>
-                    <button class="login-button"><a href="<%= request.getContextPath()%>/user/login.jsp"
-                                                    >Login</a></button>
+        <div class="modal-bg" id="modal-bg">
+            <div class="modal-box" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+                <div class="modal-header" id="modal-title">Please login to continue</div>
+                <div class="modal-actions">
+                    <button class="btn-cancel" type="button">Cancel</button>
+                    <button class="btn-login" onclick="location.href='<%= request.getContextPath()%>/user/login.jsp'">Login</button>
                 </div>
             </div>
         </div>
