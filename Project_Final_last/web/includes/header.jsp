@@ -79,7 +79,7 @@
                             <i class="fas fa-shopping-cart"></i>
                         </a>
                         <div class="user-dropdown">
-                            <div class="user-avatar" id="userDropdownToggle">
+                            <div class="user-avatar" <%if(AuthUtils.isLoggedIn(session)) { %>id="userDropdownToggle" <%}%>>
 
                                 <%
                                     if (AuthUtils.isLoggedIn(session)) {
