@@ -4,6 +4,9 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dao.RoleDAO"%>
+<%@page import="dto.UserDTO"%>
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -20,134 +23,67 @@
                 <div class="header">
                     <h1>Manage Account</h1>
                     <div class="search-bar">
-                        <input type="text" placeholder="Search user name">
-                        <button class="search-button">
-                            <i class="fas fa-search"></i>
-                        </button>
+                        <form action="<%= request.getContextPath()%>/AccountController">
+                            <input type="hidden" name="action" value="searchUser">
+                            <% String searchTerm = request.getAttribute("searchTerm") != null ? (String) request.getAttribute("searchTerm") : "";%>
+                            <input type="text" placeholder="Search user name" name="searchTerm" value="<%=searchTerm%>">
+                            <button type="submit" class="search-button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
+                <%
+                    List<UserDTO> accounts = (List<UserDTO>) request.getAttribute("accounts");
+                    if (accounts != null && !accounts.isEmpty()) {
+                        RoleDAO rdao = new RoleDAO();
 
+                %>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
                                 <th>Full name</th>
-                                <th>Avatar</th>
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>Role</th>
                                 <th>
-                                    <a href="add-user.php" class="add-button">
+                                    <a href="<%= request.getContextPath()%>/admin/userForm.jsp" class="add-button">
                                         <i class="fas fa-plus"></i>
                                     </a>
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
+                            <%for (UserDTO item : accounts) {%>
                             <tr>
-                                <td>Ngo Dang Quang</td>
-                                <td>
-                                    <img src= "../img/avt-user-test.jpg" alt="Avatar" class="avatar">
-                                </td>
-                                <td>phuthanh2003</td>
-                                <td>phuthanh@example.com</td>
-                                <td>0707054154</td>
-                                <td>Admin</td>
+                                <td><%=item.getFull_name()%></td>   
+                                <td><%=item.getUser_name()%></td>
+                                <td><%=item.getEmail()%></td>
+                                <td><%=item.getPhone_number()%></td>
+                                <td><%=rdao.readById(item.getRole_id()).getRole_name()%></td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="edit-user.php?id=1" class="edit-button">
+                                        <a href="<%= request.getContextPath()%>/UserController?action=editAccount&accountId=<%=item.getUser_name()%>" class="edit-button">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="delete-user.php?id=1" class="delete-button">
+                                        <a href="<%= request.getContextPath()%>/AccountController?action=delete&accountId=<%=item.getUser_name()%>" class="delete-button">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </div>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>John Doe</td>
-                                <td>
-                                    <img src="/placeholder.svg?height=40&width=40" alt="Avatar" class="avatar">
-                                </td>
-                                <td>john_doe</td>
-                                <td>john.doe@example.com</td>
-                                <td>12345678901</td>
-                                <td>Admin</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="edit-user.php?id=2" class="edit-button">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="delete-user.php?id=2" class="delete-button">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>John Doe</td>
-                                <td>
-                                    <img src="/placeholder.svg?height=40&width=40" alt="Avatar" class="avatar">
-                                </td>
-                                <td>john_doeee</td>
-                                <td>john.doeee@example.com</td>
-                                <td>12345678901</td>
-                                <td>Customer</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="edit-user.php?id=3" class="edit-button">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="delete-user.php?id=3" class="delete-button">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ngu di</td>
-                                <td>
-                                    <img src="/placeholder.svg?height=40&width=40" alt="Avatar" class="avatar">
-                                </td>
-                                <td>124au</td>
-                                <td>ngudi@example.com</td>
-                                <td>3456789012</td>
-                                <td>Customer</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="edit-user.php?id=4" class="edit-button">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="delete-user.php?id=4" class="delete-button">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Dan ong dich thuc</td>
-                                <td>
-                                    <img src="/placeholder.svg?height=40&width=40" alt="Avatar" class="avatar">
-                                </td>
-                                <td>53kia</td>
-                                <td>danong@example.com</td>
-                                <td>9012345678</td>
-                                <td>Customer</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="edit-user.php?id=5" class="edit-button">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="delete-user.php?id=5" class="delete-button">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
+                            </tr>     
+                            <%
+                                }
+                            %>
+
                         </tbody>
                     </table>
                 </div>
+                <%
+                    }
+                %>
             </div>
     </body>
 </html>

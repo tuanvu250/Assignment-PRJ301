@@ -1,6 +1,8 @@
 package controller;
 
+import dao.RoleDAO;
 import dao.UserDAO;
+import dto.RoleDTO;
 import dto.UserDTO;
 import java.io.IOException;
 import java.util.UUID;
@@ -24,7 +26,11 @@ public class UserController extends HttpServlet {
     private static final String LOGIN_PAGE = "/user/login.jsp";
     private static final String REGISTER_PAGE = "/user/register.jsp";
     private static final String PROFILE_PAGE = "/user/profile.jsp";
+    private static final String MANAGEUSER_PAGE = "/admin/manageUsers.jsp";
+    private static final String USERFORM_PAGE = "/admin/userForm.jsp";
+
     private static UserDAO userDao = new UserDAO();
+    private static RoleDAO rdao = new RoleDAO();
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(UserController.class.getName());
 
     protected String processLogin(HttpServletRequest request, HttpServletResponse response)
@@ -66,6 +72,7 @@ public class UserController extends HttpServlet {
     protected String processRegister(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME_PAGE;
+        HttpSession session = request.getSession();
         boolean checkRegister = true;
         try {
             String username = request.getParameter("regUsername");
@@ -74,6 +81,8 @@ public class UserController extends HttpServlet {
             String fullname = request.getParameter("regFullname");
             String email = request.getParameter("regEmail");
             String phone = request.getParameter("regPhone");
+            String role = request.getParameter("regRole");
+            int roleId = 2;
             if (!VerifyRegister.verifyUsername(username)) {
                 checkRegister = false;
                 request.setAttribute("errorMessUsername", "Sorry, this username is unavailable. Please try another one!");
@@ -98,10 +107,17 @@ public class UserController extends HttpServlet {
                 checkRegister = false;
                 request.setAttribute("errorMessPhone", "Invalid phone number. Please enter a valid one!");
             }
-
+            if (AuthUtils.checkIsAdmin(session)) {
+                if (!VerifyRegister.verifyRole(role)) {
+                    checkRegister = false;
+                    request.setAttribute("errorMessRole", "Role must be select one value!");
+                } else {
+                    roleId = Integer.parseInt(role);
+                }
+            }
             String token = UUID.randomUUID().toString();
 
-            UserDTO newUser = new UserDTO(fullname, username, password, email, phone, 2, "ACTIVE", token, null);
+            UserDTO newUser = new UserDTO(fullname, username, password, email, phone, roleId, "ACTIVE", token, null);
             UserDTO existUser = userDao.readByUsName(newUser.getUser_name());
             if (existUser != null) {
                 request.setAttribute("errorMessUsername", "User ID already exists. Please choose another one.");
@@ -115,10 +131,15 @@ public class UserController extends HttpServlet {
             if (!checkRegister) {
                 url = REGISTER_PAGE;
                 request.setAttribute("newUser", newUser);
+                if (AuthUtils.checkIsAdmin(session)) {
+                    url = USERFORM_PAGE;
+                }
             } else {
+                url = LOGIN_PAGE;
                 String hashPassword = PasswordUtils.hashPassword(newUser.getPassword());
                 newUser.setPassword(hashPassword);
                 boolean result = userDao.create(newUser);
+
                 if (result) {
                     boolean emailSent = sendCongratulationsEmail(newUser.getEmail(), newUser.getFull_name(), newUser.getUser_name());
 
@@ -129,17 +150,15 @@ public class UserController extends HttpServlet {
                         LOGGER.log(Level.WARNING, "Failed to send congratulations email to {0}", email);
                         request.setAttribute("success", "Registration successful! You can now login. (Note: Welcome email could not be sent)");
                     }
+                    if (AuthUtils.checkIsAdmin(session)) {
+                        url = "/AccountController?action=manageAccount";
+                    }
                 } else {
                     url = REGISTER_PAGE;
                     request.setAttribute("errorRegister", "Registration failed. Please try again!");
                 }
-                // tự đăng nhập khi đăng ký thành công
-                if (AuthUtils.verifyUser(newUser.getUser_name(), newUser.getPassword())) {
-                    url = HOME_PAGE;
-                    UserDTO user = AuthUtils.getUser(newUser.getUser_name());
-                    request.getSession().setAttribute("user", user);
-                }
             }
+
         } catch (Exception e) {
             log("ERROR: " + e.toString());
         }
@@ -216,8 +235,134 @@ public class UserController extends HttpServlet {
         return url;
     }
 
+    protected String processEdit(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String url = HOME_PAGE;
+        HttpSession session = request.getSession();
+        if (AuthUtils.checkIsAdmin(session)) {
+            String accountId = request.getParameter("accountId");
+            UserDTO us = userDao.readByUsName(accountId);
+            if (us != null) {
+                RoleDTO rdto = rdao.readById(us.getRole_id());
+                request.setAttribute("newUser", us);
+                request.setAttribute("action", "update");
+                url = USERFORM_PAGE;
+            } else {
+                url = "/AccountController?action=manageAccount";
+            }
+        }
+        return url;
+    }
+
+    protected String processUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String url = HOME_PAGE;
+        HttpSession session = request.getSession();
+        boolean checkRegister = true;
+
+        if (AuthUtils.checkIsAdmin(session)) {
+            try {
+                // Lấy username từ request nhưng không cho phép chỉnh sửa
+                String username = request.getParameter("regUsername");
+
+                // Không lấy password để đảm bảo admin không thể cập nhật mật khẩu
+                UserDTO oldUser = userDao.readByUsName(username);
+                if (oldUser == null) {
+                    request.setAttribute("errorRegister", "User not found!");
+                    return REGISTER_PAGE;
+                }
+
+                // Lấy các thông tin cần cập nhật
+                String fullname = request.getParameter("regFullname");
+                String email = request.getParameter("regEmail");
+                String phone = request.getParameter("regPhone");
+                String role = request.getParameter("regRole");
+
+                // Xác định roleId mặc định
+                int roleId = oldUser.getRole_id(); // Giữ nguyên role cũ nếu không hợp lệ
+
+                // Kiểm tra các trường nhập vào
+                if (!VerifyRegister.verifyFullname(fullname)) {
+                    checkRegister = false;
+                    request.setAttribute("errorMessFullname", "This field is required. Please input!");
+                }
+                if (!VerifyRegister.verifyEmail(email)) {
+                    checkRegister = false;
+                    request.setAttribute("errorMessEmail", "Invalid email format. Please enter a valid email address!");
+                }
+                if (!VerifyRegister.verifyPhoneNumber(phone)) {
+                    checkRegister = false;
+                    request.setAttribute("errorMessPhone", "Invalid phone number. Please enter a valid one!");
+                }
+
+                // Kiểm tra role nếu có thay đổi
+                if (!VerifyRegister.verifyRole(role)) {
+                    checkRegister = false;
+                    request.setAttribute("errorMessRole", "Role must be select one value!");
+                } else {
+                    roleId = Integer.parseInt(role);
+                }
+
+                // Kiểm tra email đã tồn tại chưa (trừ trường hợp trùng với email cũ)
+                UserDTO existEmail = userDao.readByEmail(email);
+                if (existEmail != null && !existEmail.getUser_name().equals(username)) {
+                    request.setAttribute("errorMessEmail", "Email already in use. Please use another email address.");
+                    checkRegister = false;
+                }
+
+                // Nếu có lỗi, quay lại trang cập nhật với dữ liệu đã nhập
+                if (!checkRegister) {
+                    url = REGISTER_PAGE;
+                    request.setAttribute("newUser", oldUser);
+                    if (AuthUtils.checkIsAdmin(session)) {
+                        url = USERFORM_PAGE;
+                    }
+                } else {
+                    // Cập nhật user với thông tin mới nhưng giữ nguyên username và password cũ
+                    UserDTO updatedUser = new UserDTO(
+                            fullname,
+                            username,
+                            oldUser.getPassword(),
+                            email,
+                            phone,
+                            roleId,
+                            oldUser.getStatus(),
+                            oldUser.getToken(),
+                            oldUser.getImage()
+                    );
+
+                    boolean result = userDao.update(updatedUser);
+
+                    if (result) {
+                        boolean emailSent = sendCongratulationsEmail(updatedUser.getEmail(), updatedUser.getFull_name(), updatedUser.getUser_name());
+
+                        if (emailSent) {
+                            LOGGER.log(Level.INFO, "Congratulations email sent to {0}", email);
+                            request.setAttribute("success", "Update successful! Welcome email has been sent to your email address. You can now login.");
+                        } else {
+                            LOGGER.log(Level.WARNING, "Failed to send congratulations email to {0}", email);
+                            request.setAttribute("success", "Update successful! You can now login. (Note: Welcome email could not be sent)");
+                        }
+
+                        if (AuthUtils.checkIsAdmin(session)) {
+                            url = "/AccountController?action=manageAccount";
+                        }
+                    } else {
+                        url = REGISTER_PAGE;
+                        request.setAttribute("errorRegister", "Update failed. Please try again!");
+                    }
+                }
+            } catch (Exception e) {
+                log("ERROR: " + e.toString());
+            }
+        }
+        return url;
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         String url = HOME_PAGE;
         try {
@@ -233,6 +378,10 @@ public class UserController extends HttpServlet {
                     url = processRegister(request, response);
                 } else if (action.equals("changePassword")) {
                     url = processChangePassword(request, response);
+                } else if (action.equals("editAccount")) {
+                    url = processEdit(request, response);
+                } else if (action.equals("update")) {
+                    url = processUpdate(request, response);
                 }
             }
         } catch (Exception e) {

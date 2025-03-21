@@ -47,6 +47,10 @@ public class VerifyRegister {
         return !(fullname == null || fullname.trim().isEmpty());
     }
 
+    public static boolean verifyRole(String roleID) {
+        return roleID != null && !roleID.trim().isEmpty();
+    }
+
     public static boolean verifyEmail(String email) {
         if (email == null || email.trim().isEmpty()) {
             return false;

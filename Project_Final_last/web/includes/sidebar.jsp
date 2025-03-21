@@ -20,7 +20,7 @@
                 <li><a href="#" class="logo">
                         <span class="nav-item">Admin DashBoard</span>
                     </a></li>
-                <li><a href="#">
+                <li><a href="<%= request.getContextPath()%>/AccountController?action=manageAccount">
                         <i class="fa-solid fa-users"></i>
                         <span class="nav-item">Accounts</span>
                     </a></li>

@@ -11,6 +11,7 @@ public class RoleDTO {
     }
 
     public RoleDTO() {
+        this.role_name = "";
     }
 
     public int getRole_id() {

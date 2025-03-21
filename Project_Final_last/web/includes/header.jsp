@@ -53,6 +53,14 @@
                     <div class="nav-menu" id="navMenu">
                         <a onclick="updateFilter('gender', '')">Products</a>
                         <a href="<%= request.getContextPath()%>/home/about.jsp">About Us</a>
+                        <%
+                            if (AuthUtils.checkIsAdmin(session)) {
+                        %>
+                        <a href="<%= request.getContextPath()%>/admin/dashboard.jsp">Admin dashboard</a>
+                        <%
+                            }
+                        %>
+
                     </div>
                 </div>
                 <div class="nav-right">
@@ -79,7 +87,7 @@
                             <i class="fas fa-shopping-cart"></i>
                         </a>
                         <div class="user-dropdown">
-                            <div class="user-avatar" <%if(AuthUtils.isLoggedIn(session)) { %>id="userDropdownToggle" <%}%>>
+                            <div class="user-avatar" <%if (AuthUtils.isLoggedIn(session)) { %>id="userDropdownToggle" <%}%>>
 
                                 <%
                                     if (AuthUtils.isLoggedIn(session)) {
@@ -104,7 +112,7 @@
                 </div>
             </div>
         </header>
-        
+
         <script src="<%= request.getContextPath()%>/assets/js/header.js"></script>
         <script src="<%= request.getContextPath()%>/assets/js/searchFilter.js" ></script>
         <script>

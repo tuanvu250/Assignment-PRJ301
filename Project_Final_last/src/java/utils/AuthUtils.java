@@ -37,9 +37,12 @@ public class AuthUtils {
     }
 
     public static boolean checkIsAdmin(HttpSession session) {
+        if (!isLoggedIn(session)) {
+            return false;
+        }
         RoleDAO rdao = new RoleDAO();
         UserDTO user = getUser(session);
-        return rdao.readById(user.getRole_id()).equals(ADMIN_ROLE);
+        return rdao.readById(user.getRole_id()).getRole_name().equalsIgnoreCase(ADMIN_ROLE);
     }
 
 }

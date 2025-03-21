@@ -49,7 +49,7 @@ public class UserDAO implements IDAO<UserDTO, String> {
 
     @Override
     public List<UserDTO> readAll() {
-        String sql = "SELECT * FROM [dbo].[USERS]";
+        String sql = "SELECT * FROM [dbo].[USERS] WHERE [STATUS] = 'ACTIVE' ORDER BY ROLE_ID";
         List<UserDTO> list = new ArrayList<>();
         try {
             Connection conn = DBUtils.getConnection();
@@ -107,6 +107,34 @@ public class UserDAO implements IDAO<UserDTO, String> {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    public List<UserDTO> readByUsNameTerm(String nameTerm) {
+        String sql = "SELECT * FROM [dbo].[USERS] WHERE [USER_NAME] LIKE ? AND [STATUS] = 'ACTIVE' ORDER BY ROLE_ID";
+        List<UserDTO> list = new ArrayList<>();
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + nameTerm +"%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                UserDTO us = new UserDTO(
+                        rs.getString("FULLNAME"),
+                        rs.getString("USER_NAME"),
+                        rs.getString("PASSWORD"),
+                        rs.getString("EMAIL"),
+                        rs.getString("PHONE"),
+                        rs.getInt("ROLE_ID"),
+                        rs.getString("STATUS"),
+                        rs.getString("TOKEN"),
+                        rs.getString("profile_image"));
+                list.add(us);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 
     public UserDTO readByEmail(String email) {

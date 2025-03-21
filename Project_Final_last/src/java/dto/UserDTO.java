@@ -32,6 +32,16 @@ public class UserDTO {
         this.token = token;
         this.image = image;
     }
+    public UserDTO(String full_name, String user_name, String password, String email, String phone_number, int role_id, String status, String token) {
+        this.full_name = full_name;
+        this.user_name = user_name;
+        this.password = password;
+        this.email = email;
+        this.phone_number = phone_number;
+        this.role_id = role_id;
+        this.status = status;
+        this.token = token;
+    }
 
     public String getStatus() {
         return status;
