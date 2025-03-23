@@ -106,7 +106,7 @@ public class ProductLineController extends HttpServlet {
         HttpSession session = request.getSession();
         if (AuthUtils.checkIsAdmin(session)) {
             url = MANAGEPDL;
-            processRequest(request, response);
+            processSearch(request, response);
         }
         return url;
     }
@@ -117,7 +117,9 @@ public class ProductLineController extends HttpServlet {
         HttpSession session = request.getSession();
         if (AuthUtils.checkIsAdmin(session)) {
             url = MANAGEPDL;
-            processRequest(request, response);
+            String id = request.getParameter("id");
+            lineDAO.delete(id);
+            processSearch(request, response);
         }
         return url;
     }
