@@ -42,6 +42,9 @@ public class ShoesProductController extends HttpServlet {
             request.setAttribute("shoesId", shoesId);
             request.setAttribute("colorIndex", colorIndex);
             url = "/products/productDetail.jsp";
+            
+            String currentURL = request.getRequestURL().toString() + "?" + request.getQueryString();
+            request.getSession().setAttribute("previousPage", currentURL);
         } catch (Exception e) {
             log("ERROR: " + e.toString());
         } finally {

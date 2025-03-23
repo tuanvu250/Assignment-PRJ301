@@ -57,8 +57,13 @@
                 </div>
                 <div class="nav-right">
                     <div class="nav-search">
-                        <form class="nav-search-form" action="search.jsp" method="get">
-                            <input type="text" name="query" placeholder="Search..." class="search">
+                        <%
+                            String searchTerm = request.getAttribute("searchTerm") + "";
+                            searchTerm = searchTerm.equals("null") ? "" : searchTerm;
+                        %>
+                        <form class="nav-search-form" id="searchForm" action="<%= request.getContextPath()%>/searchFilter">
+                            <input type="text" name="searchTerm" id="searchInput" placeholder="Search..." class="search"  value="<%= request.getParameter("searchTerm") == null ? "" : request.getParameter("searchTerm")%>">
+                            <input type="hidden" name="action" value="searchShoes">
                             <button type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -72,7 +77,7 @@
                         }
                     %>
                     <div class="nav-ic">
-                        <a href="FavController?action=readAll&username=<%=username%>" id="fav-link">
+                        <a href="AllFavController?action=readAll&username=<%=username%>" id="fav-link">
                             <i class="fas fa-heart"></i>
                         </a>
                         <a href="<%= request.getContextPath()%>/cart/cartList.jsp" id="cart-link">
