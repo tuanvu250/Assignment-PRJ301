@@ -77,7 +77,7 @@
                         }
                     %>
                     <div class="nav-ic">
-                        <a href="AllFavController?action=readAll&username=<%=username%>" id="fav-link">
+                        <a href="<%= request.getContextPath()%>/AllFavController?action=readAll&username=<%=username%>" id="fav-link">
                             <i class="fas fa-heart"></i>
                         </a>
                         <a href="<%= request.getContextPath()%>/cart/cartList.jsp" id="cart-link">

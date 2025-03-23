@@ -123,8 +123,8 @@
                             <h3 class="label-sale">SOLDOUT</h3>
                             <%}%>
                             <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>">
-                                <img src="asset/<%=shoes.getShoes_id()%>_1.jpg">
-                                <img class="hidden-img" src="asset/<%=shoes.getShoes_id()%>_2.jpg">
+                                <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_1.jpg">
+                                <img class="hidden-img" src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_2.jpg">
                             </a>
                             <div class="div-hover-buy" <% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: rgba(0,0,0,0.3);"<%}%>>
                                 <a class="hover-buy"<% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: #1d1d1b; opacity: 1;"<%} else {%> 
