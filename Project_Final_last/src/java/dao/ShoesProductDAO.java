@@ -360,8 +360,64 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         }
         return false;
     }
+    
+    public boolean deleteFromFav(String username, String shoesId) {
+        String sql = "DELETE FD" +
+                        " FROM [dbo].[FAVOURITE_DETAIL] FD" +
+                        " JOIN [dbo].[FAVOURITE] F ON FD.FAV_ID = F.FAV_ID" +
+                        " WHERE F.USER_NAME = ? AND FD.SHOES_ID = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, shoesId);
+            return ps.executeUpdate() > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
+    public boolean deleteAllFav(String username) {
+        String sql = "DELETE FD" +
+                        " FROM [dbo].[FAVOURITE_DETAIL] FD" +
+                        " JOIN [dbo].[FAVOURITE] F ON FD.FAV_ID = F.FAV_ID" +
+                        " WHERE F.USER_NAME = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            return ps.executeUpdate() > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 
     public List<ShoesProductDTO> readAllFav(String username) {
+        String sql = "SELECT FD.SHOES_ID"
+                + " FROM [dbo].[FAVOURITE_DETAIL] FD"
+                + " JOIN [dbo].[FAVOURITE] F ON FD.FAV_ID = F.FAV_ID"
+                + " WHERE F.USER_NAME = ?";
+        List<ShoesProductDTO> list= new ArrayList<>();
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                list.add(readById(rs.getString("SHOES_ID")));
+            }
+            return list;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
     }
 

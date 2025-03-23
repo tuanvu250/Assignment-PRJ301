@@ -4,6 +4,10 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dto.ProductColorDTO"%>
+<%@page import="dao.ShoesProductDAO"%>
+<%@page import="java.util.List"%>
+<%@page import="dto.ShoesProductDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,25 +22,35 @@
         <div class="favourite">
             <h1>FAVOURITE LIST</h1>
             <div class="favourite-container">
+                <%
+                    if (session.getAttribute("listFav") != null) {
+                        List<ShoesProductDTO> listFav = (List<ShoesProductDTO>) session.getAttribute("listFav");
+                        for (ShoesProductDTO shoes : listFav) {
+                            ShoesProductDAO shoesdao = new ShoesProductDAO();
+                            List<ProductColorDTO> listColor = shoesdao.colorOfShoes(shoes.getShoes_id());
+                            int size = listColor.size();
+                %>
                 <div class="favourite-item">
-                    <img src="img/Rectangle_43.png">
+                    <img src="asset/<%=shoes.getShoes_id()%>_1.jpg" style="max-width: 250px;">
                     <div class="favourite-info">
-                        <a href="#" class="favourite-name">Abc xyz</a>
+                        <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>&colorIndex=1"
+                           class="favourite-name"><%=shoes.getShoes_name()%></a>
                         <div class="favourite-price">
-                            <p>XXX.XXX VND</p>
+                            <p><%=shoes.getPrice()%> VND</p>
                             <p class="sale-price">XXX.XXX VND</p>
                         </div>
                         <div class="favourite-choice">
                             <div class="favourite-color">
+                                <%
+                                    for (int i = 1; i <= size; i++) {
+                                        ProductColorDTO color = listColor.get(i - 1);
+                                %>
                                 <div>
-                                    <a></a>
+                                    <a href=""
+                                       style="background-color: <%=color.getColor_code()%>"> </a>
                                 </div>
-                                <div>
-                                    <a></a>
-                                </div>
-                                <div>
-                                    <a></a>
-                                </div>
+                                <%;
+                                    }%>
                             </div>
                             <div class="favourite-size">
                                 <label>Size</label>
@@ -51,112 +65,29 @@
                                 <label>Quantity</label>
                                 <select>
                                     <option selected hidden></option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
+                                    <%
+                                        for (int i = 1; i <= 10; i++) {
+                                    %>
+                                    <option><%=i%></option>
+                                    <%}%> 
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class="favourite-btn">
                         <a class="favourite-cart"><i class="fa-solid fa-cart-shopping"></i></a>
-                        <a class="favourite-delete"><i class="fa-solid fa-trash"></i></a>
+                        <a href="FavController?action=delete&username=<%=username%>&shoesId=<%=shoes.getShoes_id()%>"
+                           class="favourite-delete"><i class="fa-solid fa-trash"></i></a>
                     </div>
-                </div>
-                <div class="favourite-item">
-                    <img src="img/Rectangle_43.png">
-                    <div class="favourite-info">
-                        <a href="#" class="favourite-name">Abc xyz</a>
-                        <div class="favourite-price">
-                            <p>XXX.XXX VND</p>
-                            <p class="sale-price">XXX.XXX VND</p>
-                        </div>
-                        <div class="favourite-choice">
-                            <div class="favourite-color">
-                                <div>
-                                    <a></a>
-                                </div>
-                                <div>
-                                    <a></a>
-                                </div>
-                                <div>
-                                    <a></a>
-                                </div>
-                            </div>
-                            <div class="favourite-size">
-                                <label>Size</label>
-                                <select>
-                                    <option selected hidden></option>
-                                    <option>35</option>
-                                    <option>36</option>
-                                    <option>37</option>
-                                </select>
-                            </div>
-                            <div class="favourite-size">
-                                <label>Quantity</label>
-                                <select>
-                                    <option selected hidden></option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="favourite-btn">
-                        <a class="favourite-cart"><i class="fa-solid fa-cart-shopping"></i></a>
-                        <a class="favourite-delete"><i class="fa-solid fa-trash"></i></a>
-                    </div>
-                </div>
-                <div class="favourite-item">
-                    <img src="img/Rectangle_43.png">
-                    <div class="favourite-info">
-                        <a href="#" class="favourite-name">Abc xyz</a>
-                        <div class="favourite-price">
-                            <p>XXX.XXX VND</p>
-                            <p class="sale-price">XXX.XXX VND</p>
-                        </div>
-                        <div class="favourite-choice">
-                            <div class="favourite-color">
-                                <div>
-                                    <a></a>
-                                </div>
-                                <div>
-                                    <a></a>
-                                </div>
-                                <div>
-                                    <a></a>
-                                </div>
-                            </div>
-                            <div class="favourite-size">
-                                <label>Size</label>
-                                <select>
-                                    <option selected hidden></option>
-                                    <option>35</option>
-                                    <option>36</option>
-                                    <option>37</option>
-                                </select>
-                            </div>
-                            <div class="favourite-size">
-                                <label>Quantity</label>
-                                <select>
-                                    <option selected hidden></option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="favourite-btn">
-                        <a class="favourite-cart"><i class="fa-solid fa-cart-shopping"></i></a>
-                        <a class="favourite-delete"><i class="fa-solid fa-trash"></i></a>
-                    </div>
-                </div>
+                </div> 
+                <%}
+                    } else {%> 
+                    <h3 style="text-align: center;">There are no more products in your favourite list.</h3>
+                <%}%>
             </div>
             <div class="favourite-footer">
-                <a>Clear All</a>
-                <a>Continue</a>
+                <a href="AllFavController?action=deleteAll&username=<%=username%>">Clear All</a>
+                <a onclick="updateFilter('gender', '')">Continue</a>
             </div>
         </div>
         <%@include file="../includes/footer.jsp" %>

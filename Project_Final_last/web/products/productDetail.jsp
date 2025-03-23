@@ -115,7 +115,15 @@
                     </div>
                     <div class="detail-cart">
                         <a class="cart-list">Add to cart</a>
-                        <a class="love-list"><i class="fa-regular fa-heart"></i></a>
+                        <%
+                            ShoesProductDAO shoesDAO = new ShoesProductDAO();
+                            if (shoesDAO.checkFav(shoes.getShoes_id(), username)) {
+                        %> 
+                        <a class="love-list" href="FavController?action=delete&username=<%=username%>&shoesId=<%=shoes.getShoes_id()%>" 
+                           id="fav-link" style="color: #C63F3E;"><i class="fa-solid fa-heart "></i></a>
+                            <%} else {%>
+                        <a class="love-list" href="FavController?action=add&username=<%=username%>&shoesId=<%=shoes.getShoes_id()%>" 
+                           id="fav-link"><i class="fa-regular fa-heart "></i></a> <%}%>
                     </div>
                     <div class="order-now">
                         <a id="buy-now">ORDER NOW</a>

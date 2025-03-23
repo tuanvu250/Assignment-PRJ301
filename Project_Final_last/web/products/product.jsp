@@ -4,6 +4,7 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dao.ShoesProductDAO"%>
 <%@page import="dto.UserDTO"%>
 <%@page import="dto.ProductStyleDTO"%>
 <%@page import="dao.ProductStyleDAO"%>
@@ -92,8 +93,8 @@
                     </div>
                 </div>
                 <div class="product-choice">
-                    <h3 class="active toggle-btn">COLOR <i class="fa-solid fa-chevron-up"></i></h3>
-                    <div class="choice-list-color show">
+                    <h3 class="toggle-btn">COLOR <i class="fa-solid fa-chevron-down"></i></h3>
+                    <div class="choice-list-color">
                         <%
                             ProductColorDAO colDAO = new ProductColorDAO();
                             List<ProductColorDTO> listProductColor = colDAO.readAll();
@@ -122,8 +123,8 @@
                             <h3 class="label-sale">SOLDOUT</h3>
                             <%}%>
                             <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>">
-                                <img src="asset/<%=shoes.getShoes_id()%>_1.jpg">
-                                <img class="hidden-img" src="asset/<%=shoes.getShoes_id()%>_2.jpg">
+                                <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_1.jpg">
+                                <img class="hidden-img" src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_2.jpg">
                             </a>
                             <div class="div-hover-buy" <% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: rgba(0,0,0,0.3);"<%}%>>
                                 <a class="hover-buy"<% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: #1d1d1b; opacity: 1;"<%} else {%> 
@@ -131,8 +132,15 @@
                                     <% if (AuthUtils.isSoldout(shoes)) { %>PRE-ORDER<%} else {%>BUY<%}%>
                                 </a>
                             </div>
+                            <%
+                               ShoesProductDAO shoesDAO = new ShoesProductDAO();
+                               if(shoesDAO.checkFav(shoes.getShoes_id(), username)) {
+                            %> 
+                            <a class="love-list" href="FavController?action=delete&username=<%=username%>&shoesId=<%=shoes.getShoes_id()%>" 
+                               id="fav-link"><i class="fa-solid fa-heart "></i></a>
+                            <%} else {%>
                             <a class="love-list" href="FavController?action=add&username=<%=username%>&shoesId=<%=shoes.getShoes_id()%>" 
-                               id="fav-link"><i class="fa-regular fa-heart "></i></a>
+                               id="fav-link"><i class="fa-regular fa-heart "></i></a> <%}%>
                         </div>
                         <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>&colorIndex=1"
                            class="product-name"><%=shoes.getShoes_name()%></a>

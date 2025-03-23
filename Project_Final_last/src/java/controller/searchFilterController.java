@@ -101,10 +101,12 @@ public class searchFilterController extends HttpServlet {
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("listShoesProduct", list);
+            String currentURL = request.getRequestURL().toString() + "?" + request.getQueryString();
+            request.getSession().setAttribute("previousPage", currentURL);
         } catch (Exception e) {
             log("ERROR: " + e.toString());
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(PRODUCT_PAGE);
+            RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         }
     }

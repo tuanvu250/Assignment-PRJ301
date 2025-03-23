@@ -17,6 +17,7 @@
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>loram</word>
             <word>lorem</word>
+            <word>updateForm</word>
         </spellchecker-wordlist>
     </configuration>
 </project>
