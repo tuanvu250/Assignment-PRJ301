@@ -8,6 +8,7 @@ package controller;
 import dao.ShoesProductDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,10 +36,12 @@ public class CartController extends HttpServlet {
             session.setAttribute("errorCart",null);
             String username = request.getParameter("username");
             String shoesId = request.getParameter("shoesId");
+            String colorId = request.getParameter("colorId");
             String sizeId = request.getParameter("sizeId");
             String quantity = request.getParameter("quantity");
+            BigDecimal price  = shoesDAO.readById(shoesId).getPrice();
             if (!sizeId.trim().isEmpty() && !quantity.trim().isEmpty()) {
-                shoesDAO.addToCart(username, shoesId, sizeId, sizeId, Integer.parseInt(quantity));
+                boolean check = shoesDAO.addToCart(username, shoesId, colorId, sizeId, Integer.parseInt(quantity), price);
             } else {
                 session.setAttribute("errorCart", "Please choose size and quantity.");
             }

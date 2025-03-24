@@ -4,6 +4,8 @@
     Author     : ADMIN
 --%>
 
+<%@page import="java.util.Locale"%>
+<%@page import="java.text.NumberFormat"%>
 <%@page import="dao.ShoesProductDAO"%>
 <%@page import="dto.UserDTO"%>
 <%@page import="dto.ProductStyleDTO"%>
@@ -148,9 +150,9 @@
                            class="product-name"><%=shoes.getShoes_name()%></a>
                         <p>Color</p>
                         <div class="product-price">
-                            <p><%=shoes.getPrice()%> VND</p>
+                            <p><%=currencyVN.format(shoes.getPrice())%></p>
                             <% if (AuthUtils.isSale(shoes)) { %>
-                            <p class="sale-text">XXX.XXX VND</p>
+                            <p class="sale-text">XXX.XXX</p>
                             <%}%>
                         </div>
                     </div>

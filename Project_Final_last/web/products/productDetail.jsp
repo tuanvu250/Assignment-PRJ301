@@ -77,7 +77,7 @@
                 <div class="detail-text">
                     <h2><%=shoes.getShoes_name()%></h2>
                     <p>Product ID <span><%=shoes.getShoes_id()%></span></p>
-                    <h2><%=shoes.getPrice()%> VND</h2>
+                    <h2><%=currencyVN.format(shoes.getPrice())%></h2>
                 </div>
                 <div class="detail-color">
                     <%
@@ -125,7 +125,7 @@
                     <h3 style="color: #C63F3E;"><%=session.getAttribute("errorCart")%></h3>
                     <%}%>
                     <div class="detail-cart">
-                        <a href="CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>&sizeId=&quantity=" 
+                        <a href="CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=colorId%>&sizeId=&quantity=" 
                            class="cart-list" id="addToCart">Add to cart</a>
                         <%
                             ShoesProductDAO shoesDAO = new ShoesProductDAO();
@@ -226,7 +226,7 @@
                     function updateCartLink() {
                         let sizeId = sizeSelect.value;
                         let quantity = quantitySelect.value;
-                        let baseUrl = "CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>";
+                        let baseUrl = "CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=request.getAttribute("colorId")%>";
                         addToCartLink.setAttribute("href", baseUrl + "&sizeId=" + sizeId + "&quantity=" + quantity);
                         }
 

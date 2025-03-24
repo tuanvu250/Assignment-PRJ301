@@ -8,6 +8,7 @@ package dao;
 import dto.ProductColorDTO;
 import dto.ShoesProductDTO;
 import dto.UserDTO;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -103,7 +104,7 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
                         rs.getString("SHOES_ID"),
                         rs.getString("SHOES_NAME"),
                         rs.getDate("PRODUCE_DATE").toLocalDate(),
-                        rs.getInt("PRICE"),
+                        rs.getBigDecimal("PRICE"),
                         rs.getInt("QUANTITY"),
                         rs.getString("GENDER"),
                         rs.getString("DESCRIPTION"),
@@ -195,7 +196,7 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
                         rs.getString("SHOES_ID"),
                         rs.getString("SHOES_NAME"),
                         rs.getDate("PRODUCE_DATE").toLocalDate(),
-                        rs.getInt("PRICE"),
+                        rs.getBigDecimal("PRICE"),
                         rs.getInt("QUANTITY"),
                         rs.getString("GENDER"),
                         rs.getString("DESCRIPTION"),
@@ -228,7 +229,7 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
                         rs.getString("SHOES_ID"),
                         rs.getString("SHOES_NAME"),
                         rs.getDate("PRODUCE_DATE").toLocalDate(),
-                        rs.getInt("PRICE"),
+                        rs.getBigDecimal("PRICE"),
                         rs.getInt("QUANTITY"),
                         rs.getString("GENDER"),
                         rs.getString("DESCRIPTION"),
@@ -272,7 +273,7 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
                         rs.getString("SHOES_ID"),
                         rs.getString("SHOES_NAME"),
                         rs.getDate("PRODUCE_DATE").toLocalDate(),
-                        rs.getInt("PRICE"),
+                        rs.getBigDecimal("PRICE"),
                         rs.getInt("QUANTITY"),
                         rs.getString("GENDER"),
                         rs.getString("DESCRIPTION"),
@@ -361,7 +362,7 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         return false;
     }
 
-    public boolean addToCart(String username, String shoesId, String colorId, String sizeId, int quantity) {
+    public boolean addToCart(String username, String shoesId, String colorId, String sizeId, int quantity, BigDecimal price) {
         String sql = "SELECT CART_ID FROM [dbo].[CART] WHERE USER_NAME = ?";
         try {
             Connection conn = DBUtils.getConnection();
@@ -391,35 +392,43 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
                 CarId = rs.getString("CART_ID");
             }
             if (!checkCart(shoesId, colorId, sizeId)) {
-                sql = "INSERT INTO [dbo].[CART_DETAIL] (CART_ID, SHOES_ID, COLOR_ID, SIZE_ID, QUANTITY)"
-                        + " VALUES (?, ?, ?, ?, ?)";
+                sql = "INSERT INTO [dbo].[CART_DETAIL] (CART_ID, SHOES_ID, COLOR_ID, SIZE_ID, QUANTITY, PRICE)"
+                        + " VALUES (?, ?, ?, ?, ?, ?)";
+                BigDecimal total = price.multiply(BigDecimal.valueOf(quantity));
+
                 ps = conn.prepareStatement(sql);
                 ps.setString(1, CarId);
                 ps.setString(2, shoesId);
                 ps.setString(3, colorId);
                 ps.setString(4, sizeId);
                 ps.setInt(5, quantity);
+                ps.setBigDecimal(6, total);
                 return ps.executeUpdate() > 0;
             } else {
                 sql = "SELECT QUANTITY FROM [dbo].[CART_DETAIL] "
-                        + " WHERE CART_ID = ? AND AND SHOES_ID = ? AND COLOR_ID = ?"
+                        + " WHERE CART_ID = ? AND SHOES_ID = ? AND COLOR_ID = ?"
                         + " AND SIZE_ID = ?";
                 ps = conn.prepareStatement(sql);
                 ps.setString(1, CarId);
                 ps.setString(2, shoesId);
                 ps.setString(3, colorId);
                 ps.setString(4, sizeId);
-                int currentQuantity = rs.getInt("QUANTITY");
-                
-                sql = "UPDATE [dbo].[CART_DETAIL] SET QUANTITY = ? "
+                rs = ps.executeQuery();
+                int currentQuantity = 0;
+                if (rs.next()) {
+                    currentQuantity = rs.getInt("QUANTITY");
+                }
+                BigDecimal total = price.multiply(BigDecimal.valueOf(quantity + currentQuantity));
+                sql = "UPDATE [dbo].[CART_DETAIL] SET QUANTITY = ?, PRICE = ?"
                         + " WHERE CART_ID = ? AND SHOES_ID = ? "
                         + " AND COLOR_ID = ? AND SIZE_ID = ?";
                 ps = conn.prepareStatement(sql);
                 ps.setInt(1, currentQuantity + quantity);
-                ps.setString(2, CarId);
-                ps.setString(3, shoesId);
-                ps.setString(4, colorId);
-                ps.setString(5, sizeId);
+                ps.setBigDecimal(2, total);
+                ps.setString(3, CarId);
+                ps.setString(4, shoesId);
+                ps.setString(5, colorId);
+                ps.setString(6, sizeId);
                 return ps.executeUpdate() > 0;
             }
         } catch (ClassNotFoundException ex) {
@@ -440,9 +449,7 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
             ps.setString(2, colorId);
             ps.setString(3, sizeId);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return true;
-            }
+            return rs.next();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

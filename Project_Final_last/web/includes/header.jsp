@@ -1,3 +1,5 @@
+<%@page import="java.util.Locale"%>
+<%@page import="java.text.NumberFormat"%>
 <%@page import="dto.UserDTO"%> <%@page import="utils.AuthUtils"%> <%@page
     contentType="text/html" pageEncoding="UTF-8"%>
     <!DOCTYPE html>
@@ -60,6 +62,9 @@
                                 }
                             %>
                         </div>
+                        <%
+                            NumberFormat currencyVN = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                        %>
                     </div>
                     <div class="nav-right">
                         <div class="nav-search">
