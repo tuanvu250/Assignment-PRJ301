@@ -17,7 +17,7 @@
     <body>
         <nav>
             <ul>
-                <li><a href="#" class="logo">
+                <li><a href="<%= request.getContextPath()%>/admin/dashboard.jsp" class="logo">
                         <span class="nav-item">Admin DashBoard</span>
                     </a></li>
                 <li><a href="<%= request.getContextPath()%>/AccountController?action=manageAccount">
@@ -40,7 +40,7 @@
                         <i class="fas fa-layer-group"></i>
                         <span class="nav-item">Material</span>
                     </a></li>
-                <li><a href="">
+                <li><a href="<%= request.getContextPath()%>/ProductStyleController?action=manageStyle">
                         <i class="fas fa-tshirt"></i>
                         <span class="nav-item">Style</span>
                     </a></li>
