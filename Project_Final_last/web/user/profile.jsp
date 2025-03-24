@@ -37,8 +37,9 @@
                     <input type="hidden" name="action" value="updateImage">
                     <input type="file" name="profileImage" accept="image/*" id="profileImageInput">
                     <button type="submit">Update Picture</button>
+                    <p style="color: green;"><%=uploadFile%></p>
                 </form>
-                <p><%=uploadFile%></p>
+                
                 <div class="history-nav">
                     <a href="#" id="showHistory">History Orders</a>
                 </div>
