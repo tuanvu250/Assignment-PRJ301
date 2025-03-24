@@ -111,9 +111,12 @@
                 <div class="product-detail">
                     <%
                         if (request.getAttribute("listShoesProduct") != null) {
+                            ShoesProductDAO shoesDAO = new ShoesProductDAO();
 
                             List<ShoesProductDTO> listShoes = (List<ShoesProductDTO>) request.getAttribute("listShoesProduct");
                             for (ShoesProductDTO shoes : listShoes) {
+                                List<ProductColorDTO> listColor = shoesDAO.colorOfShoes(shoes.getShoes_id());
+                                String colorMain = listColor.get(0).getColor_id();
                     %>
                     <div class="product-item" onclick="redirectToProduct(this)" style="cursor: pointer;">
                         <div class="img-sale">
@@ -123,8 +126,8 @@
                             <h3 class="label-sale">SOLDOUT</h3>
                             <%}%>
                             <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>">
-                                <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_1.jpg">
-                                <img class="hidden-img" src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_2.jpg">
+                                <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=colorMain%>_1.jpg">
+                                <img class="hidden-img" src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=colorMain%>_2.jpg">
                             </a>
                             <div class="div-hover-buy" <% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: rgba(0,0,0,0.3);"<%}%>>
                                 <a class="hover-buy"<% if (AuthUtils.isSoldout(shoes)) { %> style="background-color: #1d1d1b; opacity: 1;"<%} else {%> 
@@ -133,12 +136,11 @@
                                 </a>
                             </div>
                             <%
-                               ShoesProductDAO shoesDAO = new ShoesProductDAO();
-                               if(shoesDAO.checkFav(shoes.getShoes_id(), username)) {
+                                if (shoesDAO.checkFav(shoes.getShoes_id(), username)) {
                             %> 
                             <a class="love-list" href="FavController?action=delete&username=<%=username%>&shoesId=<%=shoes.getShoes_id()%>" 
                                id="fav-link"><i class="fa-solid fa-heart "></i></a>
-                            <%} else {%>
+                                <%} else {%>
                             <a class="love-list" href="FavController?action=add&username=<%=username%>&shoesId=<%=shoes.getShoes_id()%>" 
                                id="fav-link"><i class="fa-regular fa-heart "></i></a> <%}%>
                         </div>

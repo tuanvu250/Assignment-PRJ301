@@ -96,8 +96,6 @@ public class searchFilterController extends HttpServlet {
 
             int totalProducts = total.size();
             int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
-            System.out.println(totalProducts);
-            System.out.println(totalPages);
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("listShoesProduct", list);

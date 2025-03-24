@@ -4,6 +4,8 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dto.ProductSizeDTO"%>
+<%@page import="dao.ProductSizeDAO"%>
 <%@page import="dto.ProductColorDTO"%>
 <%@page import="dao.ShoesProductDAO"%>
 <%@page import="java.util.List"%>
@@ -24,14 +26,17 @@
             <div class="favourite-container">
                 <%
                     if (session.getAttribute("listFav") != null) {
+                        ShoesProductDAO shoesDAO = new ShoesProductDAO();
                         List<ShoesProductDTO> listFav = (List<ShoesProductDTO>) session.getAttribute("listFav");
                         for (ShoesProductDTO shoes : listFav) {
                             ShoesProductDAO shoesdao = new ShoesProductDAO();
                             List<ProductColorDTO> listColor = shoesdao.colorOfShoes(shoes.getShoes_id());
+                            String colorId = listColor.get(0).getColor_id();
                             int size = listColor.size();
                 %>
                 <div class="favourite-item">
-                    <img src="asset/<%=shoes.getShoes_id()%>_1.jpg" style="max-width: 250px;">
+                    <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=colorId%>_1.jpg" 
+                         style="max-width: 250px;">
                     <div class="favourite-info">
                         <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>&colorIndex=1"
                            class="favourite-name"><%=shoes.getShoes_name()%></a>
@@ -45,7 +50,8 @@
                                     for (int i = 1; i <= size; i++) {
                                         ProductColorDTO color = listColor.get(i - 1);
                                 %>
-                                <div>
+                                <div <%if (color.getColor_id().equals(colorId)) {%>
+                                    style="border: 2px #1d1d1b solid; border-radius: 50%;" <%}%>>
                                     <a href=""
                                        style="background-color: <%=color.getColor_code()%>"> </a>
                                 </div>
@@ -54,21 +60,25 @@
                             </div>
                             <div class="favourite-size">
                                 <label>Size</label>
-                                <select>
-                                    <option selected hidden></option>
-                                    <option>35</option>
-                                    <option>36</option>
-                                    <option>37</option>
+                                <select name="sizeId">
+                                    <option value="" selected hidden></option>
+                                    <%
+                                        ProductSizeDAO sizeDAO = new ProductSizeDAO();
+                                        List<ProductSizeDTO> sizeList = sizeDAO.checkSize(shoes.getShoes_id(), colorId);
+                                        for (ProductSizeDTO sizeShoes : sizeList) {
+                                    %>
+                                    <option value="<%=sizeShoes.getSize_id()%>"><%=sizeShoes.getSize_num()%></option>
+                                    <%}%>
                                 </select>
                             </div>
                             <div class="favourite-size">
                                 <label>Quantity</label>
-                                <select>
-                                    <option selected hidden></option>
+                                <select name="quantity">
+                                    <option value="" selected hidden></option>
                                     <%
                                         for (int i = 1; i <= 10; i++) {
                                     %>
-                                    <option><%=i%></option>
+                                    <option value="<%=i%>"><%=i%></option>
                                     <%}%> 
                                 </select>
                             </div>
@@ -81,8 +91,8 @@
                     </div>
                 </div> 
                 <%}
-                    } else {%> 
-                    <h3 style="text-align: center;">There are no more products in your favourite list.</h3>
+                } else {%> 
+                <h3 style="text-align: center;">There are no more products in your favourite list.</h3>
                 <%}%>
             </div>
             <div class="favourite-footer">

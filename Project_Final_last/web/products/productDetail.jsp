@@ -4,6 +4,8 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dao.ProductLineDAO"%>
+<%@page import="dto.ProductLineDTO"%>
 <%@page import="dto.ProductSizeDTO"%>
 <%@page import="dao.ProductSizeDAO"%>
 <%@page import="java.util.List"%>
@@ -25,14 +27,21 @@
                 String shoesId = request.getAttribute("shoesId") + "";
                 String colorIndex = request.getAttribute("colorIndex") + "";
                 int index = Integer.parseInt(colorIndex) + 0;
-                ShoesProductDAO shoesdao = new ShoesProductDAO();
+                ShoesProductDAO shoesdao = new ShoesProductDAO(); 
+                ProductLineDAO linedao = new ProductLineDAO();
                 ShoesProductDTO shoes = shoesdao.readById(shoesId);
+                ProductLineDTO line = linedao.readById(shoes.getLine_id());
+                
                 List<ProductColorDTO> listColor = shoesdao.colorOfShoes(shoesId);
                 int size = listColor.size();
+                String colorId = null;
+                if (request.getAttribute("colorId") != null) {
+                    colorId = request.getAttribute("colorId") + "";
+                }
         %>
         <div class="product-link">
-            <a>Product</a>
-            <a>Product line</a>
+            <a onclick="updateFilter('gender', '')" >Product</a>
+            <a onclick="updateFilter('productLine', '<%=shoes.getLine_id()%>')"><%=line.getLine_name()%></a>
             <a><%=shoes.getShoes_name()%></a>
         </div>
         <div class="detail-container">
@@ -40,16 +49,16 @@
                 <div class="img-slider">
                     <div class="img-list">
                         <div>
-                            <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=1 + 4 * (index - 1)%>.jpg">
+                            <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=colorId%>_1.jpg">
                         </div>
                         <div>
-                            <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=2 + 4 * (index - 1)%>.jpg">
+                            <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=colorId%>_2.jpg">
                         </div>
                         <div>
-                            <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=3 + 4 * (index - 1)%>.jpg">
+                            <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=colorId%>_3.jpg">
                         </div>
                         <div>
-                            <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=4 + 4 * (index - 1)%>.jpg">
+                            <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=colorId%>_4.jpg">
                         </div>
                     </div>
                     <div class="img-btn">
@@ -58,10 +67,10 @@
                     </div>
                 </div>
                 <ul class="thumnails">
-                    <li><img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=1 + 4 * (index - 1)%>.jpg" alt="thumnail_1"></li>
-                    <li><img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=2 + 4 * (index - 1)%>.jpg" alt="thumnail_2"></li>
-                    <li><img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=3 + 4 * (index - 1)%>.jpg" alt="thumnail_3"></li>
-                    <li><img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=4 + 4 * (index - 1)%>.jpg" alt="thumnail_4"></li>
+                    <li><img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=colorId%>_1.jpg" alt="thumnail_1"></li>
+                    <li><img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=colorId%>_2.jpg" alt="thumnail_2"></li>
+                    <li><img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=colorId%>_3.jpg" alt="thumnail_3"></li>
+                    <li><img src="<%= request.getContextPath()%>/assets/img/img-products/<%=shoes.getShoes_id()%>_<%=colorId%>_4.jpg" alt="thumnail_4"></li>
                 </ul>
             </div>
             <div class="detail-info">
@@ -75,7 +84,8 @@
                         for (int i = 1; i <= size; i++) {
                             ProductColorDTO color = listColor.get(i - 1);
                     %>
-                    <div>
+                    <div <%if(color.getColor_id().equals(colorId)) {%>
+                        style="border: 2px #1d1d1b solid" <%}%>>
                         <a href="ShoesProductController?shoesId=<%=shoesId%>&colorIndex=<%=i%>"
                            style="background-color: <%=color.getColor_code()%>"> </a>
                     </div>
@@ -86,29 +96,25 @@
                     <div class="size-quantity">
                         <div class="btn-size">
                             <label>Size</label>
-                            <select>
-                                <option selected hidden></option>
+                            <select name="sizeId">
+                                <option value="" selected hidden></option>
                                 <%
-                                    String colorId = null;
-                                    if (request.getAttribute("colorId") != null) {
-                                        colorId = request.getAttribute("colorId") + "";
-                                    }
                                     ProductSizeDAO sizeDAO = new ProductSizeDAO();
                                     List<ProductSizeDTO> sizeList = sizeDAO.checkSize(shoesId, colorId);
                                     for (ProductSizeDTO sizeShoes : sizeList) {
                                 %>
-                                <option><%=sizeShoes.getSize_num()%></option>
+                                <option value="<%=sizeShoes.getSize_id()%>"><%=sizeShoes.getSize_num()%></option>
                                 <%}%>
                             </select>
                         </div>
                         <div class="btn-quantity">
                             <label>Quantity</label>
-                            <select>
+                            <select name="quantity">
                                 <option selected hidden></option>
                                 <%
                                     for (int i = 1; i <= 10; i++) {
                                 %>
-                                <option><%=i%></option>
+                                <option value="<%=i%>"><%=i%></option>
                                 <%}%>
                             </select>
                         </div>
