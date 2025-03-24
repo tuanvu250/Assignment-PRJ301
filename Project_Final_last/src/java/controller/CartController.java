@@ -41,10 +41,16 @@ public class CartController extends HttpServlet {
             String colorId = request.getParameter("colorId");
             String sizeId = request.getParameter("sizeId");
             String quantity = request.getParameter("quantity");
+            System.out.println(username);
+            System.out.println(shoesId);
+            System.out.println(colorId);
+            System.out.println(sizeId);
+            System.out.println(quantity);
             BigDecimal price  = shoesDAO.readById(shoesId).getPrice();
             if (!sizeId.trim().isEmpty() && !quantity.trim().isEmpty()) {
                 boolean check = cartDAO.addToCart(username, shoesId, colorId, sizeId, Integer.parseInt(quantity), price);
             } else {
+                session.setAttribute("shoesId", shoesId);
                 session.setAttribute("errorCart", "Please choose size and quantity.");
             }
         }
