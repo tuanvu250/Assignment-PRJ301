@@ -24,14 +24,14 @@
         <%@include file="../includes/header.jsp" %>
         <%
             if (request.getAttribute("shoesId") != null && request.getAttribute("colorIndex") != null) {
-                String shoesId = request.getAttribute("shoesId") + "";
+                shoesId = request.getAttribute("shoesId") + "";
                 String colorIndex = request.getAttribute("colorIndex") + "";
                 int index = Integer.parseInt(colorIndex) + 0;
-                ShoesProductDAO shoesdao = new ShoesProductDAO(); 
+                ShoesProductDAO shoesdao = new ShoesProductDAO();
                 ProductLineDAO linedao = new ProductLineDAO();
                 ShoesProductDTO shoes = shoesdao.readById(shoesId);
                 ProductLineDTO line = linedao.readById(shoes.getLine_id());
-                
+
                 List<ProductColorDTO> listColor = shoesdao.colorOfShoes(shoesId);
                 int size = listColor.size();
                 String colorId = null;
@@ -84,7 +84,7 @@
                         for (int i = 1; i <= size; i++) {
                             ProductColorDTO color = listColor.get(i - 1);
                     %>
-                    <div <%if(color.getColor_id().equals(colorId)) {%>
+                    <div <%if (color.getColor_id().equals(colorId)) {%>
                         style="border: 2px #1d1d1b solid" <%}%>>
                         <a href="ShoesProductController?shoesId=<%=shoesId%>&colorIndex=<%=i%>"
                            style="background-color: <%=color.getColor_code()%>"> </a>
@@ -96,7 +96,7 @@
                     <div class="size-quantity">
                         <div class="btn-size">
                             <label>Size</label>
-                            <select name="sizeId">
+                            <select name="sizeId" id="sizeId">
                                 <option value="" selected hidden></option>
                                 <%
                                     ProductSizeDAO sizeDAO = new ProductSizeDAO();
@@ -109,7 +109,7 @@
                         </div>
                         <div class="btn-quantity">
                             <label>Quantity</label>
-                            <select name="quantity">
+                            <select name="quantity" id="quantity">
                                 <option selected hidden></option>
                                 <%
                                     for (int i = 1; i <= 10; i++) {
@@ -120,15 +120,16 @@
                         </div>
                     </div>
                     <div class="detail-cart">
-                        <a class="cart-list">Add to cart</a>
+                        <a href="CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>&sizeId=&quantity=" 
+                           class="cart-list" id="addToCart">Add to cart</a>
                         <%
                             ShoesProductDAO shoesDAO = new ShoesProductDAO();
                             if (shoesDAO.checkFav(shoes.getShoes_id(), username)) {
                         %> 
-                        <a class="love-list" href="FavController?action=delete&username=<%=username%>&shoesId=<%=shoes.getShoes_id()%>" 
+                        <a class="love-list" href="FavController?action=delete&username=<%=username%>&shoesId=<%=shoesId%>" 
                            id="fav-link" style="color: #C63F3E;"><i class="fa-solid fa-heart "></i></a>
                             <%} else {%>
-                        <a class="love-list" href="FavController?action=add&username=<%=username%>&shoesId=<%=shoes.getShoes_id()%>" 
+                        <a class="love-list" href="FavController?action=add&username=<%=username%>&shoesId=<%=shoesId%>" 
                            id="fav-link"><i class="fa-regular fa-heart "></i></a> <%}%>
                     </div>
                     <div class="order-now">
@@ -152,66 +153,82 @@
         <%@include file="../includes/footer.jsp" %>
         <script src="<%= request.getContextPath()%>/assets/js/productDetail.js"></script>
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const favLinks = document.querySelectorAll('.love-list');
-                const cartLinks = document.querySelectorAll('.cart-list');
-                const buyLink = document.getElementById('buy-now');
-                const overlay = document.getElementById('modal-bg');
-                const cancelButton = document.querySelector('.btn-cancel');
+                document.addEventListener('DOMContentLoaded', function () {
+                    const favLinks = document.querySelectorAll('.love-list');
+                    const cartLinks = document.querySelectorAll('.cart-list');
+                    const buyLink = document.getElementById('buy-now');
+                    const overlay = document.getElementById('modal-bg');
+                    const cancelButton = document.querySelector('.btn-cancel');
 
 
-                let isLogin = <%=AuthUtils.isLoggedIn(session) ? "true" : "false"%>;
+                    let isLogin = <%=AuthUtils.isLoggedIn(session) ? "true" : "false"%>;
 
-                favLinks.forEach(link => {
-                    link.addEventListener('click', function (event) {
+                    favLinks.forEach(link => {
+                        link.addEventListener('click', function (event) {
+                            if (!isLogin) {
+                                event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                                overlay.classList.add('show');
+                                document.body.style.overflow = 'hidden';
+                            }
+                        });
+                    });
+
+                    cartLinks.forEach(link => {
+                        link.addEventListener('click', function (event) {
+                            if (!isLogin) {
+                                event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                                overlay.classList.add('show');
+                                document.body.style.overflow = 'hidden';
+                            }
+                        });
+                    });
+
+                    buyLink.addEventListener('click', function (event) {
                         if (!isLogin) {
                             event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
                             overlay.classList.add('show');
-                            document.body.style.overflow = 'hidden';
+                            document.body.style.overflow = 'hidden'; // Ngăn cuộn
                         }
                     });
-                });
 
-                cartLinks.forEach(link => {
-                    link.addEventListener('click', function (event) {
+                    cartLink.addEventListener('click', function (event) {
                         if (!isLogin) {
                             event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
                             overlay.classList.add('show');
-                            document.body.style.overflow = 'hidden';
+                            document.body.style.overflow = 'hidden'; // Ngăn cuộn
                         }
                     });
-                });
 
-                buyLink.addEventListener('click', function (event) {
-                    if (!isLogin) {
-                        event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
-                        overlay.classList.add('show');
-                        document.body.style.overflow = 'hidden'; // Ngăn cuộn
-                    }
-                });
-
-                cartLink.addEventListener('click', function (event) {
-                    if (!isLogin) {
-                        event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
-                        overlay.classList.add('show');
-                        document.body.style.overflow = 'hidden'; // Ngăn cuộn
-                    }
-                });
-
-                // Đóng popup khi bấm Cancel
-                cancelButton.addEventListener('click', function () {
-                    overlay.classList.remove('show');
-                    document.body.style.overflow = ''; // Cho phép cuộn lại
-                });
-
-                // Đóng popup khi click ra ngoài
-                overlay.addEventListener('click', function (event) {
-                    if (event.target === overlay) {
+                    // Đóng popup khi bấm Cancel
+                    cancelButton.addEventListener('click', function () {
                         overlay.classList.remove('show');
                         document.body.style.overflow = ''; // Cho phép cuộn lại
-                    }
+                    });
+
+                    // Đóng popup khi click ra ngoài
+                    overlay.addEventListener('click', function (event) {
+                        if (event.target === overlay) {
+                            overlay.classList.remove('show');
+                            document.body.style.overflow = ''; // Cho phép cuộn lại
+                        }
+                    });
                 });
-            });
+                document.addEventListener("DOMContentLoaded", function () {
+                    let sizeSelect = document.getElementById("sizeId");
+                    let quantitySelect = document.getElementById("quantity");
+                    let addToCartLink = document.getElementById("addToCart");
+
+                    function updateCartLink() {
+                        let sizeId = sizeSelect.value;
+                        let quantity = quantitySelect.value;
+                        let baseUrl = "CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>";
+                        addToCartLink.href = `${baseUrl}&sizeId=${sizeId}&quantity=${quantity}`;
+                                }
+
+                                // Gán sự kiện cho cả hai select
+                                sizeSelect.addEventListener("change", updateCartLink);
+                                quantitySelect.addEventListener("change", updateCartLink);
+                            });
         </script>
     </body>
 </html>

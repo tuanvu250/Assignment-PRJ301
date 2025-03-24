@@ -77,6 +77,7 @@
                         </div>
                         <%
                             String username = null;
+                            String shoesId = null;
                             if (AuthUtils.isLoggedIn(session)) {
                                 UserDTO user = (UserDTO) session.getAttribute("user");
                                 username = user.getUser_name();

@@ -35,7 +35,6 @@ public class FavController extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         String url = (String) session.getAttribute("previousPage");
-        System.out.println(url);
         if (AuthUtils.isLoggedIn(session)) {
             String username = request.getParameter("username");
             String shoesId = request.getParameter("shoesId");
@@ -48,7 +47,6 @@ public class FavController extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         String url = (String) session.getAttribute("previousPage");
-        System.out.println(url);
         if (AuthUtils.isLoggedIn(session)) {
             String username = request.getParameter("username");
             String shoesId = request.getParameter("shoesId");

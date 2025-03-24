@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.ShoesProductDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -12,6 +13,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import utils.AuthUtils;
 
 /**
  *
@@ -20,29 +23,44 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "CartController", urlPatterns = {"/CartController"})
 public class CartController extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    private static final String PRODUCT_PAGE = "/products/product.jsp";
+    private ShoesProductDAO shoesDAO = new ShoesProductDAO();
+    
+    protected String processAddCart(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String url = (String) session.getAttribute("previousPage");
+        if (AuthUtils.isLoggedIn(session)) {
+            System.out.println("OK size quantity");
+            String username = request.getParameter("username");
+            String shoesId = request.getParameter("shoesId");
+            String sizeId =  request.getParameter("sizeId");
+            String quantity = request.getParameter("quantity");
+            System.out.println(sizeId);
+            System.out.println(quantity);
+        }
+        return url;
+    }
+    
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet CartController</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet CartController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        String url = PRODUCT_PAGE;
+        try {
+            String action = request.getParameter("action");
+            if (action != null) {
+                if (action.equals("add")) {
+                    url = processAddCart(request, response);
+                } else if (action.equals("delete")) {
+                }
+            }
+        } catch (Exception e) {
+            log("ERROR: " + e.toString());
+        } finally {
+//            RequestDispatcher rd = request.getRequestDispatcher(url);
+//            rd.forward(request, response);
+            response.sendRedirect(url);
         }
     }
 
