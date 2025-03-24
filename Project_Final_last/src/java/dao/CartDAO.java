@@ -48,13 +48,14 @@ public class CartDAO implements IDAO<CartDTO, String> {
     }
 
     public List<CartDTO> readAllByUserId(String username) {
-        String sql = "SELECT CD.CART_ID, SHOES_ID, COLOR_ID, QUANTITY, PRICE"
+        String sql = "SELECT CD.CART_ID, SHOES_ID, COLOR_ID, SIZE_ID, QUANTITY, PRICE"
                 + " FROM CART_DETAIL CD JOIN CART C ON CD.CART_ID = C.CART_ID"
                 + " WHERE C.USER_NAME = ?";
         List<CartDTO> list = new ArrayList<>();
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 CartDTO cart = new CartDTO(

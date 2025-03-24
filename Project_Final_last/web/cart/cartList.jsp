@@ -4,6 +4,13 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dto.ProductSizeDTO"%>
+<%@page import="dao.ProductSizeDAO"%>
+<%@page import="dto.CartDTO"%>
+<%@page import="dto.ProductColorDTO"%>
+<%@page import="java.util.List"%>
+<%@page import="dto.ShoesProductDTO"%>
+<%@page import="dao.ShoesProductDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,96 +25,88 @@
             <div class="favourite">
                 <h1>CART</h1>
                 <div class="favourite-container">
+                    <%
+                        if (session.getAttribute("listCart") != null) {
+                            ShoesProductDAO shoesDAO = new ShoesProductDAO();
+                            List<CartDTO> listCart = (List<CartDTO>) session.getAttribute("listCart");
+                            for (CartDTO cart : listCart) {
+                                List<ProductColorDTO> listColor = shoesDAO.colorOfShoes(cart.getShoes_id());
+                                String colorId = cart.getColor_id();
+                                ShoesProductDTO shoes = shoesDAO.readById(cart.getShoes_id());
+                                int size = listColor.size();
+                    %>
                     <div class="favourite-item">
-                        <img src="img/Rectangle_43.png">
+                        <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=cart.getShoes_id()%>_<%=colorId%>_1.jpg"
+                             style="max-width: 250px;">
                         <div class="favourite-info">
-                            <a href="#" class="favourite-name">Abc xyz</a>
+                            <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>&colorIndex=1" 
+                               class="favourite-name"><%=shoes.getShoes_name()%></a>
                             <div class="favourite-price">
-                                <p>XXX.XXX VND</p>
+                                <p><%=currencyVN.format(shoes.getPrice())%></p>
                                 <p class="sale-price">XXX.XXX VND</p>
                             </div>
                             <div class="favourite-choice">
                                 <div class="favourite-color">
-                                    <div>
-                                        <a></a>
+                                    <%
+                                        for (int i = 1; i <= size; i++) {
+                                            ProductColorDTO color = listColor.get(i - 1);
+                                    %>
+                                    <div <%if (color.getColor_id().equals(colorId)) {%>
+                                        style="border: 2px #1d1d1b solid; border-radius: 50%;" <%}%>>
+                                        <a href=""
+                                           style="background-color: <%=color.getColor_code()%>"> </a>
                                     </div>
-                                    <div>
-                                        <a></a>
-                                    </div>
-                                    <div>
-                                        <a></a>
-                                    </div>
+                                    <%}%>
                                 </div>
                                 <div class="favourite-size">
                                     <label>Size</label>
                                     <select>
-                                        <option selected hidden></option>
-                                        <option>35</option>
-                                        <option>36</option>
-                                        <option>37</option>
+                                        <option value="" selected hidden></option>
+                                        <%
+                                            ProductSizeDAO sizeDAO = new ProductSizeDAO();
+                                            List<ProductSizeDTO> sizeList = sizeDAO.checkSize(shoes.getShoes_id(), colorId);
+                                            for (ProductSizeDTO sizeShoes : sizeList) {
+                                        %>
+                                        <option value="<%=sizeShoes.getSize_id()%>"
+                                                <%if (cart.getSize_id().equals(sizeShoes.getSize_id())) {%>
+                                                selected<%}%>
+                                                ><%=sizeShoes.getSize_num()%></option>
+                                        <%}%>
                                     </select>
                                 </div>
                                 <div class="favourite-size">
                                     <label>Quantity</label>
                                     <select>
-                                        <option selected hidden></option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
+                                        <option value="" selected hidden></option>
+                                        <%
+                                            for (int i = 1; i <= 10; i++) {
+                                        %>
+                                        <option value="<%=i%>" 
+                                                <%if (cart.getQuantity() == i) {%>selected<%}%>
+                                                ><%=i%></option>
+                                        <%}%> 
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <div class="favourite-btn">
-                            <a class="favourite-cart"><i class="fa-regular fa-heart"></i></a>
+                            <%
+                                if (shoesDAO.checkFav(shoes.getShoes_id(), username)) {
+                            %> 
+                            <a href="FavController?action=delete&username=<%=username%>&shoesId=<%=cart.getShoes_id()%>"
+                                class="favourite-cart"><i class="fa-solid fa-heart"></i></a> <%} else {%>
+                                
+                            <a href="FavController?action=add&username=<%=username%>&shoesId=<%=cart.getShoes_id()%>"
+                                class="favourite-cart"><i class="fa-regular fa-heart"></i></a><%}%>
+                                
                             <a class="favourite-delete"><i class="fa-solid fa-trash"></i></a>
                         </div>
                     </div>
-                    <div class="favourite-item">
-                        <img src="img/Rectangle_43.png">
-                        <div class="favourite-info">
-                            <a href="#" class="favourite-name">Abc xyz</a>
-                            <div class="favourite-price">
-                                <p>XXX.XXX VND</p>
-                                <p class="sale-price">XXX.XXX VND</p>
-                            </div>
-                            <div class="favourite-choice">
-                                <div class="favourite-color">
-                                    <div>
-                                        <a></a>
-                                    </div>
-                                    <div>
-                                        <a></a>
-                                    </div>
-                                    <div>
-                                        <a></a>
-                                    </div>
-                                </div>
-                                <div class="favourite-size">
-                                    <label>Size</label>
-                                    <select>
-                                        <option selected hidden></option>
-                                        <option>35</option>
-                                        <option>36</option>
-                                        <option>37</option>
-                                    </select>
-                                </div>
-                                <div class="favourite-size">
-                                    <label>Quantity</label>
-                                    <select>
-                                        <option selected hidden></option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="favourite-btn">
-                            <a class="favourite-cart"><i class="fa-regular fa-heart"></i></a>
-                            <a class="favourite-delete"><i class="fa-solid fa-trash"></i></a>
-                        </div>
-                    </div>
+
+                    <%}
+                        }else {%> 
+                    <h3 style="text-align: center; color: #C63F3E">There are no more products in your favourite list.</h3>
+                    <%}%>
                 </div>
                 <div class="favourite-footer">
                     <a>Clear All</a>

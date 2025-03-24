@@ -41,7 +41,7 @@
                         <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>&colorIndex=1"
                            class="favourite-name"><%=shoes.getShoes_name()%></a>
                         <div class="favourite-price">
-                            <p><%=shoes.getPrice()%> VND</p>
+                            <p><%=currencyVN.format(shoes.getPrice())%></p>
                             <p class="sale-price">XXX.XXX VND</p>
                         </div>
                         <div class="favourite-choice">
@@ -55,8 +55,7 @@
                                     <a href=""
                                        style="background-color: <%=color.getColor_code()%>"> </a>
                                 </div>
-                                <%;
-                                    }%>
+                                <%}%>
                             </div>
                             <div class="favourite-size">
                                 <label>Size</label>

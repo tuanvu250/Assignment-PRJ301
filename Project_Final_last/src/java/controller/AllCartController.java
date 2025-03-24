@@ -34,12 +34,13 @@ public class AllCartController extends HttpServlet {
     protected String processReadAllCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        String url = "/favourite/favouriteList.jsp";
+        String url = "/cart/cartList.jsp";
 
         if (AuthUtils.isLoggedIn(session)) {
             String username = request.getParameter("username");
             List<CartDTO> listCart = cartDAO.readAllByUserId(username);
             session.setAttribute("listCart", listCart);
+            System.out.println(listCart.size());
             String currentURL = request.getRequestURL().toString() + "?" + request.getQueryString();
             request.getSession().setAttribute("previousPage", currentURL);
         }
@@ -49,12 +50,13 @@ public class AllCartController extends HttpServlet {
     protected String processDeleteAllFav(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        String url = "/favourite/favouriteList.jsp";
+        String url = "/cart/cartList.jsp";
 
         if (AuthUtils.isLoggedIn(session)) {
             String username = request.getParameter("username");
             shoesDAO.deleteAllFav(username);
             session.setAttribute("listFav", null);
+            System.out.println();
             String currentURL = request.getRequestURL().toString() + "?" + request.getQueryString();
             request.getSession().setAttribute("previousPage", currentURL);
         }
