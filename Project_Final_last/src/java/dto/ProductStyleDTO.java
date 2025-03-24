@@ -29,5 +29,4 @@ public class ProductStyleDTO {
         this.style_name = style_name;
     }
     
-    
 }

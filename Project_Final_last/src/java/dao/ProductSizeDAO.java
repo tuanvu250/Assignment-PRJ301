@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+ 
 package dao;
 
 import dto.ProductSizeDTO;
@@ -16,10 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import utils.DBUtils;
 
-/**
- *
- * @author ADMIN
- */
+ 
 public class ProductSizeDAO implements IDAO<ProductSizeDTO, String> {
 
     @Override

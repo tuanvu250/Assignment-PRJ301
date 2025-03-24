@@ -5,11 +5,12 @@
  */
 package controller;
 
-import dao.ProductLineDAO;
 import dao.ProductMaterialDAO;
-import dto.ProductLineDTO;
+import dao.ProductStyleDAO;
 import dto.ProductMaterialDTO;
+import dto.ProductStyleDTO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -24,28 +25,28 @@ import utils.AuthUtils;
  *
  * @author Dell
  */
-@WebServlet(name = "ProductMaterialController", urlPatterns = {"/ProductMaterialController"})
-public class ProductMaterialController extends HttpServlet {
+@WebServlet(name = "ProductStyleController", urlPatterns = {"/ProductStyleController"})
+public class ProductStyleController extends HttpServlet {
 
     private static final String HOME = "/home/home.jsp";
-    private static final String MANAGEMATE = "/admin/manageMaterial.jsp";
-    private static final String MATERIALFORM = "/admin/materialForm.jsp";
+    private static final String MANAGESTYLE = "/admin/manageProductStyle.jsp";
+    private static final String STYLEFORM = "/admin/styleForm.jsp";
 
-    private final ProductMaterialDAO matdao = new ProductMaterialDAO();
+    private final ProductStyleDAO stdao = new ProductStyleDAO();
 
     protected String processSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME;
         HttpSession session = request.getSession();
         if (AuthUtils.checkIsAdmin(session)) {
-            url = MANAGEMATE;
-            String matTerm = request.getParameter("matTerm");
-            if (matTerm == null) {
-                matTerm = "";
+            url = MANAGESTYLE;
+            String styleTerm = request.getParameter("styleTerm");
+            if (styleTerm == null) {
+                styleTerm = "";
             }
-            List<ProductMaterialDTO> materials = matdao.searchTerm(matTerm);
-            request.setAttribute("materials", materials);
-            request.setAttribute("searchterm", matTerm);
+            List<ProductStyleDTO> styles = stdao.searchTerm(styleTerm);
+            request.setAttribute("styles", styles);
+            request.setAttribute("searchterm", styleTerm);
         }
         return url;
     }
@@ -55,15 +56,15 @@ public class ProductMaterialController extends HttpServlet {
         String url = HOME;
         HttpSession session = request.getSession();
         if (AuthUtils.checkIsAdmin(session)) {
-            String mateName = request.getParameter("materialName");
-            if (mateName != null && !mateName.trim().isEmpty()) {
-                if (matdao.add(mateName)) {
-                    url = MANAGEMATE;
+            String styleName = request.getParameter("materialName");
+            if (styleName != null && !styleName.trim().isEmpty()) {
+                if (stdao.add(styleName)) {
+                    url = MANAGESTYLE;
                     processSearch(request, response);
                 }
             } else {
-                request.setAttribute("errorAddMAT", "This field is requried. Please input one value!");
-                url = MATERIALFORM;
+                request.setAttribute("errorStyle", "This field is requried. Please input one value!");
+                url = MANAGESTYLE;
             }
         }
         return url;
@@ -74,12 +75,12 @@ public class ProductMaterialController extends HttpServlet {
         String url = HOME;
         HttpSession session = request.getSession();
         if (AuthUtils.checkIsAdmin(session)) {
-            url = MATERIALFORM;
+            url = STYLEFORM;
             String id = request.getParameter("id");
-            ProductMaterialDTO mate = matdao.readById(id);
-            request.setAttribute("mateid", id);
-            request.setAttribute("oldname", mate.getMat_name());
-            request.setAttribute("action", "editMaterial");
+            ProductStyleDTO style = stdao.readById(id);
+            request.setAttribute("styleid", id);
+            request.setAttribute("oldname", style.getStyle_name());
+            request.setAttribute("action", "editStyle");
         }
         return url;
     }
@@ -89,12 +90,12 @@ public class ProductMaterialController extends HttpServlet {
         String url = HOME;
         HttpSession session = request.getSession();
         if (AuthUtils.checkIsAdmin(session)) {
-            url = MANAGEMATE;
-            String id = request.getParameter("mateid");
-            String materialName = request.getParameter("materialName");
-            ProductMaterialDTO mate = matdao.readById(id);
-            mate.setMat_name(materialName);
-            matdao.update(mate);
+            url = MANAGESTYLE;
+            String id = request.getParameter("styleid");
+            String styleName = request.getParameter("styleName");
+            ProductStyleDTO style = stdao.readById(id);
+            style.setStyle_name(styleName);
+            stdao.update(style);
             processSearch(request, response);
         }
         return url;
@@ -105,7 +106,7 @@ public class ProductMaterialController extends HttpServlet {
         String url = HOME;
         HttpSession session = request.getSession();
         if (AuthUtils.checkIsAdmin(session)) {
-            url = MANAGEMATE;
+            url = MANAGESTYLE;
             processSearch(request, response);
         }
         return url;
@@ -116,9 +117,9 @@ public class ProductMaterialController extends HttpServlet {
         String url = HOME;
         HttpSession session = request.getSession();
         if (AuthUtils.checkIsAdmin(session)) {
-            url = MANAGEMATE;
+            url = MANAGESTYLE;
             String id = request.getParameter("id");
-            matdao.delete(id);
+            stdao.delete(id);
             processSearch(request, response);
         }
         return url;
@@ -133,15 +134,15 @@ public class ProductMaterialController extends HttpServlet {
             if (action == null) {
                 url = HOME;
             } else {
-                if (action.equals("searchMAT")) {
+                if (action.equals("searchStyle")) {
                     url = processSearch(request, response);
-                } else if (action.equals("manageMAT")) {
+                } else if (action.equals("manageStyle")) {
                     url = processSearch(request, response);
-                } else if (action.equals("addMaterial")) {
+                } else if (action.equals("addStyle")) {
                     url = processAdd(request, response);
                 } else if (action.equals("editpage")) {
                     url = processEditPage(request, response);
-                } else if (action.equals("editMaterial")) {
+                } else if (action.equals("editStyle")) {
                     url = processEdit(request, response);
                 } else if (action.equals("cancel")) {
                     url = processCancel(request, response);
@@ -155,6 +156,7 @@ public class ProductMaterialController extends HttpServlet {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
