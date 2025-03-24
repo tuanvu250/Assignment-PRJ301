@@ -119,6 +119,11 @@
                             </select>
                         </div>
                     </div>
+                    <%
+                        if(session.getAttribute("errorCart") != null) {
+                    %>
+                    <h3 style="color: #C63F3E;"><%=session.getAttribute("errorCart")%></h3>
+                    <%}%>
                     <div class="detail-cart">
                         <a href="CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>&sizeId=&quantity=" 
                            class="cart-list" id="addToCart">Add to cart</a>
@@ -222,13 +227,13 @@
                         let sizeId = sizeSelect.value;
                         let quantity = quantitySelect.value;
                         let baseUrl = "CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>";
-                        addToCartLink.href = `${baseUrl}&sizeId=${sizeId}&quantity=${quantity}`;
-                                }
+                        addToCartLink.setAttribute("href", baseUrl + "&sizeId=" + sizeId + "&quantity=" + quantity);
+                        }
 
                                 // Gán sự kiện cho cả hai select
                                 sizeSelect.addEventListener("change", updateCartLink);
                                 quantitySelect.addEventListener("change", updateCartLink);
-                            });
+                });
         </script>
     </body>
 </html>

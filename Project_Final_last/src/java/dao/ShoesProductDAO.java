@@ -360,12 +360,102 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         }
         return false;
     }
-    
+
+    public boolean addToCart(String username, String shoesId, String colorId, String sizeId, int quantity) {
+        String sql = "SELECT CART_ID FROM [dbo].[CART] WHERE USER_NAME = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            String CarId = null;
+            if (!rs.next()) {
+                String getMaxFavIdQuery = "SELECT MAX(CART_ID) FROM [dbo].[CART]";
+                Statement st = conn.createStatement();
+                rs = st.executeQuery(getMaxFavIdQuery);
+                String newCarId = "CAR001"; // Mặc định nếu chưa có bản ghi nào
+                if (rs.next() && rs.getString(1) != null) {
+                    String lastId = rs.getString(1); // Lấy mã FAV cuối cùng (FAV002, FAV003,...)
+                    int number = Integer.parseInt(lastId.substring(3)) + 1; // Cắt "FAV" và chuyển số
+                    newCarId = String.format("CAR%03d", number); // Định dạng thành FAVxxx
+                }
+
+                // Chèn bản ghi mới vào FAVOURITE
+                String insertFavQuery = "INSERT INTO [dbo].[CART] (CART_ID, USER_NAME) VALUES (?, ?)";
+                ps = conn.prepareStatement(insertFavQuery);
+                ps.setString(1, newCarId);
+                ps.setString(2, username);
+                ps.executeUpdate();
+                CarId = newCarId;
+            } else {
+                CarId = rs.getString("CART_ID");
+            }
+            if (!checkCart(shoesId, colorId, sizeId)) {
+                sql = "INSERT INTO [dbo].[CART_DETAIL] (CART_ID, SHOES_ID, COLOR_ID, SIZE_ID, QUANTITY)"
+                        + " VALUES (?, ?, ?, ?, ?)";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, CarId);
+                ps.setString(2, shoesId);
+                ps.setString(3, colorId);
+                ps.setString(4, sizeId);
+                ps.setInt(5, quantity);
+                return ps.executeUpdate() > 0;
+            } else {
+                sql = "SELECT QUANTITY FROM [dbo].[CART_DETAIL] "
+                        + " WHERE CART_ID = ? AND AND SHOES_ID = ? AND COLOR_ID = ?"
+                        + " AND SIZE_ID = ?";
+                ps = conn.prepareStatement(sql);
+                ps.setString(1, CarId);
+                ps.setString(2, shoesId);
+                ps.setString(3, colorId);
+                ps.setString(4, sizeId);
+                int currentQuantity = rs.getInt("QUANTITY");
+                
+                sql = "UPDATE [dbo].[CART_DETAIL] SET QUANTITY = ? "
+                        + " WHERE CART_ID = ? AND SHOES_ID = ? "
+                        + " AND COLOR_ID = ? AND SIZE_ID = ?";
+                ps = conn.prepareStatement(sql);
+                ps.setInt(1, currentQuantity + quantity);
+                ps.setString(2, CarId);
+                ps.setString(3, shoesId);
+                ps.setString(4, colorId);
+                ps.setString(5, sizeId);
+                return ps.executeUpdate() > 0;
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean checkCart(String shoesId, String colorId, String sizeId) {
+        String sql = "SELECT CART_ID FROM [dbo].[CART_DETAIL]"
+                + " WHERE SHOES_ID = ? AND COLOR_ID = ? AND SIZE_ID = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, shoesId);
+            ps.setString(2, colorId);
+            ps.setString(3, sizeId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     public boolean deleteFromFav(String username, String shoesId) {
-        String sql = "DELETE FD" +
-                        " FROM [dbo].[FAVOURITE_DETAIL] FD" +
-                        " JOIN [dbo].[FAVOURITE] F ON FD.FAV_ID = F.FAV_ID" +
-                        " WHERE F.USER_NAME = ? AND FD.SHOES_ID = ?";
+        String sql = "DELETE FD"
+                + " FROM [dbo].[FAVOURITE_DETAIL] FD"
+                + " JOIN [dbo].[FAVOURITE] F ON FD.FAV_ID = F.FAV_ID"
+                + " WHERE F.USER_NAME = ? AND FD.SHOES_ID = ?";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -379,12 +469,12 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         }
         return false;
     }
-    
+
     public boolean deleteAllFav(String username) {
-        String sql = "DELETE FD" +
-                        " FROM [dbo].[FAVOURITE_DETAIL] FD" +
-                        " JOIN [dbo].[FAVOURITE] F ON FD.FAV_ID = F.FAV_ID" +
-                        " WHERE F.USER_NAME = ?";
+        String sql = "DELETE FD"
+                + " FROM [dbo].[FAVOURITE_DETAIL] FD"
+                + " JOIN [dbo].[FAVOURITE] F ON FD.FAV_ID = F.FAV_ID"
+                + " WHERE F.USER_NAME = ?";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -403,13 +493,13 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
                 + " FROM [dbo].[FAVOURITE_DETAIL] FD"
                 + " JOIN [dbo].[FAVOURITE] F ON FD.FAV_ID = F.FAV_ID"
                 + " WHERE F.USER_NAME = ?";
-        List<ShoesProductDTO> list= new ArrayList<>();
+        List<ShoesProductDTO> list = new ArrayList<>();
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 list.add(readById(rs.getString("SHOES_ID")));
             }
             return list;

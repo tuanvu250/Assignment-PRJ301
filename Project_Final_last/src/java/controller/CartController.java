@@ -8,6 +8,7 @@ package controller;
 import dao.ShoesProductDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,24 +26,26 @@ public class CartController extends HttpServlet {
 
     private static final String PRODUCT_PAGE = "/products/product.jsp";
     private ShoesProductDAO shoesDAO = new ShoesProductDAO();
-    
+
     protected String processAddCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         String url = (String) session.getAttribute("previousPage");
         if (AuthUtils.isLoggedIn(session)) {
-            System.out.println("OK size quantity");
+            session.setAttribute("errorCart",null);
             String username = request.getParameter("username");
             String shoesId = request.getParameter("shoesId");
-            String sizeId =  request.getParameter("sizeId");
+            String sizeId = request.getParameter("sizeId");
             String quantity = request.getParameter("quantity");
-            System.out.println(sizeId);
-            System.out.println(quantity);
+            if (!sizeId.trim().isEmpty() && !quantity.trim().isEmpty()) {
+                shoesDAO.addToCart(username, shoesId, sizeId, sizeId, Integer.parseInt(quantity));
+            } else {
+                session.setAttribute("errorCart", "Please choose size and quantity.");
+            }
         }
         return url;
     }
-    
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
