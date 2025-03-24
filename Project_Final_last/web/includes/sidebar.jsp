@@ -36,7 +36,7 @@
                         <i class="fas fa-tags"></i>
                         <span class="nav-item">Product Line</span>
                     </a></li>
-                <li><a href="">
+                <li><a href="<%= request.getContextPath()%>/ProductMaterialController?action=manageMAT">
                         <i class="fas fa-layer-group"></i>
                         <span class="nav-item">Material</span>
                     </a></li>
