@@ -92,7 +92,7 @@
                             <a href="<%= request.getContextPath()%>/AllFavController?action=readAll&username=<%=username%>" id="fav-link">
                                 <i class="fas fa-heart"></i>
                             </a>
-                            <a href="<%= request.getContextPath()%>/cart/cartList.jsp" id="cart-link">
+                            <a href="<%= request.getContextPath()%>/AllCartController?action=readAll&username=<%=username%>" id="cart-link">
                                 <i class="fas fa-shopping-cart"></i>
                             </a>
                             <div class="user-dropdown">

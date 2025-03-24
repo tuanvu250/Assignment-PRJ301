@@ -92,7 +92,7 @@
                 </div> 
                 <%}
                 } else {%> 
-                <h3 style="text-align: center;">There are no more products in your favourite list.</h3>
+                <h3 style="text-align: center; color: #C63F3E">There are no more products in your favourite list.</h3>
                 <%}%>
             </div>
             <div class="favourite-footer">
