@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.CartDAO;
 import dao.ShoesProductDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,13 +28,14 @@ public class CartController extends HttpServlet {
 
     private static final String PRODUCT_PAGE = "/products/product.jsp";
     private ShoesProductDAO shoesDAO = new ShoesProductDAO();
+    private CartDAO cartDAO = new CartDAO();
 
     protected String processAddCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         String url = (String) session.getAttribute("previousPage");
         if (AuthUtils.isLoggedIn(session)) {
-            session.setAttribute("errorCart",null);
+            
             String username = request.getParameter("username");
             String shoesId = request.getParameter("shoesId");
             String colorId = request.getParameter("colorId");
@@ -41,7 +43,7 @@ public class CartController extends HttpServlet {
             String quantity = request.getParameter("quantity");
             BigDecimal price  = shoesDAO.readById(shoesId).getPrice();
             if (!sizeId.trim().isEmpty() && !quantity.trim().isEmpty()) {
-                boolean check = shoesDAO.addToCart(username, shoesId, colorId, sizeId, Integer.parseInt(quantity), price);
+                boolean check = cartDAO.addToCart(username, shoesId, colorId, sizeId, Integer.parseInt(quantity), price);
             } else {
                 session.setAttribute("errorCart", "Please choose size and quantity.");
             }
@@ -49,6 +51,20 @@ public class CartController extends HttpServlet {
         return url;
     }
 
+    protected String processDeleteCart(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String url = (String) session.getAttribute("previousPage");
+        if (AuthUtils.isLoggedIn(session)) {
+            String username = request.getParameter("username");
+            String shoesId = request.getParameter("shoesId");
+            String colorId = request.getParameter("colorId");
+            String sizeId = request.getParameter("sizeId");
+            cartDAO.deleteCart(username, shoesId, colorId, sizeId);
+        }
+        return url;
+    }
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -59,6 +75,7 @@ public class CartController extends HttpServlet {
                 if (action.equals("add")) {
                     url = processAddCart(request, response);
                 } else if (action.equals("delete")) {
+                    url = processDeleteCart(request, response);
                 }
             }
         } catch (Exception e) {

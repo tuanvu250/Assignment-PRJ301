@@ -94,23 +94,25 @@
                                 if (shoesDAO.checkFav(shoes.getShoes_id(), username)) {
                             %> 
                             <a href="FavController?action=delete&username=<%=username%>&shoesId=<%=cart.getShoes_id()%>"
-                                class="favourite-cart"><i class="fa-solid fa-heart"></i></a> <%} else {%>
-                                
+                               class="favourite-cart"><i class="fa-solid fa-heart"></i></a> <%} else {%>
+
                             <a href="FavController?action=add&username=<%=username%>&shoesId=<%=cart.getShoes_id()%>"
-                                class="favourite-cart"><i class="fa-regular fa-heart"></i></a><%}%>
-                                
-                            <a class="favourite-delete"><i class="fa-solid fa-trash"></i></a>
+                               class="favourite-cart"><i class="fa-regular fa-heart"></i></a><%}%>
+
+                            <a href="CartController?action=delete&username=<%=username%>&shoesId=<%=cart.getShoes_id()%>&colorId=<%=cart.getColor_id()%>&sizeId=<%=cart.getSize_id()%>"
+                               class="favourite-delete"><i class="fa-solid fa-trash"></i></a>
                         </div>
                     </div>
 
                     <%}
-                        }else {%> 
-                    <h3 style="text-align: center; color: #C63F3E">There are no more products in your favourite list.</h3>
+                    } else {%> 
+                    <h3 style="text-align: center; color: #C63F3E">There are no more products in your cart list.</h3>
                     <%}%>
                 </div>
                 <div class="favourite-footer">
-                    <a>Clear All</a>
-                    <a>Back to product</a>
+                    <a href="AllCartController?action=deleteAll&username=<%=username%>"
+                       >Clear All</a>
+                    <a onclick="updateFilter('gender', '')">Back to product</a>
                 </div>
 
             </div>

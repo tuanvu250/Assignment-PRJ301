@@ -37,7 +37,7 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
         String url = HOME_PAGE;
         String user_name = request.getParameter("username");
-        System.out.println(user_name);
+       
         String password = request.getParameter("password");
         if (AuthUtils.verifyUser(user_name, password)) {
             url = HOME_PAGE;

@@ -123,7 +123,7 @@
                         if(session.getAttribute("errorCart") != null) {
                     %>
                     <h3 style="color: #C63F3E;"><%=session.getAttribute("errorCart")%></h3>
-                    <%}%>
+                    <%session.setAttribute("errorCart", null);}%>
                     <div class="detail-cart">
                         <a href="CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=colorId%>&sizeId=&quantity=" 
                            class="cart-list" id="addToCart">Add to cart</a>
@@ -138,7 +138,8 @@
                            id="fav-link"><i class="fa-regular fa-heart "></i></a> <%}%>
                     </div>
                     <div class="order-now">
-                        <a id="buy-now">ORDER NOW</a>
+                        <a href="AllCartController?action=buyNow&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=colorId%>&sizeId=&quantity="
+                            id="buy-now">ORDER NOW</a>
                     </div>
                 </div>
                 <div class="info-detail">
@@ -230,9 +231,25 @@
                         addToCartLink.setAttribute("href", baseUrl + "&sizeId=" + sizeId + "&quantity=" + quantity);
                         }
 
-                                // Gán sự kiện cho cả hai select
-                                sizeSelect.addEventListener("change", updateCartLink);
-                                quantitySelect.addEventListener("change", updateCartLink);
+                    // Gán sự kiện cho cả hai select
+                    sizeSelect.addEventListener("change", updateCartLink);
+                    quantitySelect.addEventListener("change", updateCartLink);
+                });
+                document.addEventListener("DOMContentLoaded", function () {
+                    let sizeSelect = document.getElementById("sizeId");
+                    let quantitySelect = document.getElementById("quantity");
+                    let addToCartLink = document.getElementById("buy-now");
+
+                    function updateBuyNow() {
+                        let sizeId = sizeSelect.value;
+                        let quantity = quantitySelect.value;
+                        let baseUrl = "AllCartController?action=buyNow&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=request.getAttribute("colorId")%>";
+                        addToCartLink.setAttribute("href", baseUrl + "&sizeId=" + sizeId + "&quantity=" + quantity);
+                        }
+
+                    // Gán sự kiện cho cả hai select
+                    sizeSelect.addEventListener("change", updateBuyNow);
+                    quantitySelect.addEventListener("change", updateBuyNow);
                 });
         </script>
     </body>

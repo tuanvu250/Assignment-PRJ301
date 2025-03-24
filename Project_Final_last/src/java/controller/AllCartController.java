@@ -10,6 +10,7 @@ import dao.ShoesProductDAO;
 import dto.CartDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -30,7 +31,7 @@ public class AllCartController extends HttpServlet {
     private static final String PRODUCT_PAGE = "/products/product.jsp";
     private ShoesProductDAO shoesDAO = new ShoesProductDAO();
     private CartDAO cartDAO = new CartDAO();
-    
+
     protected String processReadAllCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -39,30 +40,59 @@ public class AllCartController extends HttpServlet {
         if (AuthUtils.isLoggedIn(session)) {
             String username = request.getParameter("username");
             List<CartDTO> listCart = cartDAO.readAllByUserId(username);
-            session.setAttribute("listCart", listCart);
-            System.out.println(listCart.size());
+            if (listCart.size() == 0) {
+                session.setAttribute("listCart", null);
+            } else {
+                session.setAttribute("listCart", listCart);
+            }
             String currentURL = request.getRequestURL().toString() + "?" + request.getQueryString();
             request.getSession().setAttribute("previousPage", currentURL);
         }
         return url;
     }
-    
-    protected String processDeleteAllFav(HttpServletRequest request, HttpServletResponse response)
+
+    protected String processDeleteAllCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         String url = "/cart/cartList.jsp";
 
         if (AuthUtils.isLoggedIn(session)) {
             String username = request.getParameter("username");
-            shoesDAO.deleteAllFav(username);
-            session.setAttribute("listFav", null);
-            System.out.println();
+            cartDAO.deleteAllCart(username);
+            session.setAttribute("listCart", null);
             String currentURL = request.getRequestURL().toString() + "?" + request.getQueryString();
-            request.getSession().setAttribute("previousPage", currentURL);
         }
         return url;
     }
-    
+
+    protected void processBuyNow(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String url = (String) session.getAttribute("previousPage");
+
+        if (AuthUtils.isLoggedIn(session)) {
+
+            String username = request.getParameter("username");
+            request.setAttribute("username", username);
+            String shoesId = request.getParameter("shoesId");
+            String colorId = request.getParameter("colorId");
+            String sizeId = request.getParameter("sizeId");
+            String quantity = request.getParameter("quantity");
+            BigDecimal price = shoesDAO.readById(shoesId).getPrice();
+            if (!sizeId.trim().isEmpty() && !quantity.trim().isEmpty()) {
+                boolean check = cartDAO.addToCart(username, shoesId, colorId, sizeId, Integer.parseInt(quantity), price);
+                url = processReadAllCart(request, response);
+                session.setAttribute("previousPage", request.getRequestURL().toString() + "?action=readAll&username=" + username);
+                RequestDispatcher rd = request.getRequestDispatcher(url);
+                rd.forward(request, response);
+            } else {
+                session.setAttribute("errorCart", "Please choose size and quantity.");
+                response.sendRedirect(url);
+            }
+
+        }
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -72,17 +102,19 @@ public class AllCartController extends HttpServlet {
             if (action != null) {
                 if (action.equals("readAll")) {
                     url = processReadAllCart(request, response);
-                } else if(action.equals("deleteAll")) {
-                    url = processDeleteAllFav(request, response);
+                    RequestDispatcher rd = request.getRequestDispatcher(url);
+                    rd.forward(request, response);
+                } else if (action.equals("deleteAll")) {
+                    url = processDeleteAllCart(request, response);
+                    RequestDispatcher rd = request.getRequestDispatcher(url);
+                    rd.forward(request, response);
+                } else if (action.equals("buyNow")) {
+                    processBuyNow(request, response);
                 }
             }
         } catch (Exception e) {
             log("ERROR: " + e.toString());
-        } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

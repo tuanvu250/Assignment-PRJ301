@@ -37,7 +37,9 @@ public class AllFavController extends HttpServlet {
         if (AuthUtils.isLoggedIn(session)) {
             String username = request.getParameter("username");
             List<ShoesProductDTO> listFav = shoesDAO.readAllFav(username);
-            session.setAttribute("listFav", listFav);
+            if(listFav.size() == 0) {
+                session.setAttribute("listFav", null);
+            } else session.setAttribute("listFav", listFav);
             String currentURL = request.getRequestURL().toString() + "?" + request.getQueryString();
             request.getSession().setAttribute("previousPage", currentURL);
         }
