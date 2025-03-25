@@ -40,13 +40,13 @@
                 <div class="deli-info">
                     <h2>DELIVERY INFORMATION</h2>
                     <div class="payment-form" >
-                        <input type="text" placeholder="Full name" name="fullName"
+                        <input type="text" placeholder="Full name" name="fullName" required
                                value="<%=user.getFull_name()%>"/>
-                        <input type="tel" placeholder="Phone number" name="phone"
+                        <input type="tel" placeholder="Phone number" name="phone" required
                                value="<%=user.getPhone_number()%>"/>
-                        <input type="email" placeholder="Email" name="email"
+                        <input type="email" placeholder="Email" name="email" required
                                value="<%=user.getEmail()%>"/>
-                        <input type="text" placeholder="Address" name="address"/> 
+                        <input type="text" placeholder="Address" name="address" required/> 
                     </div>
                 </div>
                 <div class="payment-method">
@@ -82,7 +82,7 @@
                             <p><%=currencyVN.format(shoes.getPrice())%></p>
                         </div>
                         <div>
-                            <p><%=AuthUtils.nameColor(cart.getColor_id())%>, Size <%=AuthUtils.saleNum(cart.getSize_id())%></p>
+                            <p><%=AuthUtils.nameColor(cart.getColor_id())%>, Size <%=AuthUtils.sizeNum(cart.getSize_id())%></p>
                             <p> x<%=cart.getQuantity()%> </p>
                         </div>
                     </div>

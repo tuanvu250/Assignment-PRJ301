@@ -204,29 +204,6 @@ input:hover {
     background-color: #f9f9f9;
 }
 
-.order-status {
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.9em;
-    font-weight: 500;
-    display: inline-block;
-}
-
-.status-completed {
-    background-color: #e6f7e6;
-    color: #2e7d32;
-}
-
-.status-processing {
-    background-color: #fff8e1;
-    color: #ff8f00;
-}
-
-.status-cancelled {
-    background-color: #ffebee;
-    color: #c62828;
-}
-
 .view-details {
     color: #1d1d1b;
     text-decoration: underline;

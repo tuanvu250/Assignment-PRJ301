@@ -39,6 +39,7 @@ public class OrderController extends HttpServlet {
             throws ServletException, IOException {
         String url = SUMMARY;
         HttpSession session = request.getSession();
+        String username = AuthUtils.getUser(session).getUser_name();
         String fulName = request.getParameter("fullName");
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
@@ -51,7 +52,7 @@ public class OrderController extends HttpServlet {
         String id = orderDAO.autoCreateID();
         
         OrderDTO order = new OrderDTO(id, fulName, phone, email, date_order, "Pending", 
-                address, paymentMethod, subtotal, discount, totalPrice);
+                address, paymentMethod, subtotal, discount, totalPrice, username);
         boolean check = orderDAO.create(order);
         request.setAttribute("order", order);
         List<CartDTO> listCart = (List<CartDTO>) session.getAttribute("listCart");

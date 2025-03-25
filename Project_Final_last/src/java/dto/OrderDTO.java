@@ -24,11 +24,9 @@ public class OrderDTO {
     private BigDecimal subtotal;
     private BigDecimal discount;
     private BigDecimal total_price;
+    private String username;
 
-    public OrderDTO() {
-    }
-
-    public OrderDTO(String order_id, String fullName, String phone, String email, Date date_ordered, String status, String address, String method_pay, BigDecimal subtotal, BigDecimal discount, BigDecimal total_price) {
+    public OrderDTO(String order_id, String fullName, String phone, String email, Date date_ordered, String status, String address, String method_pay, BigDecimal subtotal, BigDecimal discount, BigDecimal total_price, String username) {
         this.order_id = order_id;
         this.fullName = fullName;
         this.phone = phone;
@@ -40,6 +38,10 @@ public class OrderDTO {
         this.subtotal = subtotal;
         this.discount = discount;
         this.total_price = total_price;
+        this.username = username;
+    }
+
+    public OrderDTO() {
     }
 
     public String getOrder_id() {
@@ -130,5 +132,12 @@ public class OrderDTO {
         this.total_price = total_price;
     }
 
-   
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
 }

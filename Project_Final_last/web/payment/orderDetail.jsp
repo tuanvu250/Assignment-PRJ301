@@ -77,7 +77,7 @@
                         <tr>
                             <td><%=AuthUtils.nameShoes(elem.getShoes_id())%></td>
                             <td><%=AuthUtils.nameColor(elem.getColor_id())%></td>
-                            <td><%=AuthUtils.saleNum(elem.getSize_id())%></td>
+                            <td><%=AuthUtils.sizeNum(elem.getSize_id())%></td>
                             <td><%=elem.getQuantity()%></td>
                             <td><%=currencyVN.format(elem.getPrice())%></td>
                         </tr> <%}%>
@@ -104,7 +104,7 @@
             </div>
 
             <div class="buttons">
-                <a href="#" class="btn">Back to Home</a>
+                <a href="<%= request.getContextPath()%>/home/home.jsp" class="btn">Back to Home</a>
 
             </div>
         </div> <%}%>

@@ -7,6 +7,7 @@ package dao;
 
 import dto.CartDTO;
 import dto.OrderDTO;
+import dto.UserDTO;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
@@ -72,8 +73,8 @@ public class OrderDAO implements IDAO<OrderDTO, String>{
                 + " ([ORDER_ID], [FULLNAME], "
                 + "[PHONE], [EMAIL], [DATE_ORDERED], "
                 + "[STATUS], [ADDRESS], [METHOD_PAY], "
-                + "[SUBTOTAL], [DISCOUNT],[TOTAL_PRICE]) "
-                + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "[SUBTOTAL], [DISCOUNT],[TOTAL_PRICE], [USER_NAME]) "
+                + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -88,6 +89,7 @@ public class OrderDAO implements IDAO<OrderDTO, String>{
             ps.setBigDecimal(9, order.getSubtotal());
             ps.setBigDecimal(10, order.getDiscount());
             ps.setBigDecimal(11, order.getTotal_price());
+            ps.setString(12, order.getUsername());
             return ps.executeUpdate() > 0;
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -122,7 +124,8 @@ public class OrderDAO implements IDAO<OrderDTO, String>{
                         rs.getString("METHOD_PAY"),
                         rs.getBigDecimal("SUBTOTAL"),
                         rs.getBigDecimal("DISCOUNT"),
-                        rs.getBigDecimal("TOTAL_PRICE")
+                        rs.getBigDecimal("TOTAL_PRICE"),
+                        rs.getString("USER_NAME")
                 );
                 return order;
             }
@@ -165,6 +168,39 @@ public class OrderDAO implements IDAO<OrderDTO, String>{
                         rs.getBigDecimal("PRICE")
                 );
                 list.add(cart);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    public List<OrderDTO> readAllByUser(String username) {
+        String sql = "SELECT * FROM [dbo].[ORDERS] WHERE USER_NAME = ?";
+        List<OrderDTO> list = new ArrayList<>();
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                OrderDTO order = new OrderDTO(
+                        rs.getString("ORDER_ID"),
+                        rs.getString("FULLNAME"),
+                        rs.getString("PHONE"),
+                        rs.getString("EMAIL"),
+                        rs.getDate("DATE_ORDERED"),
+                        rs.getString("STATUS"),
+                        rs.getString("ADDRESS"),
+                        rs.getString("METHOD_PAY"),
+                        rs.getBigDecimal("SUBTOTAL"),
+                        rs.getBigDecimal("DISCOUNT"),
+                        rs.getBigDecimal("TOTAL_PRICE"),
+                        rs.getString("USER_NAME")
+                );
+                list.add(order);
             }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);

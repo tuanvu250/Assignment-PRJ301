@@ -1,6 +1,7 @@
 package utils;
 
 import dao.ProductColorDAO;
+import dao.ProductSizeDAO;
 import dao.RoleDAO;
 import dao.SaleDAO;
 import dao.ShoesProductDAO;
@@ -42,6 +43,11 @@ public class AuthUtils {
     public static double saleNum(String id) {
         SaleDAO dao = new SaleDAO();
         return dao.saleNum(id);
+    }
+    
+    public static double sizeNum(String id) {
+        ProductSizeDAO dao = new ProductSizeDAO();
+        return dao.readById(id).getSize_num();
     }
     
     public static String nameShoes(String id) {
