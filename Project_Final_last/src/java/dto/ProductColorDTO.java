@@ -1,17 +1,23 @@
- 
 package dto;
 
- 
 public class ProductColorDTO {
+
     private String color_id;
     private String color_name;
     private String color_code;
 
     public ProductColorDTO() {
+        this.color_name = "";
+        this.color_code = "";
     }
 
     public ProductColorDTO(String color_id, String color_name, String color_code) {
         this.color_id = color_id;
+        this.color_name = color_name;
+        this.color_code = color_code;
+    }
+
+    public ProductColorDTO(String color_name, String color_code) {
         this.color_name = color_name;
         this.color_code = color_code;
     }
@@ -40,6 +46,4 @@ public class ProductColorDTO {
         this.color_code = color_code;
     }
 
-    
-    
 }

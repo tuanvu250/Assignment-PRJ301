@@ -55,16 +55,29 @@ public class ProductStyleController extends HttpServlet {
             throws ServletException, IOException {
         String url = HOME;
         HttpSession session = request.getSession();
+        boolean check = true;
         if (AuthUtils.checkIsAdmin(session)) {
-            String styleName = request.getParameter("materialName");
-            if (styleName != null && !styleName.trim().isEmpty()) {
-                if (stdao.add(styleName)) {
-                    url = MANAGESTYLE;
-                    processSearch(request, response);
+            String styleName = request.getParameter("styleName").trim();
+            if (styleName != null && !styleName.isEmpty()) {
+                if (stdao.isStyleNameExist(styleName)) {
+                    check = false;
+                    request.setAttribute("error_editAddStyle", "Style name " + styleName + " already exists!");
                 }
             } else {
-                request.setAttribute("errorStyle", "This field is requried. Please input one value!");
-                url = MANAGESTYLE;
+                check = false;
+                request.setAttribute("error_editAddStyle", "This field is requried. Please input one value!");
+            }
+            if (!check) {
+                url = STYLEFORM;
+                request.setAttribute("stylename", styleName);
+            } else {
+                if (stdao.add(styleName)) {
+                    url = MANAGESTYLE;
+                    request.setAttribute("add_editSuccess", "Add new Style successfully!");
+                    processSearch(request, response);
+                } else {
+                    request.setAttribute("add_editFailed", "Add new Style failed!");
+                }
             }
         }
         return url;
@@ -78,9 +91,14 @@ public class ProductStyleController extends HttpServlet {
             url = STYLEFORM;
             String id = request.getParameter("id");
             ProductStyleDTO style = stdao.readById(id);
-            request.setAttribute("styleid", id);
-            request.setAttribute("oldname", style.getStyle_name());
-            request.setAttribute("action", "editStyle");
+            if (style != null) {
+                request.setAttribute("styleid", id);
+                request.setAttribute("oldname", style.getStyle_name());
+                request.setAttribute("action", "editStyle");
+            } else {
+                url = MANAGESTYLE;
+                request.setAttribute("errorEditpage", "Style not found!");
+            }
         }
         return url;
     }
@@ -89,14 +107,34 @@ public class ProductStyleController extends HttpServlet {
             throws ServletException, IOException {
         String url = HOME;
         HttpSession session = request.getSession();
+        boolean check = true;
         if (AuthUtils.checkIsAdmin(session)) {
-            url = MANAGESTYLE;
+            String styleName = request.getParameter("styleName").trim();
             String id = request.getParameter("styleid");
-            String styleName = request.getParameter("styleName");
-            ProductStyleDTO style = stdao.readById(id);
-            style.setStyle_name(styleName);
-            stdao.update(style);
-            processSearch(request, response);
+            if (styleName != null && !styleName.isEmpty()) {
+                if (stdao.isStyleNameExist(styleName)) {
+                    check = false;
+                    request.setAttribute("error_editAddStyle", "Style name " + styleName + " already exists!");
+                }
+            } else {
+                check = false;
+                request.setAttribute("error_editAddStyle", "This field is requried. Please input one value!");
+            }
+            if (!check) {
+                url = STYLEFORM;
+                request.setAttribute("stylename", styleName);
+                request.setAttribute("styleid", id);
+                request.setAttribute("action", "editStyle");
+            } else {
+                ProductStyleDTO style = new ProductStyleDTO(id, styleName);
+                if (stdao.update(style)) {
+                    url = MANAGESTYLE;
+                    request.setAttribute("add_editSuccess", "Edit Style successfully!");
+                    processSearch(request, response);
+                } else {
+                    request.setAttribute("add_editFailed", "Edit Style failed!");
+                }
+            }
         }
         return url;
     }
@@ -119,8 +157,12 @@ public class ProductStyleController extends HttpServlet {
         if (AuthUtils.checkIsAdmin(session)) {
             url = MANAGESTYLE;
             String id = request.getParameter("id");
-            stdao.delete(id);
-            processSearch(request, response);
+            if (stdao.delete(id)) {
+                request.setAttribute("resultDelete", "Delete successfully!");
+                processSearch(request, response);
+            } else {
+                request.setAttribute("resultDelete", "Delete failed!");
+            }
         }
         return url;
     }

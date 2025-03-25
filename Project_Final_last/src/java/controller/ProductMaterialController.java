@@ -54,16 +54,30 @@ public class ProductMaterialController extends HttpServlet {
             throws ServletException, IOException {
         String url = HOME;
         HttpSession session = request.getSession();
+        boolean check = true;
         if (AuthUtils.checkIsAdmin(session)) {
-            String mateName = request.getParameter("materialName");
+            String mateName = request.getParameter("materialName").trim();
             if (mateName != null && !mateName.trim().isEmpty()) {
-                if (matdao.add(mateName)) {
-                    url = MANAGEMATE;
-                    processSearch(request, response);
+                if (matdao.isMaterialNameExist(mateName)) {
+                    check = false;
+                    request.setAttribute("error_editAddMAT", "Material name " + mateName + " already exists!");
                 }
             } else {
-                request.setAttribute("errorAddMAT", "This field is requried. Please input one value!");
+                check = false;
+                request.setAttribute("error_editAddMAT", "This field is requried. Please input one value!");
+            }
+            if (!check) {
                 url = MATERIALFORM;
+                request.setAttribute("mateName", mateName);
+            } else {
+                if (matdao.add(mateName)) {
+                    url = MANAGEMATE;
+                    request.setAttribute("add_editSuccess", "Add new Material successfully!");
+                    processSearch(request, response);
+                } else {
+                    url = MATERIALFORM;
+                    request.setAttribute("add_editFailed", "Add new Material failed!");
+                }
             }
         }
         return url;
@@ -77,9 +91,16 @@ public class ProductMaterialController extends HttpServlet {
             url = MATERIALFORM;
             String id = request.getParameter("id");
             ProductMaterialDTO mate = matdao.readById(id);
-            request.setAttribute("mateid", id);
-            request.setAttribute("oldname", mate.getMat_name());
-            request.setAttribute("action", "editMaterial");
+            if (mate != null) {
+                request.setAttribute("mateid", id);
+                request.setAttribute("oldname", mate.getMat_name());
+                request.setAttribute("action", "editMaterial");
+            } else {
+                url = MANAGEMATE;
+                request.setAttribute("errorEditpage", "Material not found!");
+                processSearch(request, response);
+            }
+
         }
         return url;
     }
@@ -88,14 +109,35 @@ public class ProductMaterialController extends HttpServlet {
             throws ServletException, IOException {
         String url = HOME;
         HttpSession session = request.getSession();
+        boolean check = true;
         if (AuthUtils.checkIsAdmin(session)) {
-            url = MANAGEMATE;
-            String id = request.getParameter("mateid");
-            String materialName = request.getParameter("materialName");
-            ProductMaterialDTO mate = matdao.readById(id);
-            mate.setMat_name(materialName);
-            matdao.update(mate);
-            processSearch(request, response);
+            String mateName = request.getParameter("materialName").trim();
+            String mateid = request.getParameter("mateid");
+            if (mateName != null && !mateName.trim().isEmpty()) {
+                if (matdao.isMaterialNameExist(mateName)) {
+                    check = false;
+                    request.setAttribute("error_editAddMAT", "Material name " + mateName + " already exists!");
+                }
+            } else {
+                check = false;
+                request.setAttribute("error_editAddMAT", "This field is requried. Please input one value!");
+            }
+            if (!check) {
+                url = MATERIALFORM;
+                request.setAttribute("mateName", mateName);
+                request.setAttribute("mateid", mateid);
+                request.setAttribute("action", "editMaterial");
+            } else {
+                ProductMaterialDTO mate = new ProductMaterialDTO(mateid, mateName);
+                if (matdao.update(mate)) {
+                    url = MANAGEMATE;
+                    request.setAttribute("add_editSuccess", "Edit Material successfully!");
+                    processSearch(request, response);
+                } else {
+                    url = MATERIALFORM;
+                    request.setAttribute("add_editFailed", " Edit Material failed!");
+                }
+            }
         }
         return url;
     }
@@ -118,8 +160,12 @@ public class ProductMaterialController extends HttpServlet {
         if (AuthUtils.checkIsAdmin(session)) {
             url = MANAGEMATE;
             String id = request.getParameter("id");
-            matdao.delete(id);
-            processSearch(request, response);
+            if (matdao.delete(id)) {
+                request.setAttribute("resultDelete", "Delete successfully!");
+                processSearch(request, response);
+            } else {
+                request.setAttribute("resultDelete", "Delete failed!");
+            }
         }
         return url;
     }

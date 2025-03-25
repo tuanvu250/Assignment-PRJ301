@@ -15,26 +15,26 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import utils.DBUtils;
- 
+
 public class ProductStyleDAO implements IDAO<ProductStyleDTO, String> {
 
     public String autoCreateID() {
-        List<ProductStyleDTO> list = readAll();
-        if (list.isEmpty()) {
-            return "S001";
-        }
-        int maxId = 0;
-        for (ProductStyleDTO item : list) {
-            String id = item.getStyle_id();
-            if (id.matches("S\\d{3}")) {
-                int num = Integer.parseInt(id.substring(1));
-                if (num > maxId) {
-                    maxId = num;
+        String sql = "SELECT MAX(STYLE_ID) FROM [dbo].[STYLE_PRODUCT] WHERE STYLE_ID LIKE 'S%'";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String maxId = rs.getString(1);
+                if (maxId != null) {
+                    int num = Integer.parseInt(maxId.substring(1));
+                    return String.format("S%03d", num + 1);
                 }
             }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ProductMaterialDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return String.format("S%03d", maxId + 1);
+        return "S001";
     }
 
     @Override
@@ -51,6 +51,24 @@ public class ProductStyleDAO implements IDAO<ProductStyleDTO, String> {
             ps.setString(2, stylename);
             int n = ps.executeUpdate();
             return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean isStyleNameExist(String stylename) {
+        String sql = "SELECT COUNT(*) FROM [dbo].[STYLE_PRODUCT] WHERE STYLE_NAME = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, stylename);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -112,8 +130,8 @@ public class ProductStyleDAO implements IDAO<ProductStyleDTO, String> {
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, object.getStyle_id());
-            ps.setString(2, object.getStyle_name());
+            ps.setString(1, object.getStyle_name());
+            ps.setString(2, object.getStyle_id());    
             int n = ps.executeUpdate();
             return n > 0;
         } catch (ClassNotFoundException ex) {

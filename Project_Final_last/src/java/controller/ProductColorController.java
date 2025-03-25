@@ -5,8 +5,8 @@
  */
 package controller;
 
-import dao.ProductLineDAO;
-import dto.ProductLineDTO;
+import dao.ProductColorDAO;
+import dto.ProductColorDTO;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
@@ -20,30 +20,30 @@ import utils.AuthUtils;
 
 /**
  *
- * @author ADMIN
+ * @author Dell
  */
-@WebServlet(name = "ProductLineController", urlPatterns = {"/ProductLineController"})
-public class ProductLineController extends HttpServlet {
+@WebServlet(name = "ProductColorController", urlPatterns = {"/ProductColorController"})
+public class ProductColorController extends HttpServlet {
 
     private static final String HOME = "/home/home.jsp";
-    private static final String MANAGEPDL = "/admin/manageProductLine.jsp";
-    private static final String PRODUCTLINE = "/admin/productLine.jsp";
+    private static final String MANAGECOLOR = "/admin/manageProductColor.jsp";
+    private static final String COLORFORM = "/admin/colorForm.jsp";
 
-    private final ProductLineDAO lineDAO = new ProductLineDAO();
+    private final ProductColorDAO colordao = new ProductColorDAO();
 
     protected String processSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME;
         HttpSession session = request.getSession();
         if (AuthUtils.checkIsAdmin(session)) {
-            url = MANAGEPDL;
-            String pdlTerm = request.getParameter("pdlTerm");
-            if (pdlTerm == null) {
-                pdlTerm = "";
+            url = MANAGECOLOR;
+            String colorTerm = request.getParameter("colorTerm");
+            if (colorTerm == null) {
+                colorTerm = "";
             }
-            List<ProductLineDTO> list = lineDAO.searchTerm(pdlTerm);
-            request.setAttribute("list", list);
-            request.setAttribute("searchterm", pdlTerm);
+            List<ProductColorDTO> colors = colordao.searchTerm(colorTerm);
+            request.setAttribute("colors", colors);
+            request.setAttribute("searchterm", colorTerm);
         }
         return url;
     }
@@ -52,28 +52,34 @@ public class ProductLineController extends HttpServlet {
             throws ServletException, IOException {
         String url = HOME;
         HttpSession session = request.getSession();
-        boolean check = true;
         if (AuthUtils.checkIsAdmin(session)) {
-            String productlineName = request.getParameter("productlineName").trim();
-            if (productlineName != null && !productlineName.isEmpty()) {
-                if (lineDAO.isLineNameExist(productlineName)) {
-                    check = false;
-                    request.setAttribute("error_editAddPDL", "ProductLine name " + productlineName + " already exists!");
-                }
-            } else {
-                check = false;
-                request.setAttribute("error_editAddPDL", "This field is requried. Please input one value!");
+            String colorName = request.getParameter("colorName");
+            String colorCode = request.getParameter("colorCode");
+            boolean checkColor = true;
+            if (colorName == null || colorName.trim().isEmpty()) {
+                checkColor = false;
+                request.setAttribute("errorColorName", "This is required. Please input one value!");
             }
-            if (!check) {
-                url = PRODUCTLINE;
-                request.setAttribute("linename", productlineName);
+            if (colorCode == null || colorCode.trim().isEmpty()) {
+                checkColor = false;
+                request.setAttribute("errorColorCode", "This is required. Please input one value!");
+            }
+            if (!colorCode.matches("^#[0-9A-Fa-f]+$")) {
+                checkColor = false;
+                request.setAttribute("errorColorCode", "Invalid format. Color code must start with '#'.");
+            }
+            ProductColorDTO color = new ProductColorDTO(colorName, colorCode);
+            if (!checkColor) {
+                url = COLORFORM;
+                request.setAttribute("color", color);
             } else {
-                if (lineDAO.add(productlineName)) {
-                    url = MANAGEPDL;
-                    request.setAttribute("add_editSuccess", "Add new ProductLine successfully!");
+                if (colordao.create(color)) {
+                    url = MANAGECOLOR;
+                    request.setAttribute("add_editSuccess", "Add new Color successfully!");
                     processSearch(request, response);
                 } else {
-                    request.setAttribute("add_editFailed", "Add new ProductLine failed!");
+                    url = COLORFORM;
+                    request.setAttribute("add_editFailed", "Create new Color Failed!");
                 }
             }
         }
@@ -85,19 +91,18 @@ public class ProductLineController extends HttpServlet {
         String url = HOME;
         HttpSession session = request.getSession();
         if (AuthUtils.checkIsAdmin(session)) {
-            url = PRODUCTLINE;
+            url = COLORFORM;
             String id = request.getParameter("id");
-            ProductLineDTO line = lineDAO.readById(id);
-            if (line != null) {
-                request.setAttribute("pdlId", id);
-                request.setAttribute("oldname", line.getLine_name());
-                request.setAttribute("action", "editProductLine");
+            ProductColorDTO color = colordao.readById(id);
+            if (color != null) {
+                request.setAttribute("colorid", id);
+                request.setAttribute("oldname", color.getColor_name());
+                request.setAttribute("oldcode", color.getColor_code());
+                request.setAttribute("action", "editColor");
             } else {
-                url = MANAGEPDL;
-                request.setAttribute("errorEditpage", "ProductLine not found!");
-                processSearch(request, response);
+                url = MANAGECOLOR;
+                request.setAttribute("errorEditpage", "Color not found!");
             }
-
         }
         return url;
     }
@@ -106,36 +111,40 @@ public class ProductLineController extends HttpServlet {
             throws ServletException, IOException {
         String url = HOME;
         HttpSession session = request.getSession();
-        boolean check = true;
         if (AuthUtils.checkIsAdmin(session)) {
-            String productlineName = request.getParameter("productlineName").trim();
-            String id = request.getParameter("pdlid");
-            if (productlineName != null && !productlineName.isEmpty()) {
-                if (lineDAO.isLineNameExist(productlineName)) {
-                    check = false;
-                    request.setAttribute("error_editAddPDL", "ProductLine name " + productlineName + " already exists!");
-                }
-            } else {
-                check = false;
-                request.setAttribute("error_editAddPDL", "This field is requried. Please input one value!");
+            String colorid = request.getParameter("colorid");
+            String colorName = request.getParameter("colorName");
+            String colorCode = request.getParameter("colorCode");
+            boolean checkColor = true;
+            if (colorName == null || colorName.trim().isEmpty()) {
+                checkColor = false;
+                request.setAttribute("errorColorName", "This is required. Please input one value!");
             }
-            if (!check) {
-                url = PRODUCTLINE;
-                request.setAttribute("linename", productlineName);
-                request.setAttribute("pdlId", id);
-                request.setAttribute("action", "editProductLine");
+            if (colorCode == null || colorCode.trim().isEmpty()) {
+                checkColor = false;
+                request.setAttribute("errorColorCode", "This is required. Please input one value!");
+            }
+            if (!colorCode.matches("^#[0-9A-Fa-f]+$")) {
+                checkColor = false;
+                request.setAttribute("errorColorCode", "Invalid format. Color code must start with '#'.");
+            }
+            ProductColorDTO color = new ProductColorDTO(colorid, colorName, colorCode);
+            if (!checkColor) {
+                url = COLORFORM;
+                request.setAttribute("color", color);
+                request.setAttribute("action", "editColor");
+                request.setAttribute("colorid", colorid);
             } else {
-                ProductLineDTO pdl = new ProductLineDTO(id, productlineName);
-                if (lineDAO.update(pdl)) {
-                    url = MANAGEPDL;
-                    request.setAttribute("add_editSuccess", "Edit ProductLine successfully!");
+                if (colordao.update(color)) {
+                    url = MANAGECOLOR;
+                    request.setAttribute("add_editSuccess", "Edit Color successfully!");
                     processSearch(request, response);
+
                 } else {
-                    url = PRODUCTLINE;
-                    request.setAttribute("add_editFailed", "Edit ProductLine failed!");
+                    url = COLORFORM;
+                    request.setAttribute("add_editFailed", "Edit Color Failed!");
                 }
             }
-
         }
         return url;
     }
@@ -145,7 +154,7 @@ public class ProductLineController extends HttpServlet {
         String url = HOME;
         HttpSession session = request.getSession();
         if (AuthUtils.checkIsAdmin(session)) {
-            url = MANAGEPDL;
+            url = MANAGECOLOR;
             processSearch(request, response);
         }
         return url;
@@ -156,15 +165,14 @@ public class ProductLineController extends HttpServlet {
         String url = HOME;
         HttpSession session = request.getSession();
         if (AuthUtils.checkIsAdmin(session)) {
-            url = MANAGEPDL;
+            url = MANAGECOLOR;
             String id = request.getParameter("id");
-            if (lineDAO.delete(id)) {
+            if (colordao.delete(id)) {
                 request.setAttribute("resultDelete", "Delete successfully!");
                 processSearch(request, response);
             } else {
                 request.setAttribute("resultDelete", "Delete failed!");
             }
-
         }
         return url;
     }
@@ -178,15 +186,15 @@ public class ProductLineController extends HttpServlet {
             if (action == null) {
                 url = HOME;
             } else {
-                if (action.equals("searchPDL")) {
+                if (action.equals("searchColor")) {
                     url = processSearch(request, response);
-                } else if (action.equals("managePDL")) {
+                } else if (action.equals("manageColor")) {
                     url = processSearch(request, response);
-                } else if (action.equals("addProductLine")) {
+                } else if (action.equals("addColor")) {
                     url = processAdd(request, response);
                 } else if (action.equals("editpage")) {
                     url = processEditPage(request, response);
-                } else if (action.equals("editProductLine")) {
+                } else if (action.equals("editColor")) {
                     url = processEdit(request, response);
                 } else if (action.equals("cancel")) {
                     url = processCancel(request, response);
@@ -202,6 +210,15 @@ public class ProductLineController extends HttpServlet {
         }
     }
 
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

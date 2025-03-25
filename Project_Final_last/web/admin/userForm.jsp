@@ -20,13 +20,21 @@
     </head>
     <body>
         <%  if (AuthUtils.checkIsAdmin(session)) {
+                String action = request.getAttribute("action") != null ? (String) request.getAttribute("action") : "add";
         %>
         <div class="container">
             <div class="form-container">
+                <%
+                    if (action.equals("add")) {
+                %>
                 <h1>Add New User</h1>
-
-
-                <%UserDTO newUser = (UserDTO) request.getAttribute("newUser");
+                <%
+                } else {
+                %>
+                <h1>Edit User</h1>
+                <%
+                    }
+                    UserDTO newUser = (UserDTO) request.getAttribute("newUser");
                     if (newUser == null) {
                         newUser = new UserDTO();
                     }
@@ -47,9 +55,10 @@
                     String errorMessRole
                             = request.getAttribute("errorMessRole") != null ? (String) request.getAttribute("errorMessRole") : "";
 
-                    String action = request.getAttribute("action") != null ? (String) request.getAttribute("action") : "register";
+                    String error_editAdd = request.getAttribute("error_editAdd") != null ? (String) request.getAttribute("error_editAdd") : "";
+
                 %>
-                <form id="userForm" method="post" action="<%= request.getContextPath()%>/UserController">
+                <form id="userForm" method="post" action="<%= request.getContextPath()%>/AccountController">
                     <input type="hidden" name="action" value="<%=action%>">
                     <div class="form-group">    
                         <label for="fullname">Full Name</label>
@@ -108,17 +117,29 @@
                             %>
                             <option value="<%=item.getRole_id()%>" <%=item.getRole_id() == newUser.getRole_id() ? "selected" : ""%>><%=item.getRole_name()%></option>
                             <%  }
-                                } %>
+                                }%>
                         </select>
-
                     </div>
-                    <% if (!errorMessRole.isEmpty()) {%>
-                    <div style="color: red"><%=errorMessRole%></div>
-                    <% } %>
-
+                    <%
+                        if (!error_editAdd.isEmpty()) {
+                    %>
+                    <p style="color: red"><%=error_editAdd%></p>
+                    <%
+                        }
+                    %>
                     <div class="form-actions">
-                        <button type="reset" class="btn btn-secondary">Cancel</button>
+                        <button type="reset" class="btn btn-secondary"><a href="<%= request.getContextPath()%>/AccountController?action=cancel" style="color: black; text-decoration: none">Cancel</a></button>
+                        <%
+                            if (action.equals("add")) {
+                        %>
                         <button type="submit" class="btn btn-primary">Add User</button>
+                        <%
+                        } else {
+                        %>
+                        <button type="submit" class="btn btn-primary">Edit User</button>
+                        <%
+                            }
+                        %>
                     </div>
                 </form>
             </div>

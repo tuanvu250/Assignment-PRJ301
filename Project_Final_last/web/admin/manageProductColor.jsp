@@ -1,3 +1,5 @@
+<%@page import="dto.ProductColorDTO"%>
+<%@page import="dto.ProductStyleDTO"%>
 <%@page import="dto.ProductMaterialDTO"%>
 <%@page import="dto.ProductLineDTO"%>
 <%@page import="java.util.List"%>
@@ -14,10 +16,10 @@
     <body>
         <%
             if (AuthUtils.checkIsAdmin(session)) {
-                List<ProductMaterialDTO> materials = (List<ProductMaterialDTO>) request.getAttribute("materials");
+                List<ProductColorDTO> colors = (List<ProductColorDTO>) request.getAttribute("colors");
                 String searchterm = request.getAttribute("searchterm") != null ? (String) request.getAttribute("searchterm") : "";
-                String errorEditpage = request.getAttribute("errorEditpage") != null ? (String) request.getAttribute("errorEditpage") : "";
                 String add_editSuccess = request.getAttribute("add_editSuccess") != null ? (String) request.getAttribute("add_editSuccess") : "";
+                String errorEditpage = request.getAttribute("errorEditpage") != null ? (String) request.getAttribute("errorEditpage") : "";
                 String resultDelete = request.getAttribute("resultDelete") != null ? (String) request.getAttribute("resultDelete") : "";
         %>
 
@@ -26,29 +28,26 @@
             <%@include file="../includes/sidebar.jsp" %>
             <div class="container">
                 <div class="header">
-                    <h1 style="margin-right: 20px">Manage Materials</h1>
+                    <h1 style="margin-right: 20px">Manage Styles</h1>
                     <div class="search-bar">
-                        <form action="<%= request.getContextPath()%>/ProductMaterialController">
-                            <input type="hidden" name="action" value="searchMAT">
-                            <input type="text" placeholder="Search material" name="matTerm" value="<%=searchterm%>">
+                        <form action="<%= request.getContextPath()%>/ProductColorController">
+                            <input type="hidden" name="action" value="searchColor">
+                            <input type="text" placeholder="Search color" name="colorTerm" value="<%=searchterm%>">
                             <button type="submit" class="search-button">
                                 <i class="fas fa-search"></i>
                             </button>
                         </form>
                     </div>
                 </div>
-                <br>
-                <%
-                    if (!errorEditpage.isEmpty()) {
-                %>
-                <p style="color: red"><%=errorEditpage%></p>
-                <%
-                    }
-                %>
                 <%
                     if (!add_editSuccess.isEmpty()) {
                 %>
                 <p style="color: green"><%=add_editSuccess%></p>
+                <%
+                    }
+                    if (!errorEditpage.isEmpty()) {
+                %>
+                <p style="color: red"><%=errorEditpage%></p>
                 <%
                     }
                     if (!resultDelete.isEmpty()) {
@@ -56,16 +55,18 @@
                 <p style="color: red"><%=resultDelete%></p>
                 <%
                     }
-                    if (!materials.isEmpty()) {
+                    if (!colors.isEmpty()) {
                 %>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Material Name</th>
+                                <th>Color Name</th>
+                                <th>Color Code</th>
+                                <th></th>
                                 <th>
-                                    <a href="<%= request.getContextPath()%>/admin/materialForm.jsp" class="add-button">
+                                    <a href="<%= request.getContextPath()%>/admin/colorForm.jsp" class="add-button">
                                         <i class="fas fa-plus"></i>
                                     </a>
                                 </th>
@@ -73,17 +74,20 @@
                         </thead>
                         <tbody>
                             <%
-                                for (ProductMaterialDTO item : materials) {
+                                for (ProductColorDTO item : colors) {
                             %>
                             <tr>
-                                <td><%=item.getMat_id()%></td>
-                                <td><%=item.getMat_name()%></td>
+                                <td><%=item.getColor_id()%></td>
+                                <td><%=item.getColor_name()%></td>
+                                <td><%=item.getColor_code()%></td>
+                                <td><div style="background-color: <%=item.getColor_code()%>; padding: 20px; border-radius: 50%"></div></td>
+
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="<%= request.getContextPath()%>/ProductMaterialController?action=editpage&id=<%=item.getMat_id()%>" class="edit-button">
+                                        <a href="<%= request.getContextPath()%>/ProductColorController?action=editpage&id=<%=item.getColor_id()%>" class="edit-button">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="<%= request.getContextPath()%>/ProductMaterialController?action=delete&id=<%=item.getMat_id()%>" class="delete-button">
+                                        <a href="<%= request.getContextPath()%>/ProductColorController?action=delete&id=<%=item.getColor_id()%>" class="delete-button">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </div>

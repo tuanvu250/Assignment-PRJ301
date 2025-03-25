@@ -44,7 +44,7 @@
                         <i class="fas fa-tshirt"></i>
                         <span class="nav-item">Style</span>
                     </a></li>
-                <li><a href="">
+                <li><a href="<%= request.getContextPath()%>/ProductColorController?action=manageColor">
                         <i class="fa-solid fa-palette"></i>
                         <span class="nav-item">Color</span>
                     </a></li>

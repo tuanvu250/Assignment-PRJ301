@@ -19,6 +19,9 @@
             if (AuthUtils.checkIsAdmin(session)) {
                 String action = request.getAttribute("action") != null ? "editMaterial" : "addMaterial";
                 String oldname = request.getAttribute("oldname") != null ? (String) request.getAttribute("oldname") : "";
+                String error_editAddMAT = request.getAttribute("error_editAddMAT") != null ? (String) request.getAttribute("error_editAddMAT") : "";
+                String mateName = request.getAttribute("mateName") != null ? (String) request.getAttribute("mateName") : "";
+                String add_editFailed = request.getAttribute("add_editFailed") != null ? (String) request.getAttribute("add_editFailed") : "";
         %>
 
         <div class="container">
@@ -27,7 +30,7 @@
                     if (request.getAttribute("mateid") != null) {
                 %>
                 <h1>Edit Material</h1>
-                <%                } else {
+                <%} else {
                 %>
                 <h1>Add Material</h1>
                 <%}%>
@@ -45,11 +48,25 @@
                         <div class="form-col">
                             <div class="form-group">
                                 <label for="name">Material Name</label>
-                                <input type="text" id="name" name="materialName" value="<%=oldname%>" required>
+                                <input type="text" id="name" name="materialName" value="<%=oldname.isEmpty() ? mateName : oldname%>" required>
                             </div>
                         </div>
-
                     </div>
+                    <%
+                        if (!error_editAddMAT.isEmpty()) {
+                    %>
+                    <p style="color: red"><%=error_editAddMAT%></p>
+                    <%
+                        }
+                    %>
+                    <%
+                       if (!add_editFailed.isEmpty()) {
+                    %>
+                    <p style="color: red"><%=add_editFailed%></p>
+                    <%
+                        }
+                    %>
+
                     <div class="form-actions">
                         <button type="reset" class="btn btn-secondary"><a href="<%= request.getContextPath()%>/ProductMaterialController?action=cancel" style="color: black; text-decoration: none">Cancel</a></button>
                         <%

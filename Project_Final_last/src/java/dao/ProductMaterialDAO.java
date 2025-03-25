@@ -6,7 +6,6 @@
 package dao;
 
 import dto.ProductMaterialDTO;
-import dto.UserDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,22 +23,22 @@ import utils.DBUtils;
 public class ProductMaterialDAO implements IDAO<ProductMaterialDTO, String> {
 
     public String autoCreateID() {
-        List<ProductMaterialDTO> list = readAll();
-        if (list.isEmpty()) {
-            return "L001";
-        }
-        int maxId = 0;
-        for (ProductMaterialDTO item : list) {
-            String id = item.getMat_id();
-            if (id.matches("M\\d{3}")) {
-                int num = Integer.parseInt(id.substring(1));
-                if (num > maxId) {
-                    maxId = num;
+        String sql = "SELECT MAX(MAT_ID) FROM [dbo].[MATERIAL] WHERE MAT_ID LIKE 'M%'";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String maxId = rs.getString(1);
+                if (maxId != null) {
+                    int num = Integer.parseInt(maxId.substring(1));
+                    return String.format("M%03d", num + 1);
                 }
             }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ProductMaterialDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return String.format("M%03d", maxId + 1);
+        return "M001";
     }
 
     @Override
@@ -56,6 +55,24 @@ public class ProductMaterialDAO implements IDAO<ProductMaterialDTO, String> {
             ps.setString(2, matname);
             int n = ps.executeUpdate();
             return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean isMaterialNameExist(String matname) {
+        String sql = "SELECT COUNT(*) FROM [dbo].[MATERIAL] WHERE MAT_NAME = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, matname);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -96,7 +113,7 @@ public class ProductMaterialDAO implements IDAO<ProductMaterialDTO, String> {
             ps.setString(1, "%" + term + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                 ProductMaterialDTO mate = new ProductMaterialDTO(
+                ProductMaterialDTO mate = new ProductMaterialDTO(
                         rs.getString("MAT_ID"),
                         rs.getString("MAT_NAME")
                 );
@@ -117,8 +134,8 @@ public class ProductMaterialDAO implements IDAO<ProductMaterialDTO, String> {
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, object.getMat_id());
-            ps.setString(2, object.getMat_name());
+            ps.setString(2, object.getMat_id());
+            ps.setString(1, object.getMat_name());
             int n = ps.executeUpdate();
             return n > 0;
         } catch (ClassNotFoundException ex) {

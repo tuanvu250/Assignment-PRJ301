@@ -17,6 +17,9 @@
             if (AuthUtils.checkIsAdmin(session)) {
                 List<ProductStyleDTO> styles = (List<ProductStyleDTO>) request.getAttribute("styles");
                 String searchterm = request.getAttribute("searchterm") != null ? (String) request.getAttribute("searchterm") : "";
+                String add_editSuccess = request.getAttribute("add_editSuccess") != null ? (String) request.getAttribute("add_editSuccess") : "";
+                String errorEditpage = request.getAttribute("errorEditpage") != null ? (String) request.getAttribute("errorEditpage") : "";
+                String resultDelete = request.getAttribute("resultDelete") != null ? (String) request.getAttribute("resultDelete") : "";
         %>
 
 
@@ -36,6 +39,21 @@
                     </div>
                 </div>
                 <%
+                    if (!add_editSuccess.isEmpty()) {
+                %>
+                <p style="color: green"><%=add_editSuccess%></p>
+                <%
+                    }
+                    if (!errorEditpage.isEmpty()) {
+                %>
+                <p style="color: red"><%=errorEditpage%></p>
+                <%
+                    }
+                    if (!resultDelete.isEmpty()) {
+                %>
+                <p style="color: red"><%=resultDelete%></p>
+                <%
+                    }
                     if (!styles.isEmpty()) {
                 %>
                 <div class="table-container">

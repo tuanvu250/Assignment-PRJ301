@@ -23,22 +23,22 @@ import utils.DBUtils;
 public class ProductLineDAO implements IDAO<ProductLineDTO, String> {
 
     public String autoCreateID() {
-        List<ProductLineDTO> list = readAll();
-        if (list.isEmpty()) {
-            return "L001";
-        }
-        int maxId = 0;
-        for (ProductLineDTO item : list) {
-            String id = item.getLine_id();
-            if (id.matches("L\\d{3}")) {
-                int num = Integer.parseInt(id.substring(1));
-                if (num > maxId) {
-                    maxId = num;
+        String sql = "SELECT MAX(LINE_ID) FROM [dbo].[PRODUCT_LINE] WHERE LINE_ID LIKE 'L%'";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String maxId = rs.getString(1);
+                if (maxId != null) {
+                    int num = Integer.parseInt(maxId.substring(1));
+                    return String.format("L%03d", num + 1);
                 }
             }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ProductMaterialDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return String.format("L%03d", maxId + 1);
+        return "L001";
     }
 
     @Override
@@ -68,6 +68,24 @@ public class ProductLineDAO implements IDAO<ProductLineDTO, String> {
             ps.setString(2, lineName);
             int n = ps.executeUpdate();
             return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean isLineNameExist(String lineName) {
+        String sql = "SELECT COUNT(*) FROM [dbo].[PRODUCT_LINE] WHERE LINE_NAME = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, lineName);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

@@ -1,4 +1,6 @@
-    <%-- 
+<%@page import="utils.AuthUtils"%>
+<%@page import="sun.net.www.protocol.http.AuthCache"%>
+<%-- 
     Document   : users
     Created on : Mar 14, 2025, 8:53:54 PM
     Author     : ADMIN
@@ -17,6 +19,12 @@
 
     </head>
     <body>
+        <%
+            if (AuthUtils.checkIsAdmin(session)) {
+                String add_editSuccess = request.getAttribute("add_editSuccess") != null ? (String) request.getAttribute("add_editSuccess") : "";
+                String errorEditpage = request.getAttribute("errorEditpage") != null ? (String) request.getAttribute("errorEditpage") : "";
+                String resultDelete = request.getAttribute("resultDelete") != null ? (String) request.getAttribute("resultDelete") : "";
+        %>
         <div class="page-container">
             <%@include file="../includes/sidebar.jsp" %>
             <div class="container">
@@ -34,6 +42,21 @@
                     </div>
                 </div>
                 <%
+                    if (!add_editSuccess.isEmpty()) {
+                %>
+                <p style="color: green"><%=add_editSuccess%></p>
+                <%
+                    }
+                    if (!errorEditpage.isEmpty()) {
+                %>
+                <p style="color: red"><%=errorEditpage%></p>
+                <%
+                    }
+                    if (!resultDelete.isEmpty()) {
+                %>
+                <p style="color: red"><%=resultDelete%></p>
+                <%
+                    }
                     List<UserDTO> accounts = (List<UserDTO>) request.getAttribute("accounts");
                     if (accounts != null && !accounts.isEmpty()) {
                         RoleDAO rdao = new RoleDAO();
@@ -65,7 +88,7 @@
                                 <td><%=rdao.readById(item.getRole_id()).getRole_name()%></td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="<%= request.getContextPath()%>/UserController?action=editAccount&accountId=<%=item.getUser_name()%>" class="edit-button">
+                                        <a href="<%= request.getContextPath()%>/AccountController?action=editAccount&accountId=<%=item.getUser_name()%>" class="edit-button">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="<%= request.getContextPath()%>/AccountController?action=delete&accountId=<%=item.getUser_name()%>" class="delete-button">
@@ -77,7 +100,6 @@
                             <%
                                 }
                             %>
-
                         </tbody>
                     </table>
                 </div>
@@ -85,5 +107,8 @@
                     }
                 %>
             </div>
+            <%
+                }
+            %>
     </body>
 </html>
