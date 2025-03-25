@@ -4,6 +4,7 @@
     Author     : ADMIN
 --%>
 
+<%@page import="java.math.BigDecimal"%>
 <%@page import="dao.ProductLineDAO"%>
 <%@page import="dto.ProductLineDTO"%>
 <%@page import="dto.ProductSizeDTO"%>
@@ -77,7 +78,12 @@
                 <div class="detail-text">
                     <h2><%=shoes.getShoes_name()%></h2>
                     <p>Product ID <span><%=shoes.getShoes_id()%></span></p>
+                    <% if (AuthUtils.isSale(shoes)) { %>
+                    <h2><%=currencyVN.format(shoes.getPrice().multiply(BigDecimal.valueOf(1 - AuthUtils.saleNum(shoes.getSale_id()))))%></h2>
+                    <h2 class="sale-text"><%=currencyVN.format(shoes.getPrice())%></h2>
+                    <%} else {%> 
                     <h2><%=currencyVN.format(shoes.getPrice())%></h2>
+                    <%}%>
                 </div>
                 <div class="detail-color">
                     <%

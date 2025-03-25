@@ -24,6 +24,11 @@ a, button {
     cursor: pointer;
 }
 
+.sale-text {
+    text-decoration: line-through;
+    color: #888;
+}
+
 /* Product Navigation */
 .product-link {
     display: flex;

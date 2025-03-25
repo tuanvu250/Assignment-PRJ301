@@ -4,6 +4,7 @@
     Author     : ADMIN
 --%>
 
+<%@page import="java.math.BigDecimal"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="dao.ShoesProductDAO"%>
@@ -149,10 +150,12 @@
                         <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>&colorIndex=1"
                            class="product-name"><%=shoes.getShoes_name()%></a>
                         <p>Color</p>
-                        <div class="product-price">
-                            <p><%=currencyVN.format(shoes.getPrice())%></p>
+                        <div class="product-price">  
                             <% if (AuthUtils.isSale(shoes)) { %>
-                            <p class="sale-text">XXX.XXX</p>
+                            <p><%=currencyVN.format(shoes.getPrice().multiply(BigDecimal.valueOf(1 - AuthUtils.saleNum(shoes.getSale_id()))))%></p>
+                            <p class="sale-text"><%=currencyVN.format(shoes.getPrice())%></p>
+                            <%} else {%> 
+                            <p><%=currencyVN.format(shoes.getPrice())%></p>
                             <%}%>
                         </div>
                     </div>
