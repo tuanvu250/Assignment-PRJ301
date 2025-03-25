@@ -27,7 +27,8 @@
                 <h1>CART</h1>
                 <div class="favourite-container">
                     <%
-                        BigDecimal totalPrice = BigDecimal.valueOf(0);;
+                        BigDecimal totalPrice = BigDecimal.valueOf(0);
+                        BigDecimal totalSale = BigDecimal.valueOf(0);
                         if (session.getAttribute("listCart") != null) {
                             ShoesProductDAO shoesDAO = new ShoesProductDAO();
                             List<CartDTO> listCart = (List<CartDTO>) session.getAttribute("listCart");
@@ -45,8 +46,14 @@
                             <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>&colorIndex=1" 
                                class="favourite-name"><%=shoes.getShoes_name()%></a>
                             <div class="favourite-price">
+                                <% if (AuthUtils.isSale(shoes)) {
+                                        BigDecimal sale = shoes.getPrice().multiply(BigDecimal.valueOf(AuthUtils.saleNum(shoes.getSale_id())));
+                                        totalSale = totalSale.add(sale.multiply(BigDecimal.valueOf(cart.getQuantity())));%>
+                                <p><%=currencyVN.format(shoes.getPrice().multiply(BigDecimal.valueOf(1 - AuthUtils.saleNum(shoes.getSale_id()))))%></p>
+                                <p class="sale-price"><%=currencyVN.format(shoes.getPrice())%></p>
+                                <%} else {%> 
                                 <p><%=currencyVN.format(shoes.getPrice())%></p>
-                                <p class="sale-price">XXX.XXX VND</p>
+                                <%}%>
                             </div>
                             <div class="favourite-choice">
                                 <div class="favourite-color">
@@ -132,12 +139,12 @@
                     </div>
                     <div>
                         <p>Discount</p>
-                        <p>XXX.XXX VND</p>
+                        <p><%=currencyVN.format(totalSale)%></p>
                     </div>
                 </div>
                 <div class="cart-total">
                     <h3>Temporary total</h3>
-                    <p>X.XXX.XXX VND</p>
+                    <p><%=currencyVN.format(totalPrice.subtract(totalSale))%></p>
                 </div>
                 <a class="cart-btn">CONTINUE</a>
             </div>

@@ -78,9 +78,12 @@
                 <div class="detail-text">
                     <h2><%=shoes.getShoes_name()%></h2>
                     <p>Product ID <span><%=shoes.getShoes_id()%></span></p>
-                    <% if (AuthUtils.isSale(shoes)) { %>
-                    <h2><%=currencyVN.format(shoes.getPrice().multiply(BigDecimal.valueOf(1 - AuthUtils.saleNum(shoes.getSale_id()))))%></h2>
-                    <h2 class="sale-text"><%=currencyVN.format(shoes.getPrice())%></h2>
+                    <% if (AuthUtils.isSale(shoes)) {%>
+                    <div style="display: flex; justify-content: space-between">
+                        <h2><%=currencyVN.format(shoes.getPrice().multiply(BigDecimal.valueOf(1 - AuthUtils.saleNum(shoes.getSale_id()))))%></h2>
+                        <h2 class="sale-text" style="text-decoration: line-through; color: #888; font-weight: inherit"
+                            ><%=currencyVN.format(shoes.getPrice())%></h2>
+                    </div>
                     <%} else {%> 
                     <h2><%=currencyVN.format(shoes.getPrice())%></h2>
                     <%}%>
@@ -126,10 +129,11 @@
                         </div>
                     </div>
                     <%
-                        if(session.getAttribute("errorCart") != null) {
+                        if (session.getAttribute("errorCart") != null) {
                     %>
                     <h3 style="color: #C63F3E;"><%=session.getAttribute("errorCart")%></h3>
-                    <%session.removeAttribute("errorCart");}%>
+                    <%session.removeAttribute("errorCart");
+                        }%>
                     <div class="detail-cart">
                         <a href="CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=colorId%>&sizeId=&quantity=" 
                            class="cart-list" id="addToCart">Add to cart</a>
@@ -145,7 +149,7 @@
                     </div>
                     <div class="order-now">
                         <a href="AllCartController?action=buyNow&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=colorId%>&sizeId=&quantity="
-                            id="buy-now">ORDER NOW</a>
+                           id="buy-now">ORDER NOW</a>
                     </div>
                 </div>
                 <div class="info-detail">
@@ -235,7 +239,7 @@
                         let quantity = quantitySelect.value;
                         let baseUrl = "CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=request.getAttribute("colorId")%>";
                         addToCartLink.setAttribute("href", baseUrl + "&sizeId=" + sizeId + "&quantity=" + quantity);
-                        }
+                    }
 
                     // Gán sự kiện cho cả hai select
                     sizeSelect.addEventListener("change", updateCartLink);
@@ -251,7 +255,7 @@
                         let quantity = quantitySelect.value;
                         let baseUrl = "AllCartController?action=buyNow&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=request.getAttribute("colorId")%>";
                         addToCartLink.setAttribute("href", baseUrl + "&sizeId=" + sizeId + "&quantity=" + quantity);
-                        }
+                    }
 
                     // Gán sự kiện cho cả hai select
                     sizeSelect.addEventListener("change", updateBuyNow);

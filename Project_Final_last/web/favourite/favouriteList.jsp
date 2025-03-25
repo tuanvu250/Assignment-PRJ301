@@ -4,6 +4,7 @@
     Author     : ADMIN
 --%>
 
+<%@page import="java.math.BigDecimal"%>
 <%@page import="dto.ProductSizeDTO"%>
 <%@page import="dao.ProductSizeDAO"%>
 <%@page import="dto.ProductColorDTO"%>
@@ -52,8 +53,12 @@
                         <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>&colorIndex=1"
                            class="favourite-name"><%=shoes.getShoes_name()%></a>
                         <div class="favourite-price">
+                            <% if (AuthUtils.isSale(shoes)) { %>
+                            <p><%=currencyVN.format(shoes.getPrice().multiply(BigDecimal.valueOf(1 - AuthUtils.saleNum(shoes.getSale_id()))))%></p>
+                            <p class="sale-price"><%=currencyVN.format(shoes.getPrice())%></p>
+                            <%} else {%> 
                             <p><%=currencyVN.format(shoes.getPrice())%></p>
-                            <p class="sale-price">XXX.XXX VND</p>
+                            <%}%>
                         </div>
                         <form class="favourite-choice" id="form_<%=shoes.getShoes_id()%>" action="<%= request.getContextPath()%>/CartController">
                             <input type="hidden" name="action" value="add"/>
