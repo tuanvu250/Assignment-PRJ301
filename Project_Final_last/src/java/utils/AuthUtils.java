@@ -1,6 +1,7 @@
 package utils;
 
 import dao.RoleDAO;
+import dao.SaleDAO;
 import dao.UserDAO;
 import dto.ShoesProductDTO;
 import dto.UserDTO;
@@ -34,6 +35,11 @@ public class AuthUtils {
 
     public static boolean isSoldout(ShoesProductDTO shoes) {
         return shoes.getStatus().equals("Soldout");
+    }
+    
+    public static double saleNum(String id) {
+        SaleDAO dao = new SaleDAO();
+        return dao.saleNum(id);
     }
 
     public static boolean checkIsAdmin(HttpSession session) {

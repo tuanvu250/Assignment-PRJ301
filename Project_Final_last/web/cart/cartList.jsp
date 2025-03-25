@@ -4,6 +4,8 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dao.VoucherDAO"%>
+<%@page import="java.math.BigDecimal"%>
 <%@page import="dto.ProductSizeDTO"%>
 <%@page import="dao.ProductSizeDAO"%>
 <%@page import="dto.CartDTO"%>
@@ -26,6 +28,10 @@
                 <h1>CART</h1>
                 <div class="favourite-container">
                     <%
+                        String discountCode = "";
+                        BigDecimal discount = BigDecimal.valueOf(0);
+                        BigDecimal totalPrice = BigDecimal.valueOf(0);
+                        BigDecimal totalSale = BigDecimal.valueOf(0);
                         if (session.getAttribute("listCart") != null) {
                             ShoesProductDAO shoesDAO = new ShoesProductDAO();
                             List<CartDTO> listCart = (List<CartDTO>) session.getAttribute("listCart");
@@ -34,6 +40,7 @@
                                 String colorId = cart.getColor_id();
                                 ShoesProductDTO shoes = shoesDAO.readById(cart.getShoes_id());
                                 int size = listColor.size();
+                                totalPrice = totalPrice.add(cart.getPrice());
                     %>
                     <div class="favourite-item">
                         <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=cart.getShoes_id()%>_<%=colorId%>_1.jpg"
@@ -42,8 +49,14 @@
                             <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>&colorIndex=1" 
                                class="favourite-name"><%=shoes.getShoes_name()%></a>
                             <div class="favourite-price">
+                                <% if (AuthUtils.isSale(shoes)) {
+                                        BigDecimal sale = shoes.getPrice().multiply(BigDecimal.valueOf(AuthUtils.saleNum(shoes.getSale_id())));
+                                        totalSale = totalSale.add(sale.multiply(BigDecimal.valueOf(cart.getQuantity())));%>
+                                <p><%=currencyVN.format(shoes.getPrice().multiply(BigDecimal.valueOf(1 - AuthUtils.saleNum(shoes.getSale_id()))))%></p>
+                                <p class="sale-price"><%=currencyVN.format(shoes.getPrice())%></p>
+                                <%} else {%> 
                                 <p><%=currencyVN.format(shoes.getPrice())%></p>
-                                <p class="sale-price">XXX.XXX VND</p>
+                                <%}%>
                             </div>
                             <div class="favourite-choice">
                                 <div class="favourite-color">
@@ -118,25 +131,48 @@
             </div>
             <div class="cart-bill">
                 <h1>BILL</h1>
-                <form>
-                    <input type="text" placeholder="DISCOUNT CODE" class="discount-code">
+                <form action="ApplyVoucherController">
+
+                    <input name="discountCode" type="text" placeholder="DISCOUNT CODE" class="discount-code">
                     <input type="submit" class="discount-btn" value="APPLY">
                 </form>
+                <%if (session.getAttribute("errorVoucherNull") != null) {%>
+                <p style="color: #C63F3E"><%=session.getAttribute("errorVoucherNull")%></p>
+                <%session.removeAttribute("errorVoucherNull");
+                    }%>
+
+                <%if (session.getAttribute("errorVoucher") != null) {%>
+                <p style="color: #C63F3E"><%=session.getAttribute("errorVoucher")%></p>
+                <%session.removeAttribute("errorVoucher");
+                    }%>
+
+                <%if (session.getAttribute("successVoucher") != null) {%>
+                <p style="color: green"><%=session.getAttribute("successVoucher")%></p>
+                <%session.removeAttribute("successVoucher");
+                    VoucherDAO vouDAO = new VoucherDAO();     
+                    discountCode = (String) session.getAttribute("discountCode");
+                    discount = BigDecimal.valueOf(vouDAO.getDiscount(discountCode));}%>
+                <%
+                    session.setAttribute("discountCode", discountCode);
+                    discount = discount.multiply(totalPrice.subtract(totalSale));
+                    totalSale = totalSale.add(discount);
+                %>
                 <div class="cart-price">
                     <div>
                         <p>Order</p>
-                        <p>XXX.XXX VND</p>
+                        <p><%=currencyVN.format(totalPrice)%></p>
                     </div>
                     <div>
                         <p>Discount</p>
-                        <p>XXX.XXX VND</p>
+                        <p><%=currencyVN.format(totalSale)%></p>
                     </div>
                 </div>
                 <div class="cart-total">
                     <h3>Temporary total</h3>
-                    <p>X.XXX.XXX VND</p>
+                    <p><%=currencyVN.format(totalPrice.subtract(totalSale))%></p>
                 </div>
-                <a class="cart-btn">CONTINUE</a>
+                <a href="<%= request.getContextPath()%>/payment/payment.jsp"
+                    class="cart-btn">CONTINUE</a>
             </div>
         </div>
         <%@include file="../includes/footer.jsp" %>

@@ -1,3 +1,6 @@
+<%@page import="java.util.List"%>
+<%@page import="dto.CartDTO"%>
+<%@page import="dao.CartDAO"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="dto.UserDTO"%> <%@page import="utils.AuthUtils"%> <%@page
@@ -92,8 +95,17 @@
                             <a href="<%= request.getContextPath()%>/AllFavController?action=readAll&username=<%=username%>" id="fav-link">
                                 <i class="fas fa-heart"></i>
                             </a>
-                            <a href="<%= request.getContextPath()%>/AllCartController?action=readAll&username=<%=username%>" id="cart-link">
+                            <a href="<%= request.getContextPath()%>/AllCartController?action=readAll&username=<%=username%>" id="cart-link"
+                               style="position: relative">
                                 <i class="fas fa-shopping-cart"></i>
+                                <%
+                                    if (username != null) {
+                                        CartDAO cartDAO = new CartDAO();
+                                        List<CartDTO> listCart = cartDAO.readAllByUserId(username);
+                                %>
+                                <span style="position: absolute; background-color: #1d1d1b; width: 16px; height: 16px;
+                                      display: flex; justify-content: center; align-items: center; top: -20%; right: -30%; border-radius: 50%; color: #fff;" 
+                                      ><%=listCart.size()%></span> <%}%>
                             </a>
                             <div class="user-dropdown">
                                 <div class="user-avatar" <%if (AuthUtils.isLoggedIn(session)) { %>id="userDropdownToggle" <%}%>>

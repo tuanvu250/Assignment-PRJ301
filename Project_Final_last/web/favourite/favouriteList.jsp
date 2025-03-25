@@ -4,6 +4,7 @@
     Author     : ADMIN
 --%>
 
+<%@page import="java.math.BigDecimal"%>
 <%@page import="dto.ProductSizeDTO"%>
 <%@page import="dao.ProductSizeDAO"%>
 <%@page import="dto.ProductColorDTO"%>
@@ -31,7 +32,18 @@
                         for (ShoesProductDTO shoes : listFav) {
                             ShoesProductDAO shoesdao = new ShoesProductDAO();
                             List<ProductColorDTO> listColor = shoesdao.colorOfShoes(shoes.getShoes_id());
-                            String colorId = listColor.get(0).getColor_id();
+                            String colorId = null;
+                            if (session.getAttribute("colorId") != null && session.getAttribute("shoesId").equals(shoes.getShoes_id())) {
+                                colorId = (String) session.getAttribute("colorId");
+                                shoesId = (String) session.getAttribute("shoesId");
+                                session.removeAttribute("colorId");
+                                session.removeAttribute("shoesId");
+                                System.out.println("OK");
+                            } else {
+                                colorId = listColor.get(0).getColor_id();
+                            }
+                            System.out.println(shoesId);
+                            System.out.println(colorId);
                             int size = listColor.size();
                 %>
                 <div class="favourite-item">
@@ -41,29 +53,44 @@
                         <a href="ShoesProductController?shoesId=<%=shoes.getShoes_id()%>&colorIndex=1"
                            class="favourite-name"><%=shoes.getShoes_name()%></a>
                         <div class="favourite-price">
+                            <% if (AuthUtils.isSale(shoes)) { %>
+                            <p><%=currencyVN.format(shoes.getPrice().multiply(BigDecimal.valueOf(1 - AuthUtils.saleNum(shoes.getSale_id()))))%></p>
+                            <p class="sale-price"><%=currencyVN.format(shoes.getPrice())%></p>
+                            <%} else {%> 
                             <p><%=currencyVN.format(shoes.getPrice())%></p>
-                            <p class="sale-price">XXX.XXX VND</p>
+                            <%}%>
                         </div>
-                        <div class="favourite-choice">
+                        <form class="favourite-choice" id="form_<%=shoes.getShoes_id()%>" action="<%= request.getContextPath()%>/CartController">
+                            <input type="hidden" name="action" value="add"/>
+                            <input type="hidden" name="username" value="<%=username%>"/>
+                            <input type="hidden" id="colorId_<%=shoes.getShoes_id()%>" name="colorId" value="<%=colorId%>"/>
+                            <input type="hidden" name="shoesId" value="<%=shoes.getShoes_id()%>"/>
                             <div class="favourite-color">
                                 <%
                                     for (int i = 1; i <= size; i++) {
                                         ProductColorDTO color = listColor.get(i - 1);
                                 %>
-                                <div <%if (color.getColor_id().equals(colorId)) {%>
-                                    style="border: 2px #1d1d1b solid; border-radius: 50%;" <%}%>>
-                                    <a href=""
+                                <div class="<%=shoes.getShoes_id()%>"
+                                     <%if (color.getColor_id().equals(colorId)) {%>
+                                     style="border: 2px #1d1d1b solid; border-radius: 50%;" <%}%>>
+                                    <a href="FavSizeController?shoesId=<%=shoes.getShoes_id()%>&colorId=<%= color.getColor_id()%>"
                                        style="background-color: <%=color.getColor_code()%>"> </a>
                                 </div>
                                 <%}%>
                             </div>
                             <div class="favourite-size">
                                 <label>Size</label>
-                                <select name="sizeId">
+                                <select name="sizeId" id="sizeSelect_<%=shoes.getShoes_id()%>">
                                     <option value="" selected hidden></option>
                                     <%
-                                        ProductSizeDAO sizeDAO = new ProductSizeDAO();
-                                        List<ProductSizeDTO> sizeList = sizeDAO.checkSize(shoes.getShoes_id(), colorId);
+                                        List<ProductSizeDTO> sizeList;
+                                        if (session.getAttribute("sizeList") != null) {
+                                            sizeList = (List<ProductSizeDTO>) session.getAttribute("sizeList");
+                                            session.removeAttribute("sizeList");
+                                        } else {
+                                            ProductSizeDAO sizeDAO = new ProductSizeDAO();
+                                            sizeList = sizeDAO.checkSize(shoes.getShoes_id(), colorId);
+                                        }
                                         for (ProductSizeDTO sizeShoes : sizeList) {
                                     %>
                                     <option value="<%=sizeShoes.getSize_id()%>"><%=sizeShoes.getSize_num()%></option>
@@ -81,10 +108,19 @@
                                     <%}%> 
                                 </select>
                             </div>
-                        </div>
+                        </form>
+                        <%
+                            if (session.getAttribute("errorCart") != null && session.getAttribute("shoesId").equals(shoes.getShoes_id())) {
+                        %>
+                        <h3 style="color: #C63F3E;"><%=session.getAttribute("errorCart")%></h3>
+                        <%session.removeAttribute("errorCart");
+                                session.removeAttribute("shoesId");
+                            }%>
                     </div>
                     <div class="favourite-btn">
-                        <a class="favourite-cart"><i class="fa-solid fa-cart-shopping"></i></a>
+                        <button form="form_<%=shoes.getShoes_id()%>" type="submit">
+                            <a class="favourite-cart"><i class="fa-solid fa-cart-shopping"></i></a>
+                        </button>
                         <a href="FavController?action=delete&username=<%=username%>&shoesId=<%=shoes.getShoes_id()%>"
                            class="favourite-delete"><i class="fa-solid fa-trash"></i></a>
                     </div>
