@@ -1,20 +1,23 @@
-﻿CREATE TRIGGER trg_UpdateTotalPrice
-ON ORDERS_DETAIL
+﻿CREATE TRIGGER trg_update_shoes_quantity
+ON SHOES_COLOR_SIZE
 AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
-    -- Cập nhật total_price trong bảng ORDERS
-    UPDATE ORDERS
-    SET TOTAL_PRICE = (
-        SELECT COALESCE(SUM(QUANTITY * PRICE), 0)
-        FROM ORDERS_DETAIL
-        WHERE ORDERS_DETAIL.ORDER_ID = ORDERS.ORDER_ID
-    )
-    WHERE ORDER_ID IN (
-        -- Lấy danh sách các ORDER_ID bị ảnh hưởng
-        SELECT DISTINCT ORDER_ID FROM inserted
+    -- Cập nhật số lượng giày trong SHOES_PRODUCT dựa trên thay đổi ở SHOES_COLOR_SIZE
+    UPDATE sp
+    SET QUANTITY = COALESCE(scs.TotalStock, 0)
+    FROM SHOES_PRODUCT sp
+    LEFT JOIN (
+        -- Tính tổng số lượng tồn kho theo SHOES_ID
+        SELECT SHOES_ID, SUM(STOCK) AS TotalStock
+        FROM SHOES_COLOR_SIZE
+        GROUP BY SHOES_ID
+    ) scs ON sp.SHOES_ID = scs.SHOES_ID
+    WHERE sp.SHOES_ID IN (
+        -- Lấy danh sách các SHOES_ID bị ảnh hưởng trong bảng Inserted hoặc Deleted
+        SELECT DISTINCT SHOES_ID FROM inserted
         UNION
-        SELECT DISTINCT ORDER_ID FROM deleted
+        SELECT DISTINCT SHOES_ID FROM deleted
     );
 END;
 
