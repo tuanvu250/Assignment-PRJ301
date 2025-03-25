@@ -154,10 +154,10 @@ public class ProfileController extends HttpServlet {
         }
 
         if (userDao.update(user)) {
-            request.setAttribute("uploadProfile", "Update Profile Success!");
+            request.setAttribute("updateSuccess", "Update Profile Successfully!");
             
         } else {
-            request.setAttribute("uploadProfile", "Update Profile Failed!");
+            request.setAttribute("updateFailed", "Update Profile Failed!");
         }
 
         return url;

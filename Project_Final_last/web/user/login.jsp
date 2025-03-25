@@ -17,6 +17,11 @@
         <%@include file="../includes/header.jsp" %>
 
         <div class="login">
+            <%String success = request.getAttribute("success") != null ? (String) request.getAttribute("success") : "";
+                if (!success.isEmpty()) {
+            %>
+            <p style="color: green"><%=success%></p>
+            <% }%>
             <h2>LOGIN</h2>
             <form class="login-form" action="<%= request.getContextPath()%>/UserController" method="post">
                 <input type="hidden" name="action" value="login" />

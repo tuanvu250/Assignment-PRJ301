@@ -39,7 +39,7 @@
                     <button type="submit">Update Picture</button>
                     <p style="color: green;"><%=uploadFile%></p>
                 </form>
-                
+
                 <div class="history-nav">
                     <a href="#" id="showHistory">History Orders</a>
                 </div>
@@ -52,13 +52,15 @@
 
                         <label for="fullname">Full Name</label>
                         <input type="text" id="fullname" name="fullname" value="<%= user.getFull_name()%>" required>
-                        <p style="color: red"><%=request.getAttribute("errorUpdateFullname") != null ? request.getAttribute("errorUpdateFullname") : ""%></p>
+                        <p style="color: red; margin-bottom: 20px "><%=request.getAttribute("errorUpdateFullname") != null ? request.getAttribute("errorUpdateFullname") : ""%></p>
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" value="<%= user.getEmail()%>" required>
-                        <p style="color: red"><%=request.getAttribute("errorUpdateEmail") != null ? request.getAttribute("errorUpdateEmail") : ""%></p>
+                        <p style="color: red; margin-bottom: 20px"><%=request.getAttribute("errorUpdateEmail") != null ? request.getAttribute("errorUpdateEmail") : ""%></p>
                         <label for="phone">Phone Number</label>
                         <input type="tel" id="phone" name="phone" value="<%= user.getPhone_number()%>" required>
-                        <p style="color: red"><%=request.getAttribute("errorUpdatePhone") != null ? request.getAttribute("errorUpdatePhone") : ""%></p>
+                        <p style="color: red; margin-bottom: 20px"><%=request.getAttribute("errorUpdatePhone") != null ? request.getAttribute("errorUpdatePhone") : ""%></p>
+                        <p style="color: green; margin-left: 10px"><%=request.getAttribute("updateSuccess") != null ? request.getAttribute("updateSuccess") : ""%></p>
+                        <p style="color: red; margin-left: 10px"><%=request.getAttribute("updateFailed") != null ? request.getAttribute("updateFailed") : ""%></p>
                         <div class="buttons">
                             <button type="submit">Save Changes</button>
                             <button type="button" class="show-popup-btn">Change Password</button>
