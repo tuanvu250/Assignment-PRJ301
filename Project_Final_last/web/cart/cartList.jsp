@@ -4,6 +4,7 @@
     Author     : ADMIN
 --%>
 
+<%@page import="java.math.BigDecimal"%>
 <%@page import="dto.ProductSizeDTO"%>
 <%@page import="dao.ProductSizeDAO"%>
 <%@page import="dto.CartDTO"%>
@@ -26,6 +27,7 @@
                 <h1>CART</h1>
                 <div class="favourite-container">
                     <%
+                        BigDecimal totalPrice = BigDecimal.valueOf(0);;
                         if (session.getAttribute("listCart") != null) {
                             ShoesProductDAO shoesDAO = new ShoesProductDAO();
                             List<CartDTO> listCart = (List<CartDTO>) session.getAttribute("listCart");
@@ -34,6 +36,7 @@
                                 String colorId = cart.getColor_id();
                                 ShoesProductDTO shoes = shoesDAO.readById(cart.getShoes_id());
                                 int size = listColor.size();
+                                totalPrice = totalPrice.add(cart.getPrice());
                     %>
                     <div class="favourite-item">
                         <img src="<%= request.getContextPath()%>/assets/img/img-products/<%=cart.getShoes_id()%>_<%=colorId%>_1.jpg"
@@ -125,7 +128,7 @@
                 <div class="cart-price">
                     <div>
                         <p>Order</p>
-                        <p>XXX.XXX VND</p>
+                        <p><%=currencyVN.format(totalPrice)%></p>
                     </div>
                     <div>
                         <p>Discount</p>

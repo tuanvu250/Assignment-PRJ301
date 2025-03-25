@@ -123,7 +123,7 @@
                         if(session.getAttribute("errorCart") != null) {
                     %>
                     <h3 style="color: #C63F3E;"><%=session.getAttribute("errorCart")%></h3>
-                    <%session.setAttribute("errorCart", null);}%>
+                    <%session.removeAttribute("errorCart");}%>
                     <div class="detail-cart">
                         <a href="CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=colorId%>&sizeId=&quantity=" 
                            class="cart-list" id="addToCart">Add to cart</a>

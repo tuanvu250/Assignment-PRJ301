@@ -31,7 +31,18 @@
                         for (ShoesProductDTO shoes : listFav) {
                             ShoesProductDAO shoesdao = new ShoesProductDAO();
                             List<ProductColorDTO> listColor = shoesdao.colorOfShoes(shoes.getShoes_id());
-                            String colorId = listColor.get(0).getColor_id();
+                            String colorId = null;
+                            if (session.getAttribute("colorId") != null && session.getAttribute("shoesId").equals(shoes.getShoes_id())) {
+                                colorId = (String) session.getAttribute("colorId");
+                                shoesId = (String) session.getAttribute("shoesId");
+                                session.removeAttribute("colorId");
+                                session.removeAttribute("shoesId");
+                                System.out.println("OK");
+                            } else {
+                                colorId = listColor.get(0).getColor_id();
+                            }
+                            System.out.println(shoesId);
+                            System.out.println(colorId);
                             int size = listColor.size();
                 %>
                 <div class="favourite-item">
@@ -54,21 +65,27 @@
                                     for (int i = 1; i <= size; i++) {
                                         ProductColorDTO color = listColor.get(i - 1);
                                 %>
-                                <div class="<%=shoes.getShoes_id()%>" onclick="updateColor('<%=shoes.getShoes_id()%>', '<%= color.getColor_id()%>', this)" 
+                                <div class="<%=shoes.getShoes_id()%>"
                                      <%if (color.getColor_id().equals(colorId)) {%>
                                      style="border: 2px #1d1d1b solid; border-radius: 50%;" <%}%>>
-                                    <a
-                                        style="background-color: <%=color.getColor_code()%>"> </a>
+                                    <a href="FavSizeController?shoesId=<%=shoes.getShoes_id()%>&colorId=<%= color.getColor_id()%>"
+                                       style="background-color: <%=color.getColor_code()%>"> </a>
                                 </div>
                                 <%}%>
                             </div>
                             <div class="favourite-size">
                                 <label>Size</label>
-                                <select name="sizeId">
+                                <select name="sizeId" id="sizeSelect_<%=shoes.getShoes_id()%>">
                                     <option value="" selected hidden></option>
                                     <%
-                                        ProductSizeDAO sizeDAO = new ProductSizeDAO();
-                                        List<ProductSizeDTO> sizeList = sizeDAO.checkSize(shoes.getShoes_id(), colorId);
+                                        List<ProductSizeDTO> sizeList;
+                                        if (session.getAttribute("sizeList") != null) {
+                                            sizeList = (List<ProductSizeDTO>) session.getAttribute("sizeList");
+                                            session.removeAttribute("sizeList");
+                                        } else {
+                                            ProductSizeDAO sizeDAO = new ProductSizeDAO();
+                                            sizeList = sizeDAO.checkSize(shoes.getShoes_id(), colorId);
+                                        }
                                         for (ProductSizeDTO sizeShoes : sizeList) {
                                     %>
                                     <option value="<%=sizeShoes.getSize_id()%>"><%=sizeShoes.getSize_num()%></option>
@@ -91,9 +108,9 @@
                             if (session.getAttribute("errorCart") != null && session.getAttribute("shoesId").equals(shoes.getShoes_id())) {
                         %>
                         <h3 style="color: #C63F3E;"><%=session.getAttribute("errorCart")%></h3>
-                        <%session.setAttribute("errorCart", null);
-                          session.setAttribute("shoesId", null);
-                        }%>
+                        <%session.removeAttribute("errorCart");
+                                session.removeAttribute("shoesId");
+                            }%>
                     </div>
                     <div class="favourite-btn">
                         <button form="form_<%=shoes.getShoes_id()%>" type="submit">
@@ -115,20 +132,5 @@
         </div>
         <%@include file="../includes/footer.jsp" %>
         <script src="../assets/js/cartList.js"></script>
-        <script>
-                    function updateColor(shoesId, colorId, element) {
-                        // Cập nhật input hidden cho đúng sản phẩm
-                        document.getElementById("colorId_" + shoesId).value = colorId;
-
-                        // Chỉ xóa border của màu trong đúng sản phẩm đó
-                        document.querySelectorAll("." + shoesId).forEach(box => {
-                            box.style.border = "none";
-                        });
-
-                        // Thêm border vào màu được chọn
-                        element.style.border = "2px solid #1d1d1b";
-                        element.style.borderRadius = "50%";
-                    }
-        </script>
     </body>
 </html>
