@@ -143,8 +143,7 @@ public class ProductStyleDAO implements IDAO<ProductStyleDTO, String> {
     }
 
     @Override
-    public boolean delete(String id) {
-        String sql = "DELETE FROM [dbo].[STYLE_PRODUCT] WHERE STYLE_ID = ? ";
+    public boolean delete(String id) { String sql = "DELETE FROM [dbo].[STYLE_PRODUCT] WHERE STYLE_ID = ? ";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -157,6 +156,7 @@ public class ProductStyleDAO implements IDAO<ProductStyleDTO, String> {
             Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+       
     }
 
     @Override
