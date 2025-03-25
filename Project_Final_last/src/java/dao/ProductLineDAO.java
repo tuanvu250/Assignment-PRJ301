@@ -22,6 +22,24 @@ import utils.DBUtils;
  */
 public class ProductLineDAO implements IDAO<ProductLineDTO, String> {
 
+    public int getTotalProductLine() {
+        String sql = "SELECT COUNT(*) FROM [dbo].[PRODUCT_LINE]";
+        int total = 0;
+
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return total;
+    }
+
     public String autoCreateID() {
         String sql = "SELECT MAX(LINE_ID) FROM [dbo].[PRODUCT_LINE] WHERE LINE_ID LIKE 'L%'";
         try {

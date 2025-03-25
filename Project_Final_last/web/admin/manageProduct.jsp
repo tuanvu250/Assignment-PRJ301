@@ -4,6 +4,12 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dao.SaleDAO"%>
+<%@page import="java.util.Locale"%>
+<%@page import="java.text.NumberFormat"%>
+<%@page import="dto.ShoesProductDTO"%>
+<%@page import="java.util.List"%>
+<%@page import="utils.AuthUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,23 +19,54 @@
         <link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/manageProduct.css">    
     </head>
     <body>
+        <%
+            if (AuthUtils.checkIsAdmin(session)) {
+                String searchterm = request.getAttribute("searchterm") != null ? (String) request.getAttribute("searchterm") : "";
+                List<ShoesProductDTO> listShoes = (List<ShoesProductDTO>) request.getAttribute("listShoes");
+                NumberFormat currencyVN = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                String add_editSuccess = request.getAttribute("add_editSuccess") != null ? (String) request.getAttribute("add_editSuccess") : "";
+                String resultDelete = request.getAttribute("resultDelete") != null ? (String) request.getAttribute("resultDelete") : "";
+                String errorEditpage = request.getAttribute("errorEditpage") != null ? (String) request.getAttribute("errorEditpage") : "";
+
+        %>
         <div class="page-container">
             <%@include file="../includes/sidebar.jsp" %>
             <div class="container">
                 <div class="header">
                     <h1>Manage Products</h1>
-                    <div class="search-bar">
-                        <input type="text" placeholder="Search product name">
-                        <button class="search-button">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
+                    <form action="<%= request.getContextPath()%>/ProductController">
+                        <input type="hidden" name="action" value="searchTerm">
+                        <div class="search-bar">
+                            <input type="text" placeholder="Search product name" name="nameTerm" value="<%=searchterm%>">
+                            <button type="submit" class="search-button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-
+                <%
+                    if (!add_editSuccess.isEmpty()) {
+                %>
+                <p style="color: green"><%=add_editSuccess%></p>    
+                <%
+                    }
+                    if (!resultDelete.isEmpty()) {
+                %>
+                <p style="color: red"><%=resultDelete%></p>    
+                <%
+                    }
+                    if (!errorEditpage.isEmpty()) {
+                %>
+                <p style="color: red"><%=errorEditpage%></p>    
+                <%
+                    }
+                    if (!listShoes.isEmpty() && listShoes != null) {
+                %>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
+                                <th>No</th>
                                 <th>Product ID</th>
                                 <th>Name</th>
                                 <th>Produce Date</th>
@@ -41,148 +78,60 @@
                                 <th>Style</th>
                                 <th>Product Line</th>
                                 <th>Material</th>
+                                <th>Sale</th>
                                 <th>
-                                    <a href="add-product.php" class="add-button">
+                                    <a href="<%= request.getContextPath()%>/admin/productForm.jsp" class="add-button">
                                         <i class="fas fa-plus"></i>
                                     </a>
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody> 
+                            <%
+                                SaleDAO saldao = new SaleDAO();
+                                int n = 1;
+                                for (ShoesProductDTO item : listShoes) {
+                            %>
+
                             <tr>
-                                <td>P001</td>
-                                <td>Classic T-Shirt</td>
-                                <td>2023-05-15</td>
-                                <td>$29.99</td>
-                                <td>120</td>
-                                <td>Men</td>
-                                <td class="truncate">Comfortable cotton t-shirt with classic fit</td>
-                                <td class="status-active">Active</td>
-                                <td>Casual</td>
-                                <td>Summer Collection</td>
-                                <td>Cotton</td>
+                                <td><%=n%></td>
+                                <td><%=item.getShoes_id()%></td>
+                                <td><%=item.getShoes_name()%></td>
+                                <td><%=item.getProduce_date()%></td>
+                                <td><%=currencyVN.format(item.getPrice())%></td>
+                                <td><%=item.getQuantity()%></td>
+                                <td><%=item.getGender()%></td>
+                                <td class="truncate"><%=item.getDescription()%></td>
+                                <td class="status-active"><%=item.getStatus()%></td>
+                                <td><%=item.getStyle_id()%></td>
+                                <td><%=item.getLine_id()%></td>
+                                <td><%=item.getMat_id()%></td>
+                                <td><%=saldao.saleNum(item.getSale_id()) * 100%></td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="product-detail.php?id=P001" class="detail-button">
+                                        <a href="<%= request.getContextPath()%>/admin/manageProductDetail.jsp" class="detail-button">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="edit-product.php?id=P001" class="edit-button">
+                                        <a href="<%= request.getContextPath()%>/ProductController?action=editPage&id=<%=item.getShoes_id()%>" class="edit-button">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="delete-product.php?id=P001" class="delete-button">
+                                        <a href="<%= request.getContextPath()%>/ProductController?action=delete&id=<%=item.getShoes_id()%>" class="delete-button">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </div>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>P002</td>
-                                <td>Slim Fit Jeans</td>
-                                <td>2023-06-20</td>
-                                <td>$59.99</td>
-                                <td>85</td>
-                                <td>Women</td>
-                                <td class="truncate">Stylish slim fit jeans with stretch fabric</td>
-                                <td class="status-active">Active</td>
-                                <td>Modern</td>
-                                <td>Denim Collection</td>
-                                <td>Denim</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="product-detail.php?id=P002" class="detail-button">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="edit-product.php?id=P002" class="edit-button">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="delete-product.php?id=P002" class="delete-button">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>P003</td>
-                                <td>Hooded Sweatshirt</td>
-                                <td>2023-07-10</td>
-                                <td>$45.99</td>
-                                <td>65</td>
-                                <td>Unisex</td>
-                                <td class="truncate">Warm and comfortable hooded sweatshirt for all seasons</td>
-                                <td class="status-active">Active</td>
-                                <td>Sporty</td>
-                                <td>Winter Collection</td>
-                                <td>Cotton Blend</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="product-detail.php?id=P003" class="detail-button">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="edit-product.php?id=P003" class="edit-button">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="delete-product.php?id=P003" class="delete-button">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>P004</td>
-                                <td>Summer Dress</td>
-                                <td>2023-04-05</td>
-                                <td>$79.99</td>
-                                <td>42</td>
-                                <td>Women</td>
-                                <td class="truncate">Lightweight floral summer dress with adjustable straps</td>
-                                <td class="status-inactive">Inactive</td>
-                                <td>Elegant</td>
-                                <td>Spring Collection</td>
-                                <td>Polyester</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="product-detail.php?id=P004" class="detail-button">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="edit-product.php?id=P004" class="edit-button">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="delete-product.php?id=P004" class="delete-button">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>P005</td>
-                                <td>Leather Jacket</td>
-                                <td>2023-08-15</td>
-                                <td>$129.99</td>
-                                <td>28</td>
-                                <td>Men</td>
-                                <td class="truncate">Premium quality leather jacket with quilted lining</td>
-                                <td class="status-active">Active</td>
-                                <td>Vintage</td>
-                                <td>Autumn Collection</td>
-                                <td>Leather</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="product-detail.php?id=P005" class="detail-button">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="edit-product.php?id=P005" class="edit-button">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="delete-product.php?id=P005" class="delete-button">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
+                            </tr>  
+                            <%
+                                    n++;
+                                }
+                            %>
                         </tbody>
                     </table>
                 </div>
+                <%} %>   
             </div>
         </div>
+        <% }
+        %>    
     </body>
 </html>

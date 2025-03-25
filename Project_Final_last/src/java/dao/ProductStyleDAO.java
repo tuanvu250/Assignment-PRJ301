@@ -18,6 +18,24 @@ import utils.DBUtils;
 
 public class ProductStyleDAO implements IDAO<ProductStyleDTO, String> {
 
+    public int getTotalStyle() {
+        String sql = "SELECT COUNT(*) FROM [dbo].[STYLE_PRODUCT]";
+        int total = 0;
+
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return total;
+    }
+
     public String autoCreateID() {
         String sql = "SELECT MAX(STYLE_ID) FROM [dbo].[STYLE_PRODUCT] WHERE STYLE_ID LIKE 'S%'";
         try {
@@ -131,7 +149,7 @@ public class ProductStyleDAO implements IDAO<ProductStyleDTO, String> {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, object.getStyle_name());
-            ps.setString(2, object.getStyle_id());    
+            ps.setString(2, object.getStyle_id());
             int n = ps.executeUpdate();
             return n > 0;
         } catch (ClassNotFoundException ex) {
@@ -157,6 +175,7 @@ public class ProductStyleDAO implements IDAO<ProductStyleDTO, String> {
             Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+
     }
 
     @Override

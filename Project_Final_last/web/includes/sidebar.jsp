@@ -28,7 +28,7 @@
                         <i class="fas fa-user"></i>
                         <span class="nav-item">Invoice</span>
                     </a></li>
-                <li><a href="">
+                <li><a href="<%= request.getContextPath()%>/ProductController?action=manageProduct">
                         <i class="fas fa-box"></i>
                         <span class="nav-item">Products</span>
                     </a></li>

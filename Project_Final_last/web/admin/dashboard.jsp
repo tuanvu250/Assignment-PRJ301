@@ -4,6 +4,13 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dao.ProductColorDAO"%>
+<%@page import="dao.ProductStyleDAO"%>
+<%@page import="dao.ProductMaterialDAO"%>
+<%@page import="dao.ProductLineDAO"%>
+<%@page import="dao.UserDAO"%>
+<%@page import="dao.ShoesProductDAO"%>
+<%@page import="utils.AuthUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,6 +20,17 @@
         <link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/dashboard.css">    
     </head>
     <body>
+        <%
+            if (AuthUtils.checkIsAdmin(session)) {
+                ShoesProductDAO pdao = new ShoesProductDAO();
+                UserDAO usdao = new UserDAO();
+                ProductLineDAO pdldao = new ProductLineDAO();
+                ProductMaterialDAO matdao = new ProductMaterialDAO();
+                ProductStyleDAO styledao = new ProductStyleDAO();
+                ProductColorDAO colordao = new ProductColorDAO();
+        %>
+
+
         <div class="page-container">
             <%@include file="../includes/sidebar.jsp" %>
             <div class="dashboard">
@@ -23,7 +41,7 @@
                         </div>
                         <div class="metric-info">
                             <div class="metric-label">Total Accounts</div>
-                            <div class="metric-value">1245</div>
+                            <div class="metric-value"><%=usdao.getTotalAccount()%></div>
                         </div>
                     </div>
                 </a>
@@ -35,7 +53,7 @@
                         </div>
                         <div class="metric-info">
                             <div class="metric-label">Total Products</div>
-                            <div class="metric-value">6145</div>
+                            <div class="metric-value"><%=pdao.getTotalShoesProduct()%></div>
                         </div>
                     </div>
                 </a>
@@ -59,7 +77,7 @@
                         </div>
                         <div class="metric-info">
                             <div class="metric-label">Total Product Line</div>
-                            <div class="metric-value">24</div>
+                            <div class="metric-value"><%=pdldao.getTotalProductLine()%></div>
                         </div>
                     </div>
                 </a>
@@ -71,7 +89,7 @@
                         </div>
                         <div class="metric-info">
                             <div class="metric-label">Total Material</div>
-                            <div class="metric-value">38</div>
+                            <div class="metric-value"><%=matdao.getTotalMaterial()%></div>
                         </div>
                     </div>
                 </a>
@@ -83,7 +101,7 @@
                         </div>
                         <div class="metric-info">
                             <div class="metric-label">Total Style</div>
-                            <div class="metric-value">52</div>
+                            <div class="metric-value"><%=styledao.getTotalStyle()%></div>
                         </div>
                     </div>
                 </a>
@@ -95,11 +113,14 @@
                         </div>
                         <div class="metric-info">
                             <div class="metric-label">Total Color</div>
-                            <div class="metric-value">76</div>
+                            <div class="metric-value"><%=colordao.getTotalColor()%></div>
                         </div>
                     </div>
                 </a>
             </div>
         </div>
+        <%
+            }
+        %>
     </body>
 </html>

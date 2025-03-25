@@ -26,14 +26,103 @@ import utils.DBUtils;
  */
 public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
 
+    public int getTotalShoesProduct() {
+        String sql = "SELECT COUNT(*) FROM SHOES_PRODUCT";
+        int total = 0;
+
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return total;
+    }
+
+    public String autoCreateID() {
+        String sql = "SELECT MAX(SHOES_ID) FROM [dbo].[SHOES_PRODUCT] WHERE SHOES_ID LIKE 'SP%'";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String maxId = rs.getString(1);
+                if (maxId != null) {
+                    int num = Integer.parseInt(maxId.substring(2));
+                    return String.format("SP%03d", num + 1);
+                }
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ProductMaterialDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "SP001";
+    }
+
     @Override
-    public boolean create(ShoesProductDTO Object) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean create(ShoesProductDTO object) {
+        String sql = "INSERT INTO [dbo].[SHOES_PRODUCT] VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, autoCreateID());
+            ps.setString(2, object.getShoes_name());
+            ps.setDate(3, java.sql.Date.valueOf(object.getProduce_date()));
+            ps.setBigDecimal(4, object.getPrice());
+            ps.setInt(5, object.getQuantity());
+            ps.setString(6, object.getGender());
+            ps.setString(7, object.getDescription());
+            ps.setString(8, object.getStatus());
+            ps.setString(9, object.getStyle_id());
+            ps.setString(10, object.getLine_id());
+            ps.setString(11, object.getMat_id());
+            ps.setString(12, object.getSale_id());
+            int n = ps.executeUpdate();
+            return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("ok");
+        return false;
     }
 
     @Override
     public List<ShoesProductDTO> readAll() {
-        return null;
+        String sql = "SELECT * FROM [dbo].[SHOES_PRODUCT]";
+        List<ShoesProductDTO> list = new ArrayList<>();
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ShoesProductDTO shoes = new ShoesProductDTO(
+                        rs.getString("SHOES_ID"),
+                        rs.getString("SHOES_NAME"),
+                        rs.getDate("PRODUCE_DATE").toLocalDate(),
+                        rs.getBigDecimal("PRICE"),
+                        rs.getInt("QUANTITY"),
+                        rs.getString("GENDER"),
+                        rs.getString("DESCRIPTION"),
+                        rs.getString("STATUS"),
+                        rs.getString("STYLE_ID"),
+                        rs.getString("LINE_ID"),
+                        rs.getString("MAT_ID"),
+                        rs.getString("SALE_ID")
+                );
+                list.add(shoes);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 
     public List<ShoesProductDTO> searchShoes2(String searchTerm, String gender, String status,
@@ -121,6 +210,7 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         } catch (SQLException ex) {
             Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println(list.size());
         return list;
     }
 
@@ -251,12 +341,59 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
 
     @Override
     public boolean update(ShoesProductDTO object) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = "UPDATE [dbo].[SHOES_PRODUCT] SET "
+                + "[SHOES_NAME] = ?, "
+                + "[PRODUCE_DATE] = ?, "
+                + "[PRICE] = ?, "
+                + "[QUANTITY] = ?, "
+                + "[GENDER] = ?, "
+                + "[DESCRIPTION] = ?, "
+                + "[STATUS] = ?, "
+                + "[STYLE_ID] = ?, "
+                + "[LINE_ID] = ?, "
+                + "[MAT_ID] = ?, "
+                + "[SALE_ID] = ? "
+                + "WHERE [SHOES_ID] = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, object.getShoes_name());
+            ps.setDate(2, java.sql.Date.valueOf(object.getProduce_date()));
+            ps.setBigDecimal(3, object.getPrice());
+            ps.setInt(4, object.getQuantity());
+            ps.setString(5, object.getGender());
+            ps.setString(6, object.getDescription());
+            ps.setString(7, object.getStatus());
+            ps.setString(8, object.getStyle_id());
+            ps.setString(9, object.getLine_id());
+            ps.setString(10, object.getMat_id());
+            ps.setString(11, object.getSale_id());
+            ps.setString(12, object.getShoes_id());
+            int n = ps.executeUpdate();
+            return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     @Override
     public boolean delete(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = "DELETE FROM [dbo].[SHOES_PRODUCT] WHERE SHOES_ID = ? ";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
+            int n = ps.executeUpdate();
+            return n > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     @Override

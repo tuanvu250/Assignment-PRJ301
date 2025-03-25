@@ -22,6 +22,24 @@ import utils.DBUtils;
  */
 public class UserDAO implements IDAO<UserDTO, String> {
 
+    public int getTotalAccount() {
+        String sql = "SELECT COUNT(*) FROM [dbo].[USERS]";
+        int total = 0;
+
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return total;
+    }
+
     @Override
     public boolean create(UserDTO Object) {
         String sql = "INSERT INTO [dbo].[USERS] (USER_NAME, FULLNAME, PASSWORD, EMAIL, PHONE, ROLE_ID, STATUS, TOKEN)"
@@ -108,13 +126,14 @@ public class UserDAO implements IDAO<UserDTO, String> {
         }
         return null;
     }
+
     public List<UserDTO> readByUsNameTerm(String nameTerm) {
         String sql = "SELECT * FROM [dbo].[USERS] WHERE [USER_NAME] LIKE ? AND [STATUS] = 'ACTIVE' ORDER BY ROLE_ID";
         List<UserDTO> list = new ArrayList<>();
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, "%" + nameTerm +"%");
+            ps.setString(1, "%" + nameTerm + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 UserDTO us = new UserDTO(
