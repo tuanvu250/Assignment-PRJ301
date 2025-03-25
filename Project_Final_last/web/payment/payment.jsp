@@ -4,6 +4,8 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dto.ProductSizeDTO"%>
+<%@page import="dao.ProductSizeDAO"%>
 <%@page import="dao.VoucherDAO"%>
 <%@page import="dao.ProductColorDAO"%>
 <%@page import="dto.ProductColorDTO"%>
@@ -33,40 +35,41 @@
                 List<CartDTO> listCart = (List<CartDTO>) session.getAttribute("listCart");
                 UserDTO user = AuthUtils.getUser(session);
         %>
-        <div class="payment">
-            <form class="payment-info" id="thisform">
+        <form class="payment" action="<%= request.getContextPath()%>/OrderController">
+            <div class="payment-info">
                 <div class="deli-info">
                     <h2>DELIVERY INFORMATION</h2>
                     <div class="payment-form" >
-                        <input type="text" placeholder="Full name"
+                        <input type="text" placeholder="Full name" name="fullName" required
                                value="<%=user.getFull_name()%>"/>
-                        <input type="tel" placeholder="Phone number"
+                        <input type="tel" placeholder="Phone number" name="phone" required
                                value="<%=user.getPhone_number()%>"/>
-                        <input type="email" placeholder="Email"
+                        <input type="email" placeholder="Email" name="email" required
                                value="<%=user.getEmail()%>"/>
-                        <input type="text" placeholder="Address"/>
+                        <input type="text" placeholder="Address" name="address" required/> 
                     </div>
                 </div>
                 <div class="payment-method">
                     <h2>PAYMENT METHOD</h2>
                     <div class="payment-checkbox">
                         <div>
-                            <input type="checkbox" id="offline"/>
+                            <input type="radio" value="Offline" name="paymentMethod" required/>
                             <label for="offline">Cash on Delivery</label>
                         </div>
                         <div>
-                            <input type="checkbox" id="online"/>
+                            <input type="radio" value="Online" name="paymentMethod"/>
                             <label for="online">Crebit / Debit Card / Smart Banking</label>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
             <div class="pay-bill">
                 <h1>BILL</h1>
                 <div class="bill-items">
                     <%
                         for (CartDTO cart : listCart) {
                             totalPrice = totalPrice.add(cart.getPrice());
+                            ProductSizeDAO sizeDAO = new ProductSizeDAO();
                             ShoesProductDTO shoes = shoesDAO.readById(cart.getShoes_id());
                             if (AuthUtils.isSale(shoes)) {
                                 BigDecimal sale = shoes.getPrice().multiply(BigDecimal.valueOf(AuthUtils.saleNum(shoes.getSale_id())));
@@ -79,7 +82,7 @@
                             <p><%=currencyVN.format(shoes.getPrice())%></p>
                         </div>
                         <div>
-                            <p><%=cart.getColor_id()%>, Size <%=cart.getSize_id()%></p>
+                            <p><%=AuthUtils.nameColor(cart.getColor_id())%>, Size <%=AuthUtils.sizeNum(cart.getSize_id())%></p>
                             <p> x<%=cart.getQuantity()%> </p>
                         </div>
                     </div>
@@ -111,9 +114,13 @@
                     <h3>TOTAL</h3>
                     <p><%=currencyVN.format(totalPrice.subtract(totalSale))%></p>
                 </div>
-                <button form="thisform">COMPLETE ORDER</button>
+                <input type="hidden" name="action" value="add"/>
+                <input type="hidden" name="subtotal" value="<%=totalPrice%>"/>
+                <input type="hidden" name="discount" value="<%=totalSale%>" />
+                <input type="hidden" name="totalPrice" value="<%=totalPrice.subtract(totalSale)%>"/>
+                <button type="submit">COMPLETE ORDER</button>
             </div>
-        </div> <%}%>
+        </form> <%}%>
         <%@include file="../includes/footer.jsp" %>
     </body>
 </html>

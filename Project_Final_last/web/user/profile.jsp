@@ -1,3 +1,5 @@
+<%@page import="dto.OrderDTO"%>
+<%@page import="dao.OrderDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="dto.UserDTO" %>
 <!DOCTYPE html>
@@ -130,6 +132,10 @@
 
                 </div>
                 <div class="order-history" id="orderHistory">
+                    <%
+                        OrderDAO orderDAO = new OrderDAO();
+                        List<OrderDTO> listOrder = orderDAO.readAllByUser(username);
+                    %>
                     <h2>ORDER HISTORY</h2>
                     <table class="order-table">
                         <thead>
@@ -142,7 +148,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Dữ liệu sẽ được load từ database -->
+                            <%
+                                for (OrderDTO order : listOrder) {
+                            %>
+                            <tr>
+                                <td>#<%=order.getOrder_id()%></td>
+                                <td><%=order.getDate_ordered()%></td>
+                                <td><%=currencyVN.format(order.getTotal_price())%></td>
+                                <td><%=order.getStatus()%></td>
+                                <td >
+                                    <a href="<%= request.getContextPath()%>/OrderController?action=orderDetail&orderId=<%=order.getOrder_id()%>"
+                                       class="view-details"
+                                        ><i class="fa-solid fa-eye"></i>Detail</a>
+                                </td>
+                            </tr> <%}%>
                         </tbody>
                     </table>
                 </div>

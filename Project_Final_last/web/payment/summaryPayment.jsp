@@ -4,6 +4,7 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dto.OrderDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,15 +15,19 @@
     </head>
     <body>
         <%@include file="../includes/header.jsp" %>
+        <%
+            if(request.getAttribute("order") != null) {
+                OrderDTO order = (OrderDTO)request.getAttribute("order");
+        %>
         <div class="container">
             <div class="header">
                 <h1>Thank you for your order at Bloom On Foot!</h1>
             </div>
-
+            
             <div class="order-details">
                 <div class="detail-row">
                     <span class="label">Order ID:</span>
-                    <span class="value">#12345</span>
+                    <span class="value">#<%=order.getOrder_id()%></span>
                 </div>
                 <div class="detail-row">
                     <span class="label">Estimated Delivery:</span>
@@ -30,23 +35,21 @@
                 </div>
                 <div class="detail-row">
                     <span class="label">Payment Status:</span>
-                    <span class="value">Paid / Pending</span>
+                    <span class="value"><%=order.getStatus()%></span>
                 </div>
                 <div class="detail-row">
                     <span class="label">Total Amount:</span>
-                    <span class="value">$XX.XX</span>
+                    <span class="value"><%=currencyVN.format(order.getTotal_price())%></span>
                 </div>
             </div>
 
-            <div class="message">
-                Your order has been successfully placed. You will receive an email confirmation shortly.
-            </div>
-
             <div class="buttons">
-                <a href="#" class="btn">Back to Home</a>
-                <a href="#" class="btn btn-secondary">View Order Details</a>
+                <a href="<%= request.getContextPath()%>/home/home.jsp"
+                   class="btn">Back to Home</a>
+                <a href="<%= request.getContextPath()%>/OrderController?action=orderDetail&orderId=<%=order.getOrder_id()%>" 
+                   class="btn btn-secondary">View Order Details</a>
             </div>
-        </div>
+        </div> <%}%>
         <%@include file="../includes/footer.jsp" %>
     </body>
 </html>

@@ -89,4 +89,20 @@ public class VoucherDAO implements IDAO<VoucherDTO, String>{
         }
         return 0;
     }
+    
+    public boolean applyVoucher(String code) {
+        String sql = "UPDATE [dbo].[VOUCHER] SET QUANTITY = QUANTITY - 1 "
+                + " WHERE CODE = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, code);
+            return ps.executeUpdate() > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(VoucherDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(VoucherDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 }
