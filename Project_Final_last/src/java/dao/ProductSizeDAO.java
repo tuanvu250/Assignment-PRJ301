@@ -73,7 +73,25 @@ public class ProductSizeDAO implements IDAO<ProductSizeDTO, String> {
 
     @Override
     public ProductSizeDTO readById(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = "select * from [dbo].[PRODUCT_SIZE] where SIZE_ID = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                ProductSizeDTO size = new ProductSizeDTO(
+                        rs.getString("SIZE_ID"),
+                        rs.getInt("SIZE_NUM")
+                );
+                return size;
+            }                    
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     @Override

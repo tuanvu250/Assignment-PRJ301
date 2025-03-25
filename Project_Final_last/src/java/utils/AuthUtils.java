@@ -1,7 +1,9 @@
 package utils;
 
+import dao.ProductColorDAO;
 import dao.RoleDAO;
 import dao.SaleDAO;
+import dao.ShoesProductDAO;
 import dao.UserDAO;
 import dto.ShoesProductDTO;
 import dto.UserDTO;
@@ -40,6 +42,16 @@ public class AuthUtils {
     public static double saleNum(String id) {
         SaleDAO dao = new SaleDAO();
         return dao.saleNum(id);
+    }
+    
+    public static String nameShoes(String id) {
+        ShoesProductDAO dao = new ShoesProductDAO();
+        return dao.readById(id).getShoes_name();
+    }
+    
+    public static String nameColor(String id) {
+        ProductColorDAO dao = new ProductColorDAO();
+        return dao.readById(id).getColor_name();
     }
 
     public static boolean checkIsAdmin(HttpSession session) {

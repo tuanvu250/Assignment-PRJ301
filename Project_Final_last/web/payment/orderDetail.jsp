@@ -4,6 +4,7 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dto.OrderDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,10 +15,16 @@
     </head>
     <body>
         <%@include file="../includes/header.jsp" %>
+        <%
+            if(request.getAttribute("order") != null && request.getAttribute("listOD") != null) {
+                OrderDTO order = (OrderDTO)request.getAttribute("order");
+                List<CartDTO> listOD = (List<CartDTO>)request.getAttribute("listOD");
+        %>
         <div class="container">
             <div class="header">
                 <h1>Order Details</h1>
-                <div class="order-id">Order ID: #12345</div>
+                <div class="order-id">Order ID: #<%=order.getOrder_id()%></div>
+                <div class="order-id">Date: <%=order.getDate_ordered()%></div>
             </div>
 
             <div class="section">
@@ -25,25 +32,30 @@
                 <div class="info-grid">
                     <div class="info-item">
                         <span class="label">Full Name:</span>
-                        <span class="value">John Doe</span>
+                        <span class="value"><%=order.getFullName()%></span>
                     </div>
                     <div class="info-item">
                         <span class="label">Phone:</span>
-                        <span class="value">+1 (555) 123-4567</span>
+                        <span class="value"><%=order.getPhone()%></span>
                     </div>
                     <div class="info-item">
                         <span class="label">Email:</span>
-                        <span class="value">john.doe@example.com</span>
+                        <span class="value"><%=order.getEmail()%></span>
                     </div>
                     <div class="info-item">
                         <span class="label">Payment Method:</span>
-                        <span class="value">Credit Card (Visa ****1234)</span>
+                        <span class="value"><%=order.getMethod_pay()%></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Address:</span>
+                        <span class="value"><%=order.getAddress()%></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Status:</span>
+                        <span class="value"><%=order.getStatus()%></span>
                     </div>
                 </div>
-                <div class="info-item" style="margin-top: 10px;">
-                    <span class="label">Address:</span>
-                    <span class="value">123 Main Street, Apt 4B, New York, NY 10001, United States</span>
-                </div>
+
             </div>
 
             <div class="section">
@@ -59,27 +71,16 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <%
+                            for (CartDTO elem : listOD) {
+                        %>
                         <tr>
-                            <td>Premium Cotton T-Shirt</td>
-                            <td>Navy Blue</td>
-                            <td>Medium</td>
-                            <td>2</td>
-                            <td>$29.99</td>
-                        </tr>
-                        <tr>
-                            <td>Slim Fit Jeans</td>
-                            <td>Dark Wash</td>
-                            <td>32x30</td>
-                            <td>1</td>
-                            <td>$49.99</td>
-                        </tr>
-                        <tr>
-                            <td>Leather Belt</td>
-                            <td>Brown</td>
-                            <td>Medium</td>
-                            <td>1</td>
-                            <td>$24.99</td>
-                        </tr>
+                            <td><%=AuthUtils.nameShoes(elem.getShoes_id())%></td>
+                            <td><%=AuthUtils.nameColor(elem.getColor_id())%></td>
+                            <td><%=AuthUtils.saleNum(elem.getSize_id())%></td>
+                            <td><%=elem.getQuantity()%></td>
+                            <td><%=currencyVN.format(elem.getPrice())%></td>
+                        </tr> <%}%>
                     </tbody>
                 </table>
             </div>
@@ -89,28 +90,24 @@
                 <div class="order-summary">
                     <div class="summary-row">
                         <span>Subtotal:</span>
-                        <span>$134.96</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>Shipping:</span>
-                        <span>$5.99</span>
+                        <span><%=currencyVN.format(order.getSubtotal())%></span>
                     </div>
                     <div class="summary-row">
                         <span>Discount:</span>
-                        <span class="discount">-$13.50</span>
+                        <span class="discount">-<%=currencyVN.format(order.getDiscount())%></span>
                     </div>
                     <div class="summary-row">
                         <span>Total Order:</span>
-                        <span>$127.45</span>
+                        <span><%=currencyVN.format(order.getTotal_price())%></span>
                     </div>
                 </div>
             </div>
 
             <div class="buttons">
                 <a href="#" class="btn">Back to Home</a>
-                
+
             </div>
-        </div>
+        </div> <%}%>
         <%@include file="../includes/footer.jsp" %>
     </body>
 </html>
