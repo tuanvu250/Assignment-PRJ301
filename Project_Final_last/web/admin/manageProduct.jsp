@@ -109,7 +109,7 @@
                                 <td><%=saldao.saleNum(item.getSale_id()) * 100%></td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a href="<%= request.getContextPath()%>/admin/productDetailForm.jsp" class="detail-button">
+                                        <a href="<%= request.getContextPath()%>/admin/manageProductDetail.jsp" class="detail-button">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <a href="<%= request.getContextPath()%>/ProductController?action=editPage&id=<%=item.getShoes_id()%>" class="edit-button">

@@ -23,6 +23,24 @@ import utils.DBUtils;
  */
 public class ProductColorDAO implements IDAO<ProductColorDTO, String> {
 
+    public int getTotalColor() {
+        String sql = "SELECT COUNT(*) FROM [dbo].[PRODUCT_COLOR]";
+        int total = 0;
+
+        try (Connection conn = DBUtils.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return total;
+    }
+
     public String autoCreateID() {
         String sql = "SELECT MAX(color_id) FROM PRODUCT_COLOR WHERE color_id LIKE 'CL%'";
         try {
@@ -39,7 +57,7 @@ public class ProductColorDAO implements IDAO<ProductColorDTO, String> {
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ProductColorDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "CL001"; 
+        return "CL001";
     }
 
     @Override
@@ -172,4 +190,39 @@ public class ProductColorDAO implements IDAO<ProductColorDTO, String> {
         return null;
     }
 
+    public boolean isColorNameExist(String colorName) {
+        String sql = "SELECT COUNT(*) FROM dbo].[PRODUCT_COLOR] WHERE COLOR_NAME = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, colorName);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public boolean isColorCodeExist(String colorName) {
+        String sql = "SELECT COUNT(*) FROM dbo].[PRODUCT_COLOR] WHERE COLOR_CODE = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, colorName);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 }

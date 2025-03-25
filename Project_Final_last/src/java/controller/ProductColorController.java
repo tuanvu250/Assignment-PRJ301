@@ -60,14 +60,23 @@ public class ProductColorController extends HttpServlet {
                 checkColor = false;
                 request.setAttribute("errorColorName", "This is required. Please input one value!");
             }
+            if (colordao.isColorNameExist(colorName)) {
+                checkColor = false;
+                request.setAttribute("errorColorName", "Color name " + colorName + " already exists!");
+            }
             if (colorCode == null || colorCode.trim().isEmpty()) {
                 checkColor = false;
                 request.setAttribute("errorColorCode", "This is required. Please input one value!");
+            }
+            if (colordao.isColorNameExist(colorName)) {
+                checkColor = false;
+                request.setAttribute("errorColorCode", "Color code " + colorCode + " already exists!");
             }
             if (!colorCode.matches("^#[0-9A-Fa-f]+$")) {
                 checkColor = false;
                 request.setAttribute("errorColorCode", "Invalid format. Color code must start with '#'.");
             }
+
             ProductColorDTO color = new ProductColorDTO(colorName, colorCode);
             if (!checkColor) {
                 url = COLORFORM;
