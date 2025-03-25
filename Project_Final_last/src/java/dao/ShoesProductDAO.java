@@ -582,5 +582,45 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         }
         return false;
     }
+    
+    public int checkStock(String shoesId, String colorId, String sizeId) {
+        String sql = "SELECT STOCK FROM [dbo].[SHOES_COLOR_SIZE] "
+                + " WHERE SHOES_ID = ? AND COLOR_ID = ? AND SIZE_ID = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, shoesId);
+            ps.setString(2, colorId);
+            ps.setString(3, sizeId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("STOCK");
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    
+    public boolean updateStock(String shoesId, String colorId, String sizeId, int quantity) {
+        String sql = "UPDATE [dbo].[SHOES_COLOR_SIZE] SET STOCK = STOCK - ? "
+                + " WHERE SHOES_ID = ? AND COLOR_ID = ? AND SIZE_ID = ?";
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, quantity);
+            ps.setString(2, shoesId);
+            ps.setString(3, colorId);
+            ps.setString(4, sizeId);
+            return ps.executeUpdate() > 0;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
    
 }

@@ -7,6 +7,8 @@ package controller;
 
 import dao.CartDAO;
 import dao.OrderDAO;
+import dao.ShoesProductDAO;
+import dao.VoucherDAO;
 import dto.CartDTO;
 import dto.OrderDTO;
 import java.io.IOException;
@@ -31,8 +33,10 @@ import utils.AuthUtils;
 public class OrderController extends HttpServlet {
     protected static final String SUMMARY = "/payment/summaryPayment.jsp";
     protected static final String DETAIL = "/payment/orderDetail.jsp";
+    protected static final ShoesProductDAO shoesDAO = new ShoesProductDAO();
     protected static final OrderDAO orderDAO = new OrderDAO();
     protected static final CartDAO cartDAO = new CartDAO();
+    protected static final VoucherDAO vouDAO = new VoucherDAO();
 
 
     protected String processAddOrder(HttpServletRequest request, HttpServletResponse response)
@@ -50,7 +54,9 @@ public class OrderController extends HttpServlet {
         BigDecimal discount = BigDecimal.valueOf(Double.parseDouble(request.getParameter("discount")));
         BigDecimal totalPrice = BigDecimal.valueOf(Double.parseDouble(request.getParameter("totalPrice")));
         String id = orderDAO.autoCreateID();
-        
+        String discountCode = (String)session.getAttribute("discountCode");
+        session.removeAttribute("discountCode");
+        vouDAO.applyVoucher(discountCode);
         OrderDTO order = new OrderDTO(id, fulName, phone, email, date_order, "Pending", 
                 address, paymentMethod, subtotal, discount, totalPrice, username);
         boolean check = orderDAO.create(order);
@@ -59,6 +65,7 @@ public class OrderController extends HttpServlet {
         session.removeAttribute("listCart");
         cartDAO.deleteAllCart(AuthUtils.getUser(session).getUser_name());
         for (CartDTO cart : listCart) {
+            shoesDAO.updateStock(cart.getShoes_id(), cart.getColor_id(), cart.getSize_id(), cart.getQuantity());
             orderDAO.createOD(id, cart);
         }
         return url;

@@ -107,7 +107,7 @@
                             <label>Size</label>
                             <form action="<%= request.getContextPath()%>/CheckStockController">
                                 <input type="hidden" name="shoesId" value="<%=shoesId%>"/>
-                                <input type="hidden" name="colorId" value="colorId"/>
+                                <input type="hidden" name="colorId" value="<%=colorId%>"/>
                                 <select name="sizeId" id="sizeId" onchange="this.form.submit()">
                                     <option value="" selected hidden></option>
                                     <%
@@ -116,8 +116,9 @@
                                         for (ProductSizeDTO sizeShoes : sizeList) {
                                     %>
                                     <option value="<%=sizeShoes.getSize_id()%>"
-                                            <%if(session.getAttribute("sizeId")!=null && session.getAttribute("sizeId").equals(sizeShoes.getSize_id())){%> 
-                                            selected <%session.removeAttribute("sizeId");}%>
+                                            <%if (session.getAttribute("sizeId") != null && session.getAttribute("sizeId").equals(sizeShoes.getSize_id())) {%> 
+                                            selected <%session.removeAttribute("sizeId");
+                                                }%>
                                             ><%=sizeShoes.getSize_num()%></option>
                                     <%}%>
                                 </select>
@@ -128,10 +129,16 @@
                             <select name="quantity" id="quantity">
                                 <option selected hidden></option>
                                 <%
-                                    for (int i = 1; i <= 10; i++) {
+                                    if (session.getAttribute("stock") != null) {
+                                        int stock = (int) session.getAttribute("stock");
+                                        for (int i = 1; i <= 10; i++) {
+                                            session.removeAttribute("stock");
+                                            if (i <= stock) {
                                 %>
                                 <option value="<%=i%>"><%=i%></option>
-                                <%}%>
+                                <%}
+                                        }
+                                    }%>
                             </select>
                         </div>
                     </div>
@@ -176,98 +183,98 @@
         <%@include file="../includes/footer.jsp" %>
         <script src="<%= request.getContextPath()%>/assets/js/productDetail.js"></script>
         <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const favLinks = document.querySelectorAll('.love-list');
-                                    const cartLinks = document.querySelectorAll('.cart-list');
-                                    const buyLink = document.getElementById('buy-now');
-                                    const overlay = document.getElementById('modal-bg');
-                                    const cancelButton = document.querySelector('.btn-cancel');
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const favLinks = document.querySelectorAll('.love-list');
+                                        const cartLinks = document.querySelectorAll('.cart-list');
+                                        const buyLink = document.getElementById('buy-now');
+                                        const overlay = document.getElementById('modal-bg');
+                                        const cancelButton = document.querySelector('.btn-cancel');
 
 
-                                    let isLogin = <%=AuthUtils.isLoggedIn(session) ? "true" : "false"%>;
+                                        let isLogin = <%=AuthUtils.isLoggedIn(session) ? "true" : "false"%>;
 
-                                    favLinks.forEach(link => {
-                                        link.addEventListener('click', function (event) {
+                                        favLinks.forEach(link => {
+                                            link.addEventListener('click', function (event) {
+                                                if (!isLogin) {
+                                                    event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                                                    overlay.classList.add('show');
+                                                    document.body.style.overflow = 'hidden';
+                                                }
+                                            });
+                                        });
+
+                                        cartLinks.forEach(link => {
+                                            link.addEventListener('click', function (event) {
+                                                if (!isLogin) {
+                                                    event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
+                                                    overlay.classList.add('show');
+                                                    document.body.style.overflow = 'hidden';
+                                                }
+                                            });
+                                        });
+
+                                        buyLink.addEventListener('click', function (event) {
                                             if (!isLogin) {
                                                 event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
                                                 overlay.classList.add('show');
-                                                document.body.style.overflow = 'hidden';
+                                                document.body.style.overflow = 'hidden'; // Ngăn cuộn
                                             }
                                         });
-                                    });
 
-                                    cartLinks.forEach(link => {
-                                        link.addEventListener('click', function (event) {
+                                        cartLink.addEventListener('click', function (event) {
                                             if (!isLogin) {
                                                 event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
                                                 overlay.classList.add('show');
-                                                document.body.style.overflow = 'hidden';
+                                                document.body.style.overflow = 'hidden'; // Ngăn cuộn
                                             }
                                         });
-                                    });
 
-                                    buyLink.addEventListener('click', function (event) {
-                                        if (!isLogin) {
-                                            event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
-                                            overlay.classList.add('show');
-                                            document.body.style.overflow = 'hidden'; // Ngăn cuộn
-                                        }
-                                    });
-
-                                    cartLink.addEventListener('click', function (event) {
-                                        if (!isLogin) {
-                                            event.preventDefault(); // Ngăn chuyển trang nếu chưa đăng nhập
-                                            overlay.classList.add('show');
-                                            document.body.style.overflow = 'hidden'; // Ngăn cuộn
-                                        }
-                                    });
-
-                                    // Đóng popup khi bấm Cancel
-                                    cancelButton.addEventListener('click', function () {
-                                        overlay.classList.remove('show');
-                                        document.body.style.overflow = ''; // Cho phép cuộn lại
-                                    });
-
-                                    // Đóng popup khi click ra ngoài
-                                    overlay.addEventListener('click', function (event) {
-                                        if (event.target === overlay) {
+                                        // Đóng popup khi bấm Cancel
+                                        cancelButton.addEventListener('click', function () {
                                             overlay.classList.remove('show');
                                             document.body.style.overflow = ''; // Cho phép cuộn lại
-                                        }
+                                        });
+
+                                        // Đóng popup khi click ra ngoài
+                                        overlay.addEventListener('click', function (event) {
+                                            if (event.target === overlay) {
+                                                overlay.classList.remove('show');
+                                                document.body.style.overflow = ''; // Cho phép cuộn lại
+                                            }
+                                        });
                                     });
-                                });
-                                document.addEventListener("DOMContentLoaded", function () {
-                                    let sizeSelect = document.getElementById("sizeId");
-                                    let quantitySelect = document.getElementById("quantity");
-                                    let addToCartLink = document.getElementById("addToCart");
+                                    document.addEventListener("DOMContentLoaded", function () {
+                                        let sizeSelect = document.getElementById("sizeId");
+                                        let quantitySelect = document.getElementById("quantity");
+                                        let addToCartLink = document.getElementById("addToCart");
 
-                                    function updateCartLink() {
-                                        let sizeId = sizeSelect.value;
-                                        let quantity = quantitySelect.value;
-                                        let baseUrl = "CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=request.getAttribute("colorId")%>";
-                                        addToCartLink.setAttribute("href", baseUrl + "&sizeId=" + sizeId + "&quantity=" + quantity);
-                                    }
+                                        function updateCartLink() {
+                                            let sizeId = sizeSelect.value;
+                                            let quantity = quantitySelect.value;
+                                            let baseUrl = "CartController?action=add&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=request.getAttribute("colorId")%>";
+                                            addToCartLink.setAttribute("href", baseUrl + "&sizeId=" + sizeId + "&quantity=" + quantity);
+                                        }
 
-                                    // Gán sự kiện cho cả hai select
-                                    sizeSelect.addEventListener("change", updateCartLink);
-                                    quantitySelect.addEventListener("change", updateCartLink);
-                                });
-                                document.addEventListener("DOMContentLoaded", function () {
-                                    let sizeSelect = document.getElementById("sizeId");
-                                    let quantitySelect = document.getElementById("quantity");
-                                    let addToCartLink = document.getElementById("buy-now");
+                                        // Gán sự kiện cho cả hai select
+                                        sizeSelect.addEventListener("change", updateCartLink);
+                                        quantitySelect.addEventListener("change", updateCartLink);
+                                    });
+                                    document.addEventListener("DOMContentLoaded", function () {
+                                        let sizeSelect = document.getElementById("sizeId");
+                                        let quantitySelect = document.getElementById("quantity");
+                                        let addToCartLink = document.getElementById("buy-now");
 
-                                    function updateBuyNow() {
-                                        let sizeId = sizeSelect.value;
-                                        let quantity = quantitySelect.value;
-                                        let baseUrl = "AllCartController?action=buyNow&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=request.getAttribute("colorId")%>";
-                                        addToCartLink.setAttribute("href", baseUrl + "&sizeId=" + sizeId + "&quantity=" + quantity);
-                                    }
+                                        function updateBuyNow() {
+                                            let sizeId = sizeSelect.value;
+                                            let quantity = quantitySelect.value;
+                                            let baseUrl = "AllCartController?action=buyNow&username=<%=username%>&shoesId=<%=shoesId%>&colorId=<%=request.getAttribute("colorId")%>";
+                                            addToCartLink.setAttribute("href", baseUrl + "&sizeId=" + sizeId + "&quantity=" + quantity);
+                                        }
 
-                                    // Gán sự kiện cho cả hai select
-                                    sizeSelect.addEventListener("change", updateBuyNow);
-                                    quantitySelect.addEventListener("change", updateBuyNow);
-                                });
+                                        // Gán sự kiện cho cả hai select
+                                        sizeSelect.addEventListener("change", updateBuyNow);
+                                        quantitySelect.addEventListener("change", updateBuyNow);
+                                    });
         </script>
     </body>
 </html>

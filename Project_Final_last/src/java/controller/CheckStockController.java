@@ -5,6 +5,7 @@
  */
 package controller;
 
+import dao.ShoesProductDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -31,10 +32,12 @@ public class CheckStockController extends HttpServlet {
             String shoesId = request.getParameter("shoesId");
             String colorId = request.getParameter("colorId");
             String sizeId = request.getParameter("sizeId");
-            System.out.println(shoesId);
-            System.out.println(colorId);
-            System.out.println(sizeId);
             session.setAttribute("sizeId", sizeId);
+            ShoesProductDAO dao = new ShoesProductDAO();
+            
+            int stock = dao.checkStock(shoesId, colorId, sizeId);
+            
+            session.setAttribute("stock", stock);
             
         } catch (Exception e) {
             log("ERROR: " + e.toString());

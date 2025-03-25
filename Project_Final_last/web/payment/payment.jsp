@@ -91,7 +91,6 @@
                 <%
                     VoucherDAO vouDAO = new VoucherDAO();     
                     discountCode = (String) session.getAttribute("discountCode");
-                    session.removeAttribute("discountCode");
                     discount = BigDecimal.valueOf(vouDAO.getDiscount(discountCode));
                     discount = discount.multiply(totalPrice.subtract(totalSale));
                     totalSale = totalSale.add(discount);
