@@ -371,6 +371,7 @@ public class ProductController extends HttpServlet {
                         if (!added) {
                             check = false;
                             request.setAttribute("errorMessage", "Error adding size: " + item.getSize_id());
+                            System.out.println(item.getSize_id());
                             break;
                         }
                     }
