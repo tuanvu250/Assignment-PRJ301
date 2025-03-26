@@ -122,12 +122,14 @@
                                 <input type="hidden" name="size_id[]" value="<%= item.getSize_id()%>">
                                 <input type="number" class="quantity-input" name="quantity[]" min="0" value="<%=scldao.getStock(shoesid, colorid, item.getSize_id())%>" required>
                             </div>
-                            <% } %>
+                            <% }%>
                         </div>
                     </div>
 
                     <div class="form-actions">
-                        <button type="reset" class="btn btn-secondary">Cancel</button>
+                        <button type="reset" class="btn btn-secondary">
+                            <a href="<%= request.getContextPath()%>/ProductController?action=cancelDetail&id=<%=shoesid%>"
+                               style="color: black; text-decoration: none">Cancel</a></button>
                         <button type="submit" class="btn btn-primary">Save Details</button>
                     </div>
                 </form>
