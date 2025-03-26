@@ -235,7 +235,7 @@
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <textarea id="description" name="description"></textarea>
+                        <textarea id="description" name="description"><%=shoes.getDescription()%></textarea>
                     </div>
 
                     <div class="form-actions">
