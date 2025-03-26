@@ -20,6 +20,8 @@
     </head>
     <body>
         <%
+            if(AuthUtils.checkIsAdmin(session)) {
+        
             if (request.getAttribute("order") != null && request.getAttribute("listOD") != null) {
                 OrderDTO order = (OrderDTO) request.getAttribute("order");
                 List<CartDTO> listOD = (List<CartDTO>) request.getAttribute("listOD");
@@ -112,6 +114,6 @@
                 <a href="<%= request.getContextPath()%>/OrderController?action=manageOrders"
                    class="btn">Cancel</a>
             </div>
-        </div> <%}%>
+        </div> <%}}%>
     </body>
 </html>

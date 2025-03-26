@@ -149,12 +149,12 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
             ps.setString(2, orderId);
 
             int rowsUpdated = ps.executeUpdate();
-            return rowsUpdated > 0; 
+            return rowsUpdated > 0;
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return false; 
+        return false;
     }
 
     @Override
@@ -262,7 +262,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
         }
         return list;
     }
-    
+
     public boolean updateDetail(String fullName, String phone, String email, String paymentMethod,
             String address, String status, String orderId) {
         String sql = "UPDATE [dbo].[ORDERS] SET FULLNAME = ?,  "
@@ -280,11 +280,30 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
             ps.setString(6, status);
             ps.setString(7, orderId);
             int rowsUpdated = ps.executeUpdate();
-            return rowsUpdated > 0; 
+            return rowsUpdated > 0;
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return false; 
+        return false;
     }
+
+    public int getTotalQuantity() {
+        String sql = "SELECT SUM(QUANTITY) AS TotalQuantity FROM [dbo].[ORDERS_DETAIL]";
+
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("TotalQuantity");
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return 0; 
+    }
+
 }

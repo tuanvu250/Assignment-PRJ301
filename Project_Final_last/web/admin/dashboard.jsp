@@ -4,6 +4,8 @@
     Author     : ADMIN
 --%>
 
+<%@page import="dao.VoucherDAO"%>
+<%@page import="dao.OrderDAO"%>
 <%@page import="dao.ProductColorDAO"%>
 <%@page import="dao.ProductStyleDAO"%>
 <%@page import="dao.ProductMaterialDAO"%>
@@ -28,6 +30,8 @@
                 ProductMaterialDAO matdao = new ProductMaterialDAO();
                 ProductStyleDAO styledao = new ProductStyleDAO();
                 ProductColorDAO colordao = new ProductColorDAO();
+                OrderDAO orderDAO = new OrderDAO();
+                VoucherDAO vouDAO = new VoucherDAO();
         %>
 
 
@@ -65,7 +69,7 @@
                         </div>
                         <div class="metric-info">
                             <div class="metric-label">Total Products Sold</div>
-                            <div class="metric-value">1408</div>
+                            <div class="metric-value"><%=orderDAO.getTotalQuantity()%></div>
                         </div>
                     </div>
                 </a>
@@ -114,6 +118,18 @@
                         <div class="metric-info">
                             <div class="metric-label">Total Color</div>
                             <div class="metric-value"><%=colordao.getTotalColor()%></div>
+                        </div>
+                    </div>
+                </a>
+                        
+                <a href="#" class="metric-link">
+                    <div class="metric-card">
+                        <div class="icon-container">
+                            <i class="fa-solid fa-ticket icon-purple"></i>
+                        </div>
+                        <div class="metric-info">
+                            <div class="metric-label">Total Voucher</div>
+                            <div class="metric-value"><%=vouDAO.getTotalVoucher()%></div>
                         </div>
                     </div>
                 </a>

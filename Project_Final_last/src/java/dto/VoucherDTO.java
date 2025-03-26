@@ -14,16 +14,21 @@ import java.sql.Date;
 public class VoucherDTO {
     private String id;
     private String code;
-    private String discount;
+    private double discount;
     private int quantity;
     private Date start_date;
     private Date end_date;
     private String status;
 
+    @Override
+    public String toString() {
+        return "VoucherDTO{" + "id=" + id + ", code=" + code + ", discount=" + discount + ", quantity=" + quantity + ", start_date=" + start_date + ", end_date=" + end_date + ", status=" + status + '}';
+    }
+
     public VoucherDTO() {
     }
 
-    public VoucherDTO(String id, String code, String discount, int quantity, Date start_date, Date end_date, String status) {
+    public VoucherDTO(String id, String code, double discount, int quantity, Date start_date, Date end_date, String status) {
         this.id = id;
         this.code = code;
         this.discount = discount;
@@ -49,11 +54,11 @@ public class VoucherDTO {
         this.code = code;
     }
 
-    public String getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(String discount) {
+    public void setDiscount(double discount) {
         this.discount = discount;
     }
 
@@ -88,5 +93,6 @@ public class VoucherDTO {
     public void setStatus(String status) {
         this.status = status;
     }
+
     
 }

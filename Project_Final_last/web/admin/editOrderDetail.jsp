@@ -30,6 +30,9 @@
     </head>
     <body>
         <%
+           
+            if(AuthUtils.checkIsAdmin(session)) {
+        
             if (request.getAttribute("order") != null && request.getAttribute("listOD") != null) {
                 OrderDTO order = (OrderDTO) request.getAttribute("order");
                 List<CartDTO> listOD = (List<CartDTO>) request.getAttribute("listOD");
@@ -140,6 +143,6 @@
                    style="color: #1d1d1b; background-color: #ddd" class="btn">Cancel</a>
                    <button class="btn" style="font-size: 15px" type="submit">Update</button>
             </div>
-        </form> <%}%>
+        </form> <%}}%>
     </body>
 </html>
