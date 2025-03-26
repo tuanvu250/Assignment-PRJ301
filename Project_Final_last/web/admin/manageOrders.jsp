@@ -4,6 +4,7 @@
     Author     : ADMIN
 --%>
 
+<%@page import="utils.AuthUtils"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.text.NumberFormat"%>
 <%@page import="dto.OrderDTO"%>
@@ -17,6 +18,9 @@
         <link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/manageOrders.css">
     </head>
     <body>
+        <%
+            if (AuthUtils.checkIsAdmin(session)) {
+        %>
         <div class="page-container">
             <%@include file="../includes/sidebar.jsp" %>
             <div class="container">
@@ -35,17 +39,22 @@
                         </button>
                     </form>
                 </div>
-                <%  
-                    
+                <%
+
                     if (request.getAttribute("listOrder") != null) {
                         List<OrderDTO> listOrder = (List<OrderDTO>) request.getAttribute("listOrder");
-                        if(request.getAttribute("checkUpdate") != null) {
+                        if (request.getAttribute("checkUpdate") != null) {
                             boolean check = (boolean) request.getAttribute("checkUpdate");
-                            if(check) { %>
-                            <div style="color: green">Update order successful</div> <%}else {%>    
-                            <div style="color: red">Update order fail </div>
-                        <%}}%>
-                        <div class="table-container" style="margin-top: 10px;">
+                            if (check) { %>
+                <div style="color: green">Update order successful</div> <%} else {%>    
+                <div style="color: red">Update order fail </div>
+                <%}
+                    }
+                    if (request.getAttribute("successStatus") != null) {
+                        String successStatus = (String) request.getAttribute("successStatus");
+                    %> <p style="color: green;"><%=successStatus%></p> <%}%>
+                <p></p>
+                <div class="table-container" style="margin-top: 10px;">
                     <table>
                         <thead>
                             <tr>
@@ -115,6 +124,6 @@
                     </table>
                 </div> <%}%>
             </div>
-        </div>
+        </div> <%}%>
     </body>
 </html>

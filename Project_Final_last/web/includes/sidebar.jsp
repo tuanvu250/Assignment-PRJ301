@@ -48,10 +48,15 @@
                         <i class="fa-solid fa-palette"></i>
                         <span class="nav-item">Color</span>
                     </a></li>
+                <li><a href="<%= request.getContextPath()%>/VoucherController?action=manageVoucher">
+                        <i class="fa-solid fa-ticket"></i>
+                        <span class="nav-item">Voucher</span>
+                    </a></li>
                 <li><a href="<%= request.getContextPath()%>/home/home.jsp" class="logout">
                         <i class="fas fa-sign-out-alt"></i>
                         <span class="nav-item">Exit</span>
                     </a></li>
+                
             </ul>
         </nav>
     </body>

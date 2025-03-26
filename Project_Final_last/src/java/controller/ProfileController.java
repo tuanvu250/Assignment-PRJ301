@@ -25,10 +25,23 @@ import utils.AuthUtils;
 @WebServlet(name = "ProfileController", urlPatterns = {"/ProfileController"})
 public class ProfileController extends HttpServlet {
 
-    private static final String UPLOAD_DIRECTORY = "D:/DOCUMENTFPT/PRJ/GITCM/Assignment-PRJ301/uploaded_images/";
+    
     private static final String PROFILE_PAGE = "user/profile.jsp";
     private static final String HOME_PAGE = "home/home.jsp";
 
+    
+    private String UPLOAD_DIRECTORY;
+
+    @Override
+    public void init() throws ServletException {
+        // Lấy đường dẫn thực tế của thư mục lưu trữ ảnh trong dự án
+        UPLOAD_DIRECTORY = getServletContext().getRealPath("/assets/img/img-users/");
+        File uploadDir = new File(UPLOAD_DIRECTORY);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs(); // Tạo thư mục nếu chưa tồn tại
+        }
+    }
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -92,7 +105,7 @@ public class ProfileController extends HttpServlet {
 
         // Đặt tên file mới theo `username_timestamp.ext`
         String newFileName = username + "_" + System.currentTimeMillis() + fileExtension;
-        String filePath = UPLOAD_DIRECTORY + newFileName;
+        String filePath = new File(UPLOAD_DIRECTORY, newFileName).getAbsolutePath();
         // lưu vào database;
         user.setImage(newFileName);
         usDao.update(user);
@@ -104,6 +117,7 @@ public class ProfileController extends HttpServlet {
                 request.setAttribute("uploadFile", "Upload Image Failed!");
             }
         }
+        //System.out.println(filePath);
         session.setAttribute("imageUser", newFileName);
         return PROFILE_PAGE;
     }
@@ -155,7 +169,7 @@ public class ProfileController extends HttpServlet {
 
         if (userDao.update(user)) {
             request.setAttribute("updateSuccess", "Update Profile Successfully!");
-            
+
         } else {
             request.setAttribute("updateFailed", "Update Profile Failed!");
         }

@@ -135,7 +135,11 @@ public class OrderController extends HttpServlet {
         String newStatus = request.getParameter("newStatus");
         String orderId = request.getParameter("orderId");
         boolean check = orderDAO.updateOrderStatus(orderId, newStatus);
-        request.setAttribute("checkUpdate", check);
+        if(check) {
+            request.setAttribute("successStatus", "Update status successful");
+        } else {
+            request.setAttribute("errorStatus", "Update status fail");
+        }
         processSearchOrders(request, response);
         return url;
     }
@@ -161,7 +165,11 @@ public class OrderController extends HttpServlet {
         String url = PROFILE;
         String orderId = request.getParameter("orderId");
         boolean check = orderDAO.updateOrderStatus(orderId, "Cancelled");
-        request.setAttribute("checkUpdate", check);
+        if(check) {
+            request.setAttribute("successCancel", "Canceled order successful");
+        } else {
+            request.setAttribute("errorCancel", "Canceled order fail");
+        }
         return url;
     }
     

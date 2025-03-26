@@ -17,22 +17,27 @@
         <%@include file="../includes/header.jsp" %>
 
         <div class="login">
-            <h2>Forgot Password</h2>
+            <h2>OTP</h2>
             <form class="login-form" action="<%= request.getContextPath()%>/ForgotPassController" method="post">
-                <input type="hidden" name="action" value="submitEmail" />
-                <input class="login-sign" type="email" placeholder="Enter email of your account" name="email" required/>
+                <input type="hidden" name="action" value="submitOTP" />
+                <input class="login-sign" type="text" placeholder="Enter OTP" name="otp" required/>
+                <%if(request.getAttribute("errorOTP") != null) {
+                    String errorOTP = (String) request.getAttribute("errorOTP");
+                %>
+                <p style="color: red;"><%=errorOTP%></p>
+                <%} else {%><p style="text-align: center">We already send OTP to your email for reset password.</p>
+                <%}
+                    if(request.getAttribute("username") != null) {
+                        username = (String) request.getAttribute("username");
+                %>
+                <input type="hidden" name="username" value="<%=username%>"/>
+                <%}%>
                 <button type="submit" class="login-btn">
                     SUBMIT
                 </button>
-                <%
-                    if(request.getAttribute("errorEmail") != null ) {
-                        String errorEmail = (String)request.getAttribute("errorEmail");
-                %>
-                <p style="color: red; text-align: center;"><%=errorEmail%></p>
-                <%}%>
             </form>
             <div class="login-mid">
-                <a href="<%= request.getContextPath()%>/user/login.jsp" >Back to Login</a>
+                <a href="<%= request.getContextPath()%>/ForgotPassController?action=sendAgain&username=<%=username%>" >Send OTP again?</a>
             </div>
             <div class="login-line">
                 <div class="login-linee"></div>
@@ -42,7 +47,7 @@
 
             <div class="login-end">
                 Don’t have an account?
-                <a href="register.jsp" >Register</a>
+                <a href="<%= request.getContextPath()%>/user/register.jsp" >Register</a>
             </div>
 
         </div>

@@ -73,6 +73,10 @@
                             changeSuccess = changeSuccess.equals("null") ? "" : changeSuccess;
                         %>
                         <div style="green"><%=changeSuccess%></div>
+                        <%if (request.getParameter("successCancel") != null) {
+                        String successCancel = (String)request.getAttribute("successCancel");
+                        System.out.println(successCancel);
+                        %> <p style="color: green"><%=successCancel%></p> <%}%>
                     </div>
                 </form>
 
@@ -137,13 +141,8 @@
                         List<OrderDTO> listOrder = orderDAO.readAllByUser(username);
                     %>
                     <h2>ORDER HISTORY</h2>
-                    <%if (request.getParameter("checkUpdate") != null) {
-                        boolean check = (boolean)request.getAttribute("checkUpdate");
-                        if(check) {
-                    %>
-                    <div style="color: green">Canceled order successful</div> <%} else {%>    
-                    <div style="color: red">Canceled order fail </div>
-                    <%}}%>
+                    
+                    
                     <table class="order-table" style="margin-top: 10px;">
                         <thead>
                             <tr>
