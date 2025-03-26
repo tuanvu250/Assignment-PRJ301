@@ -24,7 +24,7 @@ import utils.DBUtils;
  *
  * @author ADMIN
  */
-public class OrderDAO implements IDAO<OrderDTO, String>{
+public class OrderDAO implements IDAO<OrderDTO, String> {
 
     public String autoCreateID() {
         String sql = "SELECT MAX(ORDER_ID) FROM [dbo].[ORDERS] WHERE ORDER_ID LIKE 'OR%'";
@@ -42,13 +42,13 @@ public class OrderDAO implements IDAO<OrderDTO, String>{
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ProductColorDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "OR001"; 
+        return "OR001";
     }
-    
+
     public boolean createOD(String orderId, CartDTO cart) {
         String sql = "INSERT INTO [dbo].[ORDERS_DETAIL] "
                 + "(ORDER_ID, SHOES_ID, COLOR_ID, SIZE_ID, QUANTITY, PRICE) "
-                        + " VALUES (?, ?, ?, ?, ?, ?)";
+                + " VALUES (?, ?, ?, ?, ?, ?)";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -66,7 +66,7 @@ public class OrderDAO implements IDAO<OrderDTO, String>{
         }
         return false;
     }
-    
+
     @Override
     public boolean create(OrderDTO order) {
         String sql = "INSERT INTO [dbo].[ORDERS] "
@@ -101,7 +101,60 @@ public class OrderDAO implements IDAO<OrderDTO, String>{
 
     @Override
     public List<OrderDTO> readAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
+    }
+
+    public List<OrderDTO> searchByOrderIdOrUsername(String keyword) {
+        String sql = "SELECT * FROM [dbo].[ORDERS] WHERE ORDER_ID LIKE ? OR USER_NAME LIKE ?";
+        List<OrderDTO> orders = new ArrayList<>();
+
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + keyword + "%");
+            ps.setString(2, "%" + keyword + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderDTO order = new OrderDTO(
+                        rs.getString("ORDER_ID"),
+                        rs.getString("FULLNAME"),
+                        rs.getString("PHONE"),
+                        rs.getString("EMAIL"),
+                        rs.getDate("DATE_ORDERED"),
+                        rs.getString("STATUS"),
+                        rs.getString("ADDRESS"),
+                        rs.getString("METHOD_PAY"),
+                        rs.getBigDecimal("SUBTOTAL"),
+                        rs.getBigDecimal("DISCOUNT"),
+                        rs.getBigDecimal("TOTAL_PRICE"),
+                        rs.getString("USER_NAME")
+                );
+                orders.add(order);
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return orders;
+    }
+
+    public boolean updateOrderStatus(String orderId, String newStatus) {
+        String sql = "UPDATE [dbo].[ORDERS] SET STATUS = ? WHERE ORDER_ID = ?";
+
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, newStatus);
+            ps.setString(2, orderId);
+
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0; 
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return false; 
     }
 
     @Override
@@ -112,7 +165,7 @@ public class OrderDAO implements IDAO<OrderDTO, String>{
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, id);
             ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
+            if (rs.next()) {
                 OrderDTO order = new OrderDTO(
                         rs.getString("ORDER_ID"),
                         rs.getString("FULLNAME"),
@@ -146,7 +199,7 @@ public class OrderDAO implements IDAO<OrderDTO, String>{
     public boolean delete(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     public List<CartDTO> readAllOderDetail(String orderId) {
         String sql = "SELECT CD.ORDER_ID, SHOES_ID, COLOR_ID, SIZE_ID, QUANTITY, PRICE"
                 + " FROM [dbo].[ORDERS_DETAIL] CD JOIN [dbo].[ORDERS] C "
@@ -176,7 +229,7 @@ public class OrderDAO implements IDAO<OrderDTO, String>{
         }
         return list;
     }
-    
+
     public List<OrderDTO> readAllByUser(String username) {
         String sql = "SELECT * FROM [dbo].[ORDERS] WHERE USER_NAME = ?";
         List<OrderDTO> list = new ArrayList<>();
@@ -185,7 +238,7 @@ public class OrderDAO implements IDAO<OrderDTO, String>{
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()) {
+            while (rs.next()) {
                 OrderDTO order = new OrderDTO(
                         rs.getString("ORDER_ID"),
                         rs.getString("FULLNAME"),
@@ -208,5 +261,30 @@ public class OrderDAO implements IDAO<OrderDTO, String>{
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
+    }
+    
+    public boolean updateDetail(String fullName, String phone, String email, String paymentMethod,
+            String address, String status, String orderId) {
+        String sql = "UPDATE [dbo].[ORDERS] SET FULLNAME = ?,  "
+                + " PHONE = ?, EMAIL = ?, ADDRESS = ?, METHOD_PAY = ?, STATUS = ? "
+                + " WHERE ORDER_ID = ?";
+
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, fullName);
+            ps.setString(2, phone);
+            ps.setString(3, email);
+            ps.setString(4, address);
+            ps.setString(5, paymentMethod);
+            ps.setString(6, status);
+            ps.setString(7, orderId);
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0; 
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return false; 
     }
 }

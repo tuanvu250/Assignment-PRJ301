@@ -31,13 +31,16 @@ import utils.AuthUtils;
  */
 @WebServlet(name = "OrderController", urlPatterns = {"/OrderController"})
 public class OrderController extends HttpServlet {
+
     protected static final String SUMMARY = "/payment/summaryPayment.jsp";
     protected static final String DETAIL = "/payment/orderDetail.jsp";
+    protected static final String ADMIN_DETAIL = "/admin/manageOrderDetail.jsp";
+    protected static final String EDIT_DETAIL = "/admin/editOrderDetail.jsp";
+    protected static final String MANAGE = "/admin/manageOrders.jsp";
     protected static final ShoesProductDAO shoesDAO = new ShoesProductDAO();
     protected static final OrderDAO orderDAO = new OrderDAO();
     protected static final CartDAO cartDAO = new CartDAO();
     protected static final VoucherDAO vouDAO = new VoucherDAO();
-
 
     protected String processAddOrder(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -54,10 +57,10 @@ public class OrderController extends HttpServlet {
         BigDecimal discount = BigDecimal.valueOf(Double.parseDouble(request.getParameter("discount")));
         BigDecimal totalPrice = BigDecimal.valueOf(Double.parseDouble(request.getParameter("totalPrice")));
         String id = orderDAO.autoCreateID();
-        String discountCode = (String)session.getAttribute("discountCode");
+        String discountCode = (String) session.getAttribute("discountCode");
         session.removeAttribute("discountCode");
         vouDAO.applyVoucher(discountCode);
-        OrderDTO order = new OrderDTO(id, fulName, phone, email, date_order, "Pending", 
+        OrderDTO order = new OrderDTO(id, fulName, phone, email, date_order, "Pending",
                 address, paymentMethod, subtotal, discount, totalPrice, username);
         boolean check = orderDAO.create(order);
         request.setAttribute("order", order);
@@ -70,7 +73,7 @@ public class OrderController extends HttpServlet {
         }
         return url;
     }
-    
+
     protected String processLookOrderDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = DETAIL;
@@ -82,6 +85,76 @@ public class OrderController extends HttpServlet {
         return url;
     }
     
+    protected String processAdminOrderDetail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String url = ADMIN_DETAIL;
+        String orderId = request.getParameter("orderId");
+        OrderDTO order = orderDAO.readById(orderId);
+        request.setAttribute("order", order);
+        List<CartDTO> listOD = orderDAO.readAllOderDetail(orderId);
+        request.setAttribute("listOD", listOD);
+        return url;
+    }
+    
+    protected String processEditOrderDetail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String url = EDIT_DETAIL;
+        String orderId = request.getParameter("orderId");
+        OrderDTO order = orderDAO.readById(orderId);
+        request.setAttribute("order", order);
+        List<CartDTO> listOD = orderDAO.readAllOderDetail(orderId);
+        request.setAttribute("listOD", listOD);
+        return url;
+    }
+
+    protected String processManageOrders(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String url = MANAGE;
+        processSearchOrders(request, response);
+        return url;
+    }
+    
+    protected String processSearchOrders(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String url = MANAGE;
+        String searchTerm = request.getParameter("searchTerm");
+        if(searchTerm == null || searchTerm.trim().isEmpty()) {
+            searchTerm = "";
+            request.setAttribute("searchTerm", searchTerm);
+        }     
+        List<OrderDTO> listOrder = orderDAO.searchByOrderIdOrUsername(searchTerm);
+        request.setAttribute("searchTerm", searchTerm);
+        request.setAttribute("listOrder", listOrder);
+        return url;
+    }
+    
+    protected String processUpdateStatus(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String url = MANAGE;
+        String newStatus = request.getParameter("newStatus");
+        String orderId = request.getParameter("orderId");
+        boolean check = orderDAO.updateOrderStatus(orderId, newStatus);
+        request.setAttribute("checkUpdate", check);
+        processSearchOrders(request, response);
+        return url;
+    }
+    
+     protected String processUpdateDetail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String url = MANAGE;
+        String fulName = request.getParameter("fullName");
+        String phone = request.getParameter("phone");
+        String email = request.getParameter("email");
+        String address = request.getParameter("address");
+        String status = request.getParameter("status");
+        String paymentMethod = request.getParameter("paymentMethod");
+        String orderId = request.getParameter("orderId");
+        boolean check = orderDAO.updateDetail(fulName, phone, email, paymentMethod, address, status, orderId);
+        request.setAttribute("checkUpdate", check);
+        processSearchOrders(request, response);
+        return url;
+     }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -91,8 +164,20 @@ public class OrderController extends HttpServlet {
             if (action != null) {
                 if (action.equals("add")) {
                     url = processAddOrder(request, response);
-                } else if(action.equals("orderDetail")) {
+                } else if (action.equals("orderDetail")) {
                     url = processLookOrderDetail(request, response);
+                } else if (action.equals("manageOrders")) {
+                    url = processManageOrders(request, response);
+                } else if (action.equals("searchOrders")) {
+                    url = processSearchOrders(request, response);
+                } else if (action.equals("updateStatus")) {
+                    url = processUpdateStatus(request, response);
+                } else if (action.equals("adminOrderDetail")) {
+                    url = processAdminOrderDetail(request, response);
+                } else if (action.equals("editOrderDetail")) {
+                    url = processEditOrderDetail(request, response);
+                } else if (action.equals("updateDetail")) {
+                    url = processUpdateDetail(request, response);
                 }
             }
         } catch (Exception e) {

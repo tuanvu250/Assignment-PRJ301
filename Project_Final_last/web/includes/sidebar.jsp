@@ -24,7 +24,7 @@
                         <i class="fa-solid fa-users"></i>
                         <span class="nav-item">Accounts</span>
                     </a></li>
-                <li><a href="">
+                <li><a href="<%= request.getContextPath()%>/OrderController?action=manageOrders">
                         <i class="fas fa-user"></i>
                         <span class="nav-item">Invoice</span>
                     </a></li>
