@@ -175,7 +175,6 @@ public class ProductStyleDAO implements IDAO<ProductStyleDTO, String> {
             Logger.getLogger(ProductLineDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
-
     }
 
     @Override
