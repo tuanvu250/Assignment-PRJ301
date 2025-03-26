@@ -43,17 +43,17 @@ import utils.AuthUtils;
 )
 @WebServlet(name = "ProductController", urlPatterns = {"/ProductController"})
 public class ProductController extends HttpServlet {
-    
+
     private static final String HOME = "/home/home.jsp";
     private static final String MANAGE_PRODUCT = "/admin/manageProduct.jsp";
     private static final String PRODUCT_FORM = "/admin/productForm.jsp";
     private static final String PRODUCT_DETAIL = "/admin/manageProductDetail.jsp";
     private static final String PRODUCT_DETAIL_FORM = "/admin/productDetailForm.jsp";
     private static final String EDIT_PRODUCT_DETAIL_FORM = "/admin/editProductDetailForm.jsp";
-    
+
     public ShoesProductDAO pdao = new ShoesProductDAO();
     public ShoesColorSizeDAO scldao = new ShoesColorSizeDAO();
-    
+
     protected String processSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME;
@@ -64,19 +64,44 @@ public class ProductController extends HttpServlet {
             if (nameTerm == null) {
                 nameTerm = "";
             }
-            List<ShoesProductDTO> listShoes = pdao.searchShoesByName(nameTerm);
+
+            // Phân trang
+            int page = 1;
+            int pageSize = 8; // Số sản phẩm trên mỗi trang
+            String pageParam = request.getParameter("page");
+            if (pageParam != null) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                    if (page < 1) {
+                        page = 1;
+                    }
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+            }
+
+            // Lấy danh sách sản phẩm theo trang
+            List<ShoesProductDTO> listShoes = pdao.searchShoesByName(nameTerm, page, pageSize);
+
+            // Đếm tổng số sản phẩm để tính tổng số trang
+            int totalProducts = pdao.countShoesByName(nameTerm);
+            int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+
+            // Gửi dữ liệu sang JSP
             request.setAttribute("listShoes", listShoes);
             request.setAttribute("searchterm", nameTerm);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
         }
         return url;
     }
-    
+
     protected String processAdd(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME;
         HttpSession session = request.getSession();
         boolean isValid = true;
-        
+
         if (AuthUtils.checkIsAdmin(session)) {
             try {
                 String nameShoes = request.getParameter("nameShoes").trim();
@@ -90,7 +115,7 @@ public class ProductController extends HttpServlet {
                 String material = request.getParameter("material");
                 String description = request.getParameter("description");
                 String pdsale = request.getParameter("sale");
-                
+
                 LocalDate date = null;
                 double price = 0;
                 int quantity = 0;
@@ -136,12 +161,12 @@ public class ProductController extends HttpServlet {
                     isValid = false;
                     request.setAttribute("errorQuantity", "Please input a valid number!");
                 }
-                
+
                 ShoesProductDTO shoes = new ShoesProductDTO(
                         nameShoes, date, BigDecimal.valueOf(price),
                         quantity, gender, description,
                         status, style, productLine, material, pdsale);
-                
+
                 if (!isValid) {
                     url = PRODUCT_FORM;
                     request.setAttribute("shoes", shoes);
@@ -163,7 +188,7 @@ public class ProductController extends HttpServlet {
         }
         return url;
     }
-    
+
     protected String processCancel(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME;
@@ -174,7 +199,7 @@ public class ProductController extends HttpServlet {
         }
         return url;
     }
-    
+
     protected String processEditPage(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME;
@@ -194,13 +219,13 @@ public class ProductController extends HttpServlet {
         }
         return url;
     }
-    
+
     protected String processEdit(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME;
         HttpSession session = request.getSession();
         boolean isValid = true;
-        
+
         if (AuthUtils.checkIsAdmin(session)) {
             try {
                 String productid = request.getParameter("productid");
@@ -215,7 +240,7 @@ public class ProductController extends HttpServlet {
                 String material = request.getParameter("material");
                 String description = request.getParameter("description");
                 String pdsale = request.getParameter("sale");
-                
+
                 LocalDate date = null;
                 double price = 0;
                 int quantity = 0;
@@ -261,13 +286,13 @@ public class ProductController extends HttpServlet {
                     isValid = false;
                     request.setAttribute("errorQuantity", "Please input a valid number!");
                 }
-                
+
                 ShoesProductDTO shoes = new ShoesProductDTO(
                         productid,
                         nameShoes, date, BigDecimal.valueOf(price),
                         quantity, gender, description,
                         status, style, productLine, material, pdsale);
-                
+
                 if (!isValid) {
                     url = PRODUCT_FORM;
                     request.setAttribute("shoes", shoes);
@@ -291,7 +316,7 @@ public class ProductController extends HttpServlet {
         }
         return url;
     }
-    
+
     protected String processDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME;
@@ -308,7 +333,7 @@ public class ProductController extends HttpServlet {
         }
         return url;
     }
-    
+
     protected String processViewDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME;
@@ -329,7 +354,7 @@ public class ProductController extends HttpServlet {
         }
         return url;
     }
-    
+
     protected String processDeleteDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME;
@@ -350,7 +375,7 @@ public class ProductController extends HttpServlet {
         }
         return url;
     }
-    
+
     protected String processAddColorImg(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = MANAGE_PRODUCT;
@@ -422,10 +447,10 @@ public class ProductController extends HttpServlet {
                 request.setAttribute("errorMessage", "An unexpected error occurred while adding product details.");
             }
         }
-        
+
         return url;
     }
-    
+
     protected String processSizeStockPage(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME;
@@ -443,7 +468,7 @@ public class ProductController extends HttpServlet {
         }
         return url;
     }
-    
+
     protected String processEditSizeStock(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = HOME;
@@ -461,14 +486,14 @@ public class ProductController extends HttpServlet {
             request.setAttribute("updateFailed", "Invalid input data!");
             return EDIT_PRODUCT_DETAIL_FORM;
         }
-        
+
         boolean updateSuccess = true;
-        
+
         for (int i = 0; i < sizeIds.length; i++) {
             try {
                 String sizeId = sizeIds[i].trim();
                 int quantity = Integer.parseInt(quantities[i].trim());
-                
+
                 if (!scldao.updateSizeStock(shoesid, colorid, sizeId, quantity)) {
                     updateSuccess = false;
                     break;
@@ -489,10 +514,10 @@ public class ProductController extends HttpServlet {
             url = EDIT_PRODUCT_DETAIL_FORM;
             request.setAttribute("updateFailed", "Update failed! Please check your input.");
         }
-        
+
         return url;
     }
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");

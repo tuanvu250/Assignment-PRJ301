@@ -306,13 +306,16 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         return list;
     }
 
-    public List<ShoesProductDTO> searchShoesByName(String searchTerm) {
-        String sql = "select * from [dbo].[SHOES_PRODUCT] where SHOES_NAME like ?";
+    public List<ShoesProductDTO> searchShoesByName(String searchTerm, int page, int pageSize) {
+        String sql = "SELECT * FROM [dbo].[SHOES_PRODUCT] WHERE SHOES_NAME LIKE ? "
+                + "ORDER BY SHOES_ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         List<ShoesProductDTO> list = new ArrayList<>();
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + searchTerm + "%");
+            ps.setInt(2, (page - 1) * pageSize); // Vị trí bắt đầu lấy dữ liệu
+            ps.setInt(3, pageSize); // Số lượng bản ghi cần lấy
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ShoesProductDTO shoes = new ShoesProductDTO(
@@ -331,12 +334,27 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
                 );
                 list.add(shoes);
             }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
+    }
+
+    public int countShoesByName(String searchTerm) {
+        String sql = "SELECT COUNT(*) AS total FROM [dbo].[SHOES_PRODUCT] WHERE SHOES_NAME LIKE ?";
+        int total = 0;
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + searchTerm + "%");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ShoesProductDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return total;
     }
 
     @Override
@@ -582,7 +600,7 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         }
         return false;
     }
-    
+
     public int checkStock(String shoesId, String colorId, String sizeId) {
         String sql = "SELECT STOCK FROM [dbo].[SHOES_COLOR_SIZE] "
                 + " WHERE SHOES_ID = ? AND COLOR_ID = ? AND SIZE_ID = ?";
@@ -603,7 +621,7 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         }
         return 0;
     }
-    
+
     public boolean updateStock(String shoesId, String colorId, String sizeId, int quantity) {
         String sql = "UPDATE [dbo].[SHOES_COLOR_SIZE] SET STOCK = STOCK - ? "
                 + " WHERE SHOES_ID = ? AND COLOR_ID = ? AND SIZE_ID = ?";
@@ -622,5 +640,5 @@ public class ShoesProductDAO implements IDAO<ShoesProductDTO, String> {
         }
         return false;
     }
-   
+
 }

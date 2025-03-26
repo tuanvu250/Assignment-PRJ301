@@ -128,6 +128,26 @@
                         </tbody>
                     </table>
                 </div>
+                       <%
+                    int currentPage = (int) request.getAttribute("currentPage");
+                    int totalPages = (int) request.getAttribute("totalPages");
+                %>
+
+                <% if (totalPages > 1) { %>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 100px;">
+                    <% if (currentPage > 1) {%>
+                    <a style="text-align: center; font-size: 18px; background-color: #C63F3E; width: 50px; border-radius: 10px;"
+                        href="<%= request.getContextPath()%>/ProductController?action=searchTerm&nameTerm=<%=searchterm%>&page=<%= currentPage - 1%>">Previous</a>
+                    <% }%>
+
+                    <span> Page <%= currentPage%> of <%= totalPages%> </span>
+
+                    <% if (currentPage < totalPages) {%>
+                    <a style="text-align: center; font-size: 18px;background-color: #C63F3E; width: 50px; border-radius: 10px;"
+                        href="<%= request.getContextPath()%>/ProductController?action=searchTerm&nameTerm=<%=searchterm%>&page=<%= currentPage + 1%>">Next</a>
+                    <% } %>
+                </div>
+                <%} %>  
                 <%} %>   
             </div>
         </div>
