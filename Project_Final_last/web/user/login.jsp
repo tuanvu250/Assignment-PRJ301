@@ -41,7 +41,7 @@
                     <input type="checkbox"/>
                     Remember me
                 </div>
-                <a href="" >Forgot password?</a>
+                <a href="<%= request.getContextPath()%>/user/forgotPass.jsp" >Forgot password?</a>
             </div>
             <div class="login-line">
                 <div class="login-linee"></div>

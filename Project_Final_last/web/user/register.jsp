@@ -118,7 +118,7 @@
 
             <div class="signup-end">
                 Already have an account?
-                <a href="login.jsp">Sign in</a>
+                <a href="<%= request.getContextPath()%>/user/login.jsp">Sign in</a>
             </div>
             <%if (!errorRegister.isEmpty()) {%>
             <div style="color: red"><%=errorRegister%></div>
