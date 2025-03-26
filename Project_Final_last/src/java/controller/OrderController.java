@@ -121,11 +121,36 @@ public class OrderController extends HttpServlet {
         String searchTerm = request.getParameter("searchTerm");
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
             searchTerm = "";
-            request.setAttribute("searchTerm", searchTerm);
         }
-        List<OrderDTO> listOrder = orderDAO.searchByOrderIdOrUsername(searchTerm);
+
+        // Phân trang
+        int page = 1;
+        int pageSize = 8; // Số đơn hàng trên mỗi trang
+        String pageParam = request.getParameter("page");
+        if (pageParam != null) {
+            try {
+                page = Integer.parseInt(pageParam);
+                if (page < 1) {
+                    page = 1;
+                }
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+        }
+
+        // Lấy danh sách đơn hàng theo trang
+        List<OrderDTO> listOrder = orderDAO.searchByOrderIdOrUsername(searchTerm, page, pageSize);
+
+        // Đếm tổng số đơn hàng để tính tổng số trang
+        int totalOrders = orderDAO.countOrdersBySearch(searchTerm);
+        int totalPages = (int) Math.ceil((double) totalOrders / pageSize);
+
+        // Gửi dữ liệu sang JSP
         request.setAttribute("searchTerm", searchTerm);
         request.setAttribute("listOrder", listOrder);
+        request.setAttribute("currentPage", page);
+        request.setAttribute("totalPages", totalPages);
+
         return url;
     }
 
@@ -135,7 +160,7 @@ public class OrderController extends HttpServlet {
         String newStatus = request.getParameter("newStatus");
         String orderId = request.getParameter("orderId");
         boolean check = orderDAO.updateOrderStatus(orderId, newStatus);
-        if(check) {
+        if (check) {
             request.setAttribute("successStatus", "Update status successful");
         } else {
             request.setAttribute("errorStatus", "Update status fail");
@@ -165,14 +190,14 @@ public class OrderController extends HttpServlet {
         String url = PROFILE;
         String orderId = request.getParameter("orderId");
         boolean check = orderDAO.updateOrderStatus(orderId, "Cancelled");
-        if(check) {
+        if (check) {
             request.setAttribute("successCancel", "Canceled order successful");
         } else {
             request.setAttribute("errorCancel", "Canceled order fail");
         }
         return url;
     }
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");

@@ -104,8 +104,11 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
         return null;
     }
 
-    public List<OrderDTO> searchByOrderIdOrUsername(String keyword) {
-        String sql = "SELECT * FROM [dbo].[ORDERS] WHERE ORDER_ID LIKE ? OR USER_NAME LIKE ?";
+    public List<OrderDTO> searchByOrderIdOrUsername(String keyword, int page, int pageSize) {
+        String sql = "SELECT * FROM [dbo].[ORDERS] "
+                + "WHERE ORDER_ID LIKE ? OR USER_NAME LIKE ? "
+                + "ORDER BY DATE_ORDERED DESC "
+                + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         List<OrderDTO> orders = new ArrayList<>();
 
         try {
@@ -113,6 +116,8 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + keyword + "%");
             ps.setString(2, "%" + keyword + "%");
+            ps.setInt(3, (page - 1) * pageSize); // Bỏ qua số dòng trước đó
+            ps.setInt(4, pageSize); // Lấy số dòng tiếp theo
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -135,8 +140,25 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return orders;
+    }
+
+    public int countOrdersBySearch(String keyword) {
+        String sql = "SELECT COUNT(*) AS total FROM [dbo].[ORDERS] WHERE ORDER_ID LIKE ? OR USER_NAME LIKE ?";
+        int total = 0;
+        try {
+            Connection conn = DBUtils.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + keyword + "%");
+            ps.setString(2, "%" + keyword + "%");
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return total;
     }
 
     public boolean updateOrderStatus(String orderId, String newStatus) {
@@ -303,7 +325,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
             Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return 0; 
+        return 0;
     }
 
 }

@@ -52,7 +52,7 @@
                     }
                     if (request.getAttribute("successStatus") != null) {
                         String successStatus = (String) request.getAttribute("successStatus");
-                    %> <p style="color: green;"><%=successStatus%></p> <%}%>
+                %> <p style="color: green;"><%=successStatus%></p> <%}%>
                 <p></p>
                 <div class="table-container" style="margin-top: 10px;">
                     <table>
@@ -122,6 +122,26 @@
                             </tr> <%}%>
                         </tbody>
                     </table>
+                    <%
+                        int currentPage = (int) request.getAttribute("currentPage");
+                        int totalPages = (int) request.getAttribute("totalPages");
+                    %>
+
+                    <% if (totalPages > 1) { %>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 100px;">
+                        <% if (currentPage > 1) {%>
+                        <a style="text-align: center; font-size: 18px; background-color: #C63F3E; width: 50px; border-radius: 10px;"
+                           href="<%= request.getContextPath()%>/OrderController?action=searchOrders&searchTerm=<%=searchTerm%>&page=<%= currentPage - 1%>">Previous</a>
+                        <% }%>
+
+                        <span> Page <%= currentPage%> of <%= totalPages%> </span>
+
+                        <% if (currentPage < totalPages) {%>
+                        <a style="text-align: center; font-size: 18px;background-color: #C63F3E; width: 50px; border-radius: 10px;"
+                           href="<%= request.getContextPath()%>/OrderController?action=searchOrders&searchTerm=<%=searchTerm%>&page=<%= currentPage + 1%>">Next</a>
+                        <% } %>
+                    </div>
+                    <%} %>  
                 </div> <%}%>
             </div>
         </div> <%}%>
