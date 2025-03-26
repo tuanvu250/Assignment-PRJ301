@@ -20,7 +20,7 @@
             <%String success = request.getAttribute("success") != null ? (String) request.getAttribute("success") : "";
                 if (!success.isEmpty()) {
             %>
-            <p style="color: green"><%=success%></p>
+            <p style="color: green; text-align: center; font-size: 18px; font-weight: 500;"><%=success%></p>
             <% }%>
             <h2>LOGIN</h2>
             <form class="login-form" action="<%= request.getContextPath()%>/UserController" method="post">
