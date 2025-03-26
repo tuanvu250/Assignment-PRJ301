@@ -137,14 +137,22 @@
                         List<OrderDTO> listOrder = orderDAO.readAllByUser(username);
                     %>
                     <h2>ORDER HISTORY</h2>
-                    <table class="order-table">
+                    <%if (request.getParameter("checkUpdate") != null) {
+                        boolean check = (boolean)request.getAttribute("checkUpdate");
+                        if(check) {
+                    %>
+                    <div style="color: green">Canceled order successful</div> <%} else {%>    
+                    <div style="color: red">Canceled order fail </div>
+                    <%}}%>
+                    <table class="order-table" style="margin-top: 10px;">
                         <thead>
                             <tr>
                                 <th>Order ID</th>
                                 <th>Date</th>
                                 <th>Total</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <th>Detail</th>
+                                <th>Canceled</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -159,7 +167,12 @@
                                 <td >
                                     <a href="<%= request.getContextPath()%>/OrderController?action=orderDetail&orderId=<%=order.getOrder_id()%>"
                                        class="view-details"
-                                        ><i class="fa-solid fa-eye"></i>Detail</a>
+                                       >Detail</a>
+                                </td>
+                                <td>
+                                    <a href="<%= request.getContextPath()%>/OrderController?action=canceled&orderId=<%=order.getOrder_id()%>"
+                                       class="view-details"
+                                       >Canceled</a>
                                 </td>
                             </tr> <%}%>
                         </tbody>

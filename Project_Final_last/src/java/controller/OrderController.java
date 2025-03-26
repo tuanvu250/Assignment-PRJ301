@@ -37,6 +37,7 @@ public class OrderController extends HttpServlet {
     protected static final String ADMIN_DETAIL = "/admin/manageOrderDetail.jsp";
     protected static final String EDIT_DETAIL = "/admin/editOrderDetail.jsp";
     protected static final String MANAGE = "/admin/manageOrders.jsp";
+    protected static final String PROFILE = "/user/profile.jsp";
     protected static final ShoesProductDAO shoesDAO = new ShoesProductDAO();
     protected static final OrderDAO orderDAO = new OrderDAO();
     protected static final CartDAO cartDAO = new CartDAO();
@@ -84,7 +85,7 @@ public class OrderController extends HttpServlet {
         request.setAttribute("listOD", listOD);
         return url;
     }
-    
+
     protected String processAdminOrderDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = ADMIN_DETAIL;
@@ -95,7 +96,7 @@ public class OrderController extends HttpServlet {
         request.setAttribute("listOD", listOD);
         return url;
     }
-    
+
     protected String processEditOrderDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = EDIT_DETAIL;
@@ -113,21 +114,21 @@ public class OrderController extends HttpServlet {
         processSearchOrders(request, response);
         return url;
     }
-    
+
     protected String processSearchOrders(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = MANAGE;
         String searchTerm = request.getParameter("searchTerm");
-        if(searchTerm == null || searchTerm.trim().isEmpty()) {
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
             searchTerm = "";
             request.setAttribute("searchTerm", searchTerm);
-        }     
+        }
         List<OrderDTO> listOrder = orderDAO.searchByOrderIdOrUsername(searchTerm);
         request.setAttribute("searchTerm", searchTerm);
         request.setAttribute("listOrder", listOrder);
         return url;
     }
-    
+
     protected String processUpdateStatus(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = MANAGE;
@@ -138,8 +139,8 @@ public class OrderController extends HttpServlet {
         processSearchOrders(request, response);
         return url;
     }
-    
-     protected String processUpdateDetail(HttpServletRequest request, HttpServletResponse response)
+
+    protected String processUpdateDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String url = MANAGE;
         String fulName = request.getParameter("fullName");
@@ -153,8 +154,17 @@ public class OrderController extends HttpServlet {
         request.setAttribute("checkUpdate", check);
         processSearchOrders(request, response);
         return url;
-     }
+    }
 
+    protected String processCanceledOrder(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String url = PROFILE;
+        String orderId = request.getParameter("orderId");
+        boolean check = orderDAO.updateOrderStatus(orderId, "Cancelled");
+        request.setAttribute("checkUpdate", check);
+        return url;
+    }
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -178,6 +188,8 @@ public class OrderController extends HttpServlet {
                     url = processEditOrderDetail(request, response);
                 } else if (action.equals("updateDetail")) {
                     url = processUpdateDetail(request, response);
+                } else if (action.equals("canceled")) {
+                    url = processCanceledOrder(request, response);
                 }
             }
         } catch (Exception e) {
