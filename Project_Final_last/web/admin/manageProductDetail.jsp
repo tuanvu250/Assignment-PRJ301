@@ -69,9 +69,7 @@
                         <div class="info-value"><%=shoes.getShoes_name()%></div>
                     </div>
                 </div>
-                <%
-                    if (list != null && !list.isEmpty()) {
-                %>
+
                 <table class="product-table">
                     <thead>
                         <tr>
@@ -85,6 +83,9 @@
                                 </div></th>
                         </tr>
                     </thead>
+                    <%
+                        if (list != null && !list.isEmpty()) {
+                    %>
                     <tbody>
                         <%
                             for (ShoesColorSizeDTO item : list) {
