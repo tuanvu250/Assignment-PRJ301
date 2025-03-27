@@ -107,7 +107,7 @@ public class OrderDAO implements IDAO<OrderDTO, String> {
     public List<OrderDTO> searchByOrderIdOrUsername(String keyword, int page, int pageSize) {
         String sql = "SELECT * FROM [dbo].[ORDERS] "
                 + "WHERE ORDER_ID LIKE ? OR USER_NAME LIKE ? "
-                + "ORDER BY DATE_ORDERED DESC "
+                + "ORDER BY ORDER_ID "
                 + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         List<OrderDTO> orders = new ArrayList<>();
 

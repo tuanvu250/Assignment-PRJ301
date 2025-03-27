@@ -46,7 +46,13 @@
                                value="<%=user.getPhone_number()%>"/>
                         <input type="email" placeholder="Email" name="email" required
                                value="<%=user.getEmail()%>"/>
-                        <input type="text" placeholder="Address" name="address" required/> 
+                        <input type="text" placeholder="Address" name="address" required/>
+                        <%
+                            if(request.getAttribute("errorAdress")!=null) {
+                                String errorAdress = (String)request.getAttribute("errorAdress");
+                        %>
+                        <p style="color: red;"><%=errorAdress%></p>
+                        <%}%>
                     </div>
                 </div>
                 <div class="payment-method">

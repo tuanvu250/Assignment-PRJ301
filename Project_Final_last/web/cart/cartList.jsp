@@ -132,8 +132,11 @@
             <div class="cart-bill">
                 <h1>BILL</h1>
                 <form action="ApplyVoucherController">
-
-                    <input name="discountCode" type="text" placeholder="DISCOUNT CODE" class="discount-code">
+                    <%
+                        
+                    %>
+                    <input name="discountCode" type="text" placeholder="DISCOUNT CODE" class="discount-code"
+                           value="<%=session.getAttribute("discountCode") != null? (String)session.getAttribute("discountCode") : ""%>">
                     <input type="submit" class="discount-btn" value="APPLY">
                 </form>
                 <%if (session.getAttribute("errorVoucherNull") != null) {%>

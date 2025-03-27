@@ -52,6 +52,10 @@ public class OrderController extends HttpServlet {
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
         String address = request.getParameter("address");
+        if(address.trim().isEmpty()) {
+            request.setAttribute("errorAdress", "Adress cannot empty.");
+            return url = "/payment/payment.jsp";
+        }
         String paymentMethod = request.getParameter("paymentMethod");
         Date date_order = new Date(System.currentTimeMillis());
         BigDecimal subtotal = BigDecimal.valueOf(Double.parseDouble(request.getParameter("subtotal")));

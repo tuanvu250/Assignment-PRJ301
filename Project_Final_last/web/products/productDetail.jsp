@@ -169,10 +169,7 @@
                 <div class="info-detail">
                     <h3 class="">Product infomation <i class="fa-solid fa-chevron-down"></i></h3>
                     <div>
-                        <p>abc xyz</p>
-                        <p>abc xyz</p>
-                        <p>abc xyz</p>
-                        <p>abc xyz</p>
+                        <p><%=shoes.getDescription()%></p>
                         <img src="<%= request.getContextPath()%>/assets/img/img-home/info-table.jpg">
                     </div>
                 </div>
