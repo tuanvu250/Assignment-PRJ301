@@ -191,7 +191,7 @@ public class ProductColorDAO implements IDAO<ProductColorDTO, String> {
     }
 
     public boolean isColorNameExist(String colorName) {
-        String sql = "SELECT COUNT(*) FROM dbo].[PRODUCT_COLOR] WHERE COLOR_NAME = ?";
+        String sql = "SELECT COUNT(*) FROM [dbo].[PRODUCT_COLOR] WHERE COLOR_NAME = ?";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -208,12 +208,12 @@ public class ProductColorDAO implements IDAO<ProductColorDTO, String> {
         return false;
     }
 
-    public boolean isColorCodeExist(String colorName) {
-        String sql = "SELECT COUNT(*) FROM dbo].[PRODUCT_COLOR] WHERE COLOR_CODE = ?";
+    public boolean isColorCodeExist(String colorCode) {
+        String sql = "SELECT COUNT(*) FROM [dbo].[PRODUCT_COLOR] WHERE COLOR_CODE = ?";
         try {
             Connection conn = DBUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, colorName);
+            ps.setString(1, colorCode);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1) > 0;

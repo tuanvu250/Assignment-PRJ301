@@ -86,8 +86,8 @@
                 ProductSizeDAO sizedao = new ProductSizeDAO();
                 List<ProductSizeDTO> sizes = sizedao.readAll();
                 ShoesColorSizeDAO scldao = new ShoesColorSizeDAO();
-                String shoesid = request.getAttribute("shoesid") != null ? (String) request.getAttribute("shoesid") : "";
                 String colorid = request.getAttribute("colorid") != null ? (String) request.getAttribute("colorid") : "";
+                String shoesid = session.getAttribute("currentID") != null ? (String) session.getAttribute("currentID") : "";
                 String updateFailed = request.getAttribute("updateFailed") != null ? (String) request.getAttribute("updateFailed") : "";
         %>
         <div class="container">

@@ -455,8 +455,6 @@ public class ProductController extends HttpServlet {
         String[] quantities = request.getParameterValues("quantity[]");
         String shoesid = request.getParameter("shoesid");
         String colorid = request.getParameter("colorid");
-        System.out.println(shoesid);
-        System.out.println(colorid);
         if (sizeIds == null || quantities == null || shoesid == null || colorid == null) {
             request.setAttribute("updateFailed", "Invalid input data!");
             return EDIT_PRODUCT_DETAIL_FORM;
@@ -499,7 +497,6 @@ public class ProductController extends HttpServlet {
         String url = HOME;
         try {
             String action = request.getParameter("action");
-            System.out.println(action);
             if (action == null) {
                 url = HOME;
             } else {
