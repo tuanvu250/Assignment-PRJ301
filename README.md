@@ -1,13 +1,19 @@
-# Assignment-PRJ301
-About Us - Bloom on Foot
-Our Story – The Name That Inspires
-In this journey of life, every step we take not only leads us to new places but also marks precious moments of growth and self-discovery. Each step is an opportunity to express ourselves and leave a unique imprint on the path we choose.
-"Bloom on Foot" serves as a gentle reminder that every step is the beginning of endless creativity, freshness, and continuous growth.
-Founded with a passion for footwear and artistry, Bloom on Foot was born from the desire to create shoes that are not only aesthetically pleasing but also provide comfort, confidence, and embrace every step you take.
-At Bloom on Foot, we don’t just sell shoes — we walk alongside you on your personal journey to bloom.
+# E-Commerce Shoe Shop (PRJ301 Project)
 
-Our Commitment
-Quality: Delivering the best products at reasonable prices
-Service: Providing a seamless shopping experience with dedicated support
-Style: Staying ahead with the latest fashion trends
-Sustainability: Striving for environmentally friendly products
+A simple web-based shoe store built using JSP, Servlets, and JDBC. This project allows users to browse products, log in, add items to cart, and simulate a checkout process. It follows the MVC design pattern and uses SQL Server as the backend database.
+
+## Features
+
+- Product listing and detail view
+- User login/logout
+- Shopping cart management
+- Checkout simulation
+- Admin product management (add/edit/delete)
+- Session handling and basic authentication
+
+## Tech Stack
+
+- Backend: Java Servlet, JSP, JDBC
+- Frontend: HTML, CSS, JavaScript
+- Database: SQL Server
+- Tools: Apache Tomcat, Git/GitHub
