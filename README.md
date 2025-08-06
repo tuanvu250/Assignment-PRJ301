@@ -143,6 +143,8 @@ Ensure the following libraries are added to classpath:
 - `/VoucherController` - Voucher management
 - `/ProductLineController` - Product line management
 
+## Demo
+Video: `https://drive.google.com/file/d/1VyuoANawHL9Umzldald-kY8oiUh6MRoV/view?usp=sharing`
 
 ## 📝 License
 
